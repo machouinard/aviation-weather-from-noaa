@@ -104,6 +104,9 @@ function machouinard_adds_register_widget() {
 
 
 class machouinard_adds_weather_widget extends WP_Widget {
+
+	protected $pireps;
+
 	function machouinard_adds_weather_widget() {
 		$machouinard_options = array(
 			'classname' => 'machouinard_adds_widget_class',
@@ -119,7 +122,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$icao = $instance['icao'];
 		$hours = $instance['hours'];
 		?>
-		<label for="<?php echo $this->get_field_name( 'icao' ); ?>">ICAO</label>
+		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO', 'machouinard_adds'); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours'); ?>" class="widefat">
@@ -134,43 +137,64 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 	function update ( $new_instance, $old_instance ) {
 		// process widget options to save
+		$ptrn = '~[-\s,.;:]+~';
 		$instance = $old_instance;
 		$instance['icao'] = strtoupper(strip_tags( $new_instance['icao'] ));
+		// $icao_arr = preg_split($ptrn, $instance['icao']);
+		$instance['icao'] = implode(',', preg_split($ptrn, $instance['icao']));
 		$instance['hours'] = strip_tags( $new_instance['hours'] );
 		return $instance;
 	}
 
 	function widget ( $args, $instance ) {
-		$icao = empty( $instance['icao'] ) ? '&nbsp;' : strtoupper($instance['icao']);
+		$icao = empty( $instance['icao'] ) ? '' : strtoupper($instance['icao']);
 		$hours = empty( $instance['hours'] ) ? '&nbsp;' : $instance['hours'];
 		$wx = $this->get_metar( $icao, $hours );
+		arsort($wx);
 		extract( $args );
 		echo $before_widget;
-		if( !empty($wx['metar']) && !empty( $wx['tafs'])) {
+		// echo '<pre>';
+		// print_r($wx);
+		// echo '</pre>';
+
+		if( !empty($wx['metar'])) {
 			echo '<p>';
 			printf( _n('Most recent report for %s in the past hour', 'Most recent report for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 			echo "</p>";
 			foreach( $wx as $type=>$info ){
-				echo '<strong>' . strtoupper($type) . "</strong><br />" . $info . "<br />\n";
+				echo '<strong>' . strtoupper($type) . "</strong><br />";
+				if( is_array( $info )){
+					foreach ($info as $key => $value) {
+						if( !empty( $value)){
+						echo  $value . "<br />\n";
+						}
+					}
+				} else {
+				echo $info . "<br />\n";
+			}
 			}
 		}
 		echo $after_widget;
 	}
 
 	function get_metar( $icao, $hours ) {
-		$icao = strtoupper($icao);
-		$metar_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&hoursBeforeNow={$hours}&mostRecent=true&stationString={$icao}";
+		$metar_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 		$tafs_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow={$hours}&mostRecent=true&stationString={$icao}";
-		$weather['metar'] = wp_remote_get( $metar_url );
-		$weather['tafs'] = wp_remote_get( $tafs_url );
-		foreach( $weather as $report=>$body ) {
-			$retr_body = wp_remote_retrieve_body( $body );
-			$pos1 = strpos( $retr_body, $icao );
-			$pos2 = strpos( $retr_body, $icao, $pos1 + strlen($icao));
-			$len = $pos2 - $pos1;
-			$wx[$report] = substr($retr_body, $pos1, $len);
+		$tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
+		$xml['metar'] = simplexml_load_file($metar_url);
+		$xml['taf'] = simplexml_load_file($tafs_url);
+		$wx['taf'] = $xml['taf']->data->TAF[0]->raw_text;
+		for( $i = 1; $i <= count($xml['metar']); $i++){
+			$wx['metar'][$i] = $xml['metar']->data->METAR[$i]->raw_text;
 		}
-
+		// echo '<pre>';
+		// print_r($xml['metar']);
+		// echo '</pre>';
+		// die();
+		
+		// if(isset($xml['metar']->errors->error)){
+		// 	echo $xml['metar']->errors->error;
+		// } 
 		return $wx;
 	}
 
