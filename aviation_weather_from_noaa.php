@@ -117,38 +117,47 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 	function form( $instance ) {
 		// displays the widget form in the admin dashboard
-		$defaults = array( 'icao' => 'KZZV', 'hours' => 2 );
+		$defaults = array( 'icao' => 'KZZV', 'hours' => 2, 'show_taf' => true );
 		$instance = wp_parse_args(  (array) $instance, $defaults );
 		$icao = $instance['icao'];
 		$hours = $instance['hours'];
+		$show_taf = $instance['show_taf'];
 		?>
 		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO', 'machouinard_adds'); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours'); ?>" class="widefat">
+
 		<?php
 		for( $x = 1; $x < 7; $x++) {
 			echo '<option value="' . $x . '" id="' . $x . '"', $hours == $x ? ' selected="selected"' : '', '>', $x, '</option>';
 		}
 		?>
 	</select>
+	<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds'); ?></label>
+	<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  />
+
 		<?php
 	}
 
 	function update ( $new_instance, $old_instance ) {
+		// print_r($old_instance);die();
 		// process widget options to save
 		$ptrn = '~[-\s,.;:]+~';
 		$instance = $old_instance;
 		$instance['icao'] = strtoupper(strip_tags( $new_instance['icao'] ));
 		// $icao_arr = preg_split($ptrn, $instance['icao']);
-		$instance['icao'] = implode(',', preg_split($ptrn, $instance['icao']));
+		$instance['icao'] = implode(', ', preg_split($ptrn, $instance['icao']));
 		$instance['hours'] = strip_tags( $new_instance['hours'] );
+		$instance['show_taf'] = $new_instance['show_taf'];
 		return $instance;
 	}
 
 	function widget ( $args, $instance ) {
 		$icao = empty( $instance['icao'] ) ? '' : strtoupper($instance['icao']);
-		$hours = empty( $instance['hours'] ) ? '&nbsp;' : $instance['hours'];
+		$hours = empty( $instance['hours'] ) ? '' : $instance['hours'];
+		$show_taf = isset($instance['show_taf'] ) ? $instance['show_taf'] : false;
+
 		$wx = $this->get_metar( $icao, $hours );
 		arsort($wx);
 		extract( $args );
@@ -159,10 +168,15 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 		if( !empty($wx['metar'])) {
 			echo '<p>';
-			printf( _n('Most recent report for %s in the past hour', 'Most recent report for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+			printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 			echo "</p>";
 			foreach( $wx as $type=>$info ){
-				echo '<strong>' . strtoupper($type) . "</strong><br />";
+
+				if($type == 'taf' && $show_taf || $type == 'metar' ){
+					echo '<strong>' . strtoupper($type) . "</strong><br />";
+				}
+				
+				if($type == "taf" && !$show_taf) continue;
 				if( is_array( $info )){
 					foreach ($info as $key => $value) {
 						if( !empty( $value)){
@@ -179,11 +193,16 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 	function get_metar( $icao, $hours ) {
 		$metar_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-		$tafs_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow={$hours}&mostRecent=true&stationString={$icao}";
+		// $tafs_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow={$hours}&mostRecent=true&stationString={$icao}";
+		// $tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 		$tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 		$xml['metar'] = simplexml_load_file($metar_url);
 		$xml['taf'] = simplexml_load_file($tafs_url);
-		$wx['taf'] = $xml['taf']->data->TAF[0]->raw_text;
+		// $wx['taf'] = $xml['taf']->data->TAF[0]->raw_text;
+		for( $i = 1; $i <= count($xml['taf']); $i++){
+			$wx['taf'][$i] = $xml['taf']->data->TAF[$i]->raw_text;
+		}
+
 		for( $i = 1; $i <= count($xml['metar']); $i++){
 			$wx['metar'][$i] = $xml['metar']->data->METAR[$i]->raw_text;
 		}
