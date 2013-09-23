@@ -105,13 +105,16 @@ function machouinard_adds_register_widget() {
 
 function machouinard_adds_weather_short( $atts ) {
 	extract( shortcode_atts( array(
-		'icao' => array( 'KORD' ),
-		'hours' => 2
-	), $atts ) );
-	$return = print_r( $icao, true );
-	$return .= $hours;
+		'apts' => 'kfuck',
+		'hours' => '3'               
+		), $atts ));
+	$apts = explode(" ", $apts);
+	$return = '<pre>';
+	$return .= print_r($apts, true);
+	$return .= '</pre>' . $hours;
 	return $return;
 }
+
 
 
 class machouinard_adds_weather_widget extends WP_Widget {
@@ -179,9 +182,9 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		// echo '</pre>';
 
 		if( !empty($wx['metar'])) {
-			echo '<p>';
+			echo '<p><strong>';
 			printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
-			echo "</p>";
+			echo "</strong></p>";
 			foreach( $wx as $type=>$info ){
 
 				if($type == 'taf' && $show_taf || $type == 'metar' ){
