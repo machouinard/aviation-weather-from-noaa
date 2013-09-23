@@ -48,7 +48,8 @@ function machouinard_adds_init() {
 	$locale = apply_filters( 'plugin_locale', get_locale(), 'machouinard_adds' );
 	load_textdomain( 'machouinard_adds', WP_LANG_DIR . '/machouinard_adds/machouinard_adds-' . $locale . '.mo' );
 	load_plugin_textdomain( 'machouinard_adds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	add_action( 'admin_menu', 'machouinard_adds_admin_settings' );
+	add_shortcode( 'adds_weather', 'machouinard_adds_weather_short');
+	// add_action( 'admin_menu', 'machouinard_adds_admin_settings' );
 }
 
 /**
@@ -75,7 +76,7 @@ register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 add_action( 'init', 'machouinard_adds_init' );
 // At this point, I'm only using the widget.  Will add functionality to the plugin at a later date.
 // Will use plugin at least for weather notifications, storm warnings, etc...
-// add_action( 'init', 'machouinard_adds_init' );
+add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
 // Wireup filters
 
@@ -100,6 +101,16 @@ function machouinard_adds_settings_page(){
 
 function machouinard_adds_register_widget() {
 	register_widget( 'machouinard_adds_weather_widget' );
+}
+
+function machouinard_adds_weather_short( $atts ) {
+	extract( shortcode_atts( array(
+		'icao' => array( 'KORD' ),
+		'hours' => 2
+	), $atts ) );
+	$return = print_r( $icao, true );
+	$return .= $hours;
+	return $return;
 }
 
 
