@@ -123,7 +123,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$hours = $instance['hours'];
 		$show_taf = $instance['show_taf'];
 		?>
-		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO', 'machouinard_adds'); ?></label>
+		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (up to 4)', 'machouinard_adds'); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours'); ?>" class="widefat">
@@ -143,11 +143,12 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	function update ( $new_instance, $old_instance ) {
 		// print_r($old_instance);die();
 		// process widget options to save
-		$ptrn = '~[-\s,.;:]+~';
+		$ptrn = '~[-\s,.;:\/+]+~';
 		$instance = $old_instance;
 		$instance['icao'] = strtoupper(strip_tags( $new_instance['icao'] ));
-		// $icao_arr = preg_split($ptrn, $instance['icao']);
-		$instance['icao'] = implode(', ', preg_split($ptrn, $instance['icao']));
+		$icao_arr = preg_split($ptrn, $instance['icao']);
+		$icao_arr = array_splice($icao_arr, 0, 4);
+		$instance['icao'] = implode(', ', $icao_arr);
 		$instance['hours'] = strip_tags( $new_instance['hours'] );
 		$instance['show_taf'] = $new_instance['show_taf'];
 		return $instance;
