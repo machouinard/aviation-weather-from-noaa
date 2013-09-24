@@ -110,49 +110,46 @@ function machouinard_adds_weather_short( $atts ) {
 		'show_taf' => '1'               
 		), $atts ));
 
-	$data = '';
 	$icao = machouinard_adds_weather_widget::clean_icao( $apts );
+	$hours = sanitize_text_field( $hours );
+	$show_taf = sanitize_text_field( $show_taf );
+	$data = '';
 
-		$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
-		arsort($wx);
+	$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
+	arsort($wx);
 
-		if( !empty($wx['metar'])) {
-			echo '<p><strong>';
-			printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
-			echo "</strong></p>";
-			foreach( $wx as $type=>$info ){
+	if( !empty($wx['metar'])) {
+		echo '<p><strong>';
+		printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+		echo "</strong></p>";
+		foreach( $wx as $type=>$info ){
 
-				if($type == 'taf' && $show_taf || $type == 'metar' ){
-					$data .= '<strong>' . strtoupper($type) . "</strong><br />";
-				}
-				
-				if($type == "taf" && !$show_taf) continue;
-				if( is_array( $info )){
-					foreach ($info as $key => $value) {
-						if( !empty( $value)){
-							$data .=  $value . "<br />\n";
-						}
+			if($type == 'taf' && $show_taf || $type == 'metar' ){
+				$data .= '<strong>' . strtoupper($type) . "</strong><br />";
+			}
+
+			if($type == "taf" && !$show_taf) continue;
+			if( is_array( $info )){
+				foreach ($info as $key => $value) {
+					if( !empty( $value)){
+						$data .=  $value . "<br />\n";
 					}
-				} else {
-					$data .= $info . "<br />\n";
 				}
+			} else {
+				$data .= $info . "<br />\n";
 			}
 		}
+	}
 
 	return $data;
 }
 
-
-
-
 class machouinard_adds_weather_widget extends WP_Widget {
-
-	protected $pireps;
 
 	function machouinard_adds_weather_widget() {
 		$machouinard_options = array(
 			'classname' => 'machouinard_adds_widget_class',
-			'description' => __( 'Displays METAR info from NOAA\'s Aviation Digital Data Service', 'machouinard_adds' )
+			'description' => __( 'Displays METAR & other info from NOAA\'s Aviation Digital Data Service', 'machouinard_adds' )
 			);
 		$this->WP_Widget( 'machouinard_adds_weather_widget', 'ADDS Weather Info', $machouinard_options );
 	}
@@ -165,7 +162,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$hours = $instance['hours'];
 		$show_taf = $instance['show_taf'];
 		?>
-		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (up to 4)', 'machouinard_adds'); ?></label>
+		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (max 4)', 'machouinard_adds'); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours'); ?>" class="widefat">
@@ -194,7 +191,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	static function clean_icao( $icao ) {
 		// echo $icao;die('&npsp;209');
 		$ptrn = '~[-\s,.;:\/+]+~';
-		$icao = strtoupper(strip_tags( $icao ));
+		$icao = strtoupper(sanitize_text_field( $icao ));
 		$icao_arr = preg_split($ptrn, $icao);
 		$icao_arr = array_splice($icao_arr, 0, 4);
 		$icao_string = implode(', ', $icao_arr);
