@@ -3,7 +3,7 @@
  * Plugin Name: Aviation Weather from NOAA
  * Plugin URI:  http://plugins.machouinard.com/adds
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:     0.1.0
+ * Version:     0.2.1
  * Author:      Mark Chouinard
  * Author URI:  http://machouinard.com
  * License:     GPLv2+
@@ -119,9 +119,9 @@ function machouinard_adds_weather_short( $atts ) {
 	arsort($wx);
 
 	if( !empty($wx['metar'])) {
-		echo '<p><strong>';
-		printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
-		echo "</strong></p>";
+		$data .= '<p><strong>';
+		$data .= sprintf( _n('All available data for %s in the past hour', 'All available data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+		$data .= "</strong></p>";
 		foreach( $wx as $type=>$info ){
 
 			if($type == 'taf' && $show_taf || $type == 'metar' ){
@@ -210,7 +210,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 		if( !empty($wx['metar'])) {
 			echo '<p><strong>';
-			printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+			printf( _n('All available data for %s in the past hour', 'All available data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 			echo "</strong></p>";
 			foreach( $wx as $type=>$info ){
 
