@@ -109,20 +109,12 @@ function machouinard_adds_weather_short( $atts ) {
 		'hours' => '3',
 		'show_taf' => '1'               
 		), $atts ));
-	// $apts = explode(" ", $apts);
+
 	$data = '';
-	// $return = '<pre>';
-	// $return .= print_r($apts, true);
-	// $return .= '</pre>' . $hours;
-	$icao = $apts;
-	// foreach( $apts as $icao ){
+	$icao = machouinard_adds_weather_widget::clean_icao( $apts );
+
 		$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
 		arsort($wx);
-		// extract( $args );
-		// echo $before_widget;
-		// echo '<pre>';
-		// print_r($wx);
-		// echo '</pre>';
 
 		if( !empty($wx['metar'])) {
 			echo '<p><strong>';
@@ -146,10 +138,6 @@ function machouinard_adds_weather_short( $atts ) {
 				}
 			}
 		}
-		
-	// }
-	
-
 
 	return $data;
 }
@@ -195,17 +183,22 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	}
 
 	function update ( $new_instance, $old_instance ) {
-		// print_r($old_instance);die();
 		// process widget options to save
-		$ptrn = '~[-\s,.;:\/+]+~';
 		$instance = $old_instance;
-		$instance['icao'] = strtoupper(strip_tags( $new_instance['icao'] ));
-		$icao_arr = preg_split($ptrn, $instance['icao']);
-		$icao_arr = array_splice($icao_arr, 0, 4);
-		$instance['icao'] = implode(', ', $icao_arr);
+		$instance[ 'icao' ] = $this->clean_icao( $new_instance[ 'icao' ] );
 		$instance['hours'] = strip_tags( $new_instance['hours'] );
 		$instance['show_taf'] = $new_instance['show_taf'];
 		return $instance;
+	}
+
+	static function clean_icao( $icao ) {
+		// echo $icao;die('&npsp;209');
+		$ptrn = '~[-\s,.;:\/+]+~';
+		$icao = strtoupper(strip_tags( $icao ));
+		$icao_arr = preg_split($ptrn, $icao);
+		$icao_arr = array_splice($icao_arr, 0, 4);
+		$icao_string = implode(', ', $icao_arr);
+		return $icao_string;
 	}
 
 	function widget ( $args, $instance ) {
@@ -217,9 +210,6 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		arsort($wx);
 		extract( $args );
 		echo $before_widget;
-		// echo '<pre>';
-		// print_r($wx);
-		// echo '</pre>';
 
 		if( !empty($wx['metar'])) {
 			echo '<p><strong>';
@@ -261,14 +251,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		for( $i = 1; $i <= count($xml['metar']); $i++){
 			$wx['metar'][$i] = $xml['metar']->data->METAR[$i]->raw_text;
 		}
-		// echo '<pre>';
-		// print_r($xml['metar']);
-		// echo '</pre>';
-		// die();
 		
-		// if(isset($xml['metar']->errors->error)){
-		// 	echo $xml['metar']->errors->error;
-		// } 
 		return $wx;
 	}
 
