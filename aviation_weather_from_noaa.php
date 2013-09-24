@@ -105,47 +105,51 @@ function machouinard_adds_register_widget() {
 
 function machouinard_adds_weather_short( $atts ) {
 	extract( shortcode_atts( array(
-		'apts' => 'kfuck',
+		'apts' => 'KORD',
 		'hours' => '3',
-		'type' => 'metar'               
+		'show_taf' => '1'               
 		), $atts ));
-	$apts = explode(" ", $apts);
+	// $apts = explode(" ", $apts);
+	$data = '';
 	// $return = '<pre>';
 	// $return .= print_r($apts, true);
 	// $return .= '</pre>' . $hours;
-	foreach( $apts as $apt ){
-		switch ($type) {
-			case 'metar':
-			$url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$apt}&hoursBeforeNow={$hours}";
-			break;
-			case 'taf':
-			$url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$apt}&hoursBeforeNow={$hours}";
-			break;
+	$icao = $apts;
+	// foreach( $apts as $icao ){
+		$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
+		arsort($wx);
+		// extract( $args );
+		// echo $before_widget;
+		// echo '<pre>';
+		// print_r($wx);
+		// echo '</pre>';
 
-			default:
-			$url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$apt}&hoursBeforeNow={$hours}";
-			break;
+		if( !empty($wx['metar'])) {
+			echo '<p><strong>';
+			printf( _n('Most recent data for %s in the past hour', 'Most recent data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+			echo "</strong></p>";
+			foreach( $wx as $type=>$info ){
+
+				if($type == 'taf' && $show_taf || $type == 'metar' ){
+					$data .= '<strong>' . strtoupper($type) . "</strong><br />";
+				}
+				
+				if($type == "taf" && !$show_taf) continue;
+				if( is_array( $info )){
+					foreach ($info as $key => $value) {
+						if( !empty( $value)){
+							$data .=  $value . "<br />\n";
+						}
+					}
+				} else {
+					$data .= $info . "<br />\n";
+				}
+			}
 		}
-
-		$type = strtoupper($type);
-		$xml = simplexml_load_file($url);
-		$num_results = $xml->data->attributes()->num_results;
-		for( $i = 0; $i < $num_results; $i++) {
-			$return[$apt][$i] .= $xml->data->$type->raw_text;
-		}
-
-	// $info = machouinard_adds_weather_widget::get_apt_info($apt);
 		
-	}
+	// }
 	
-	$data = "<strong>" . $type . "</strong><br />\n";
-	asort($return);
-	foreach( $return as $reports ){
-		foreach( $reports as $report ) {
-			$data .= $report . "<br />\n";
-		}
-		
-	}
+
 
 	return $data;
 }
