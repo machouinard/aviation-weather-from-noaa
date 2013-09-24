@@ -91,7 +91,7 @@ function machouinard_adds_admin_settings() {
 		'manage_options',
 		'machouinard_adds_settings',
 		'machouinard_adds_settings_page'
-	);
+		);
 }
 
 // Setup the settings page - for future use
@@ -106,14 +106,50 @@ function machouinard_adds_register_widget() {
 function machouinard_adds_weather_short( $atts ) {
 	extract( shortcode_atts( array(
 		'apts' => 'kfuck',
-		'hours' => '3'               
+		'hours' => '3',
+		'type' => 'metar'               
 		), $atts ));
 	$apts = explode(" ", $apts);
-	$return = '<pre>';
-	$return .= print_r($apts, true);
-	$return .= '</pre>' . $hours;
-	return $return;
+	// $return = '<pre>';
+	// $return .= print_r($apts, true);
+	// $return .= '</pre>' . $hours;
+	foreach( $apts as $apt ){
+		switch ($type) {
+			case 'metar':
+			$url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$apt}&hoursBeforeNow={$hours}";
+			break;
+			case 'taf':
+			$url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$apt}&hoursBeforeNow={$hours}";
+			break;
+
+			default:
+			$url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$apt}&hoursBeforeNow={$hours}";
+			break;
+		}
+
+		$type = strtoupper($type);
+		$xml = simplexml_load_file($url);
+		$num_results = $xml->data->attributes()->num_results;
+		for( $i = 0; $i < $num_results; $i++) {
+			$return[$apt][$i] .= $xml->data->$type->raw_text;
+		}
+
+	// $info = machouinard_adds_weather_widget::get_apt_info($apt);
+		
+	}
+	
+	$data = "<strong>" . $type . "</strong><br />\n";
+	asort($return);
+	foreach( $return as $reports ){
+		foreach( $reports as $report ) {
+			$data .= $report . "<br />\n";
+		}
+		
+	}
+
+	return $data;
 }
+
 
 
 
@@ -125,7 +161,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$machouinard_options = array(
 			'classname' => 'machouinard_adds_widget_class',
 			'description' => __( 'Displays METAR info from NOAA\'s Aviation Digital Data Service', 'machouinard_adds' )
-		);
+			);
 		$this->WP_Widget( 'machouinard_adds_weather_widget', 'ADDS Weather Info', $machouinard_options );
 	}
 
@@ -142,14 +178,14 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours'); ?>" class="widefat">
 
-		<?php
-		for( $x = 1; $x < 7; $x++) {
-			echo '<option value="' . $x . '" id="' . $x . '"', $hours == $x ? ' selected="selected"' : '', '>', $x, '</option>';
-		}
-		?>
-	</select>
-	<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds'); ?></label>
-	<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  />
+			<?php
+			for( $x = 1; $x < 7; $x++) {
+				echo '<option value="' . $x . '" id="' . $x . '"', $hours == $x ? ' selected="selected"' : '', '>', $x, '</option>';
+			}
+			?>
+		</select>
+		<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds'); ?></label>
+		<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  />
 
 		<?php
 	}
@@ -195,18 +231,18 @@ class machouinard_adds_weather_widget extends WP_Widget {
 				if( is_array( $info )){
 					foreach ($info as $key => $value) {
 						if( !empty( $value)){
-						echo  $value . "<br />\n";
+							echo  $value . "<br />\n";
 						}
 					}
 				} else {
-				echo $info . "<br />\n";
-			}
+					echo $info . "<br />\n";
+				}
 			}
 		}
 		echo $after_widget;
 	}
 
-	function get_metar( $icao, $hours ) {
+	static function get_metar( $icao, $hours ) {
 		$metar_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 		// $tafs_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow={$hours}&mostRecent=true&stationString={$icao}";
 		// $tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
@@ -230,6 +266,16 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		// 	echo $xml['metar']->errors->error;
 		// } 
 		return $wx;
+	}
+
+	public static function get_apt_info($icao) {
+		$url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
+		$xml = simplexml_load_file( $url );
+		$info['station_id'] = $xml->data->Station->station_id;
+		$info['lat'] = $xml->data->Station->latitude;
+		$info['lon'] = $xml->data->Station->longitude;
+
+		return $info;
 	}
 
 }
