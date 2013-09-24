@@ -36,7 +36,7 @@
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.1.0' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.2.3' );
 define( 'MACHOUINARD_ADDS_URL',     plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH',    dirname( __FILE__ ) . '/' );
 
@@ -48,7 +48,6 @@ function machouinard_adds_init() {
 	$locale = apply_filters( 'plugin_locale', get_locale(), 'machouinard_adds' );
 	load_textdomain( 'machouinard_adds', WP_LANG_DIR . '/machouinard_adds/machouinard_adds-' . $locale . '.mo' );
 	load_plugin_textdomain( 'machouinard_adds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	add_shortcode( 'adds_weather', 'machouinard_adds_weather_short');
 	// add_action( 'admin_menu', 'machouinard_adds_admin_settings' );
 }
 
@@ -73,17 +72,14 @@ function machouinard_adds_deactivate() {
 register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 
 // Wireup actions
-add_action( 'init', 'machouinard_adds_init' );
-// At this point, I'm only using the widget.  Will add functionality to the plugin at a later date.
-// Will use plugin at least for weather notifications, storm warnings, etc...
-add_action( 'init', 'machouinard_adds_init' );
+// For now, only using widget and shortcode
+// add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
+add_shortcode( 'adds_weather', 'machouinard_adds_weather_short' );
 // Wireup filters
 
-// Wireup shortcodes
-// 
-//
-// Setup the settings menu option - for future use
+
+// Setup the settings menu option - For future use
 function machouinard_adds_admin_settings() {
 	add_options_page(
 		__( 'ADDS Weather Settings', 'machouinard_adds' ),
@@ -94,8 +90,8 @@ function machouinard_adds_admin_settings() {
 		);
 }
 
-// Setup the settings page - for future use
-function machouinard_adds_settings_page(){
+// Setup the settings page - For future use
+function machouinard_adds_settings_page() {
 
 }
 
@@ -103,35 +99,37 @@ function machouinard_adds_register_widget() {
 	register_widget( 'machouinard_adds_weather_widget' );
 }
 
+// Wireup shortcodes
+// 
 function machouinard_adds_weather_short( $atts ) {
 	extract( shortcode_atts( array(
 		'apts' => 'KORD',
 		'hours' => '3',
 		'show_taf' => '1'               
-		), $atts ));
+		), $atts ) );
 
 	$icao = machouinard_adds_weather_widget::clean_icao( $apts );
-	$hours = sanitize_text_field( $hours );
-	$show_taf = sanitize_text_field( $show_taf );
+	$hours = intval( $hours );
+	$show_taf = intval( $show_taf );
 	$data = '';
 
 	$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
-	arsort($wx);
+	arsort( $wx);
 
-	if( !empty($wx['metar'])) {
+	if( !empty( $wx[ 'metar' ] ) ) {
 		$data .= '<p><strong>';
 		$data .= sprintf( _n('All available data for %s in the past hour', 'All available data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 		$data .= "</strong></p>";
-		foreach( $wx as $type=>$info ){
+		foreach( $wx as $type=>$info ) {
 
-			if($type == 'taf' && $show_taf || $type == 'metar' ){
-				$data .= '<strong>' . strtoupper($type) . "</strong><br />";
+			if( $type == 'taf' && $show_taf || $type == 'metar' ) {
+				$data .= '<strong>' . strtoupper( $type) . "</strong><br />";
 			}
 
-			if($type == "taf" && !$show_taf) continue;
-			if( is_array( $info )){
-				foreach ($info as $key => $value) {
-					if( !empty( $value)){
+			if( $type == "taf" && !$show_taf ) continue;
+			if( is_array( $info ) ) {
+				foreach ( $info as $key => $value ) {
+					if( !empty( $value ) ) {
 						$data .=  $value . "<br />\n";
 					}
 				}
@@ -158,14 +156,14 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		// displays the widget form in the admin dashboard
 		$defaults = array( 'icao' => 'KZZV', 'hours' => 2, 'show_taf' => true );
 		$instance = wp_parse_args(  (array) $instance, $defaults );
-		$icao = $instance['icao'];
-		$hours = $instance['hours'];
-		$show_taf = $instance['show_taf'];
+		$icao = $instance[ 'icao' ];
+		$hours = $instance[ 'hours' ];
+		$show_taf = $instance[ 'show_taf' ];
 		?>
-		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (max 4)', 'machouinard_adds'); ?></label>
+		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (max 4)', 'machouinard_adds' ); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
-		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours'); ?>" class="widefat">
+		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours' ); ?>" class="widefat">
 
 			<?php
 			for( $x = 1; $x < 7; $x++) {
@@ -173,7 +171,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 			}
 			?>
 		</select>
-		<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds'); ?></label>
+		<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds' ); ?></label>
 		<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  />
 
 		<?php
@@ -183,45 +181,44 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		// process widget options to save
 		$instance = $old_instance;
 		$instance[ 'icao' ] = $this->clean_icao( $new_instance[ 'icao' ] );
-		$instance['hours'] = strip_tags( $new_instance['hours'] );
-		$instance['show_taf'] = $new_instance['show_taf'];
+		$instance[ 'hours' ] = strip_tags( $new_instance[ 'hours' ] );
+		$instance[ 'show_taf' ] = strip_tags( $new_instance[ 'show_taf' ] );
 		return $instance;
 	}
 
 	static function clean_icao( $icao ) {
-		// echo $icao;die('&npsp;209');
 		$ptrn = '~[-\s,.;:\/+]+~';
-		$icao = strtoupper(sanitize_text_field( $icao ));
-		$icao_arr = preg_split($ptrn, $icao);
-		$icao_arr = array_splice($icao_arr, 0, 4);
+		$icao = strtoupper(sanitize_text_field( $icao ) );
+		$icao_arr = preg_split( $ptrn, $icao);
+		$icao_arr = array_splice( $icao_arr, 0, 4);
 		$icao_string = implode(', ', $icao_arr);
 		return $icao_string;
 	}
 
 	function widget ( $args, $instance ) {
-		$icao = empty( $instance['icao'] ) ? '' : strtoupper($instance['icao']);
-		$hours = empty( $instance['hours'] ) ? '' : $instance['hours'];
-		$show_taf = isset($instance['show_taf'] ) ? $instance['show_taf'] : false;
+		$icao = empty( $instance[ 'icao' ] ) ? '' : strtoupper( $instance[ 'icao' ] );
+		$hours = empty( $instance[ 'hours' ] ) ? '' : $instance[ 'hours' ];
+		$show_taf = isset( $instance[ 'show_taf' ] ) ? $instance[ 'show_taf' ] : false;
 
 		$wx = $this->get_metar( $icao, $hours );
-		arsort($wx);
+		arsort( $wx );
 		extract( $args );
 		echo $before_widget;
 
-		if( !empty($wx['metar'])) {
+		if( !empty( $wx[ 'metar' ] ) ) {
 			echo '<p><strong>';
 			printf( _n('All available data for %s in the past hour', 'All available data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 			echo "</strong></p>";
-			foreach( $wx as $type=>$info ){
+			foreach( $wx as $type=>$info ) {
 
-				if($type == 'taf' && $show_taf || $type == 'metar' ){
-					echo '<strong>' . strtoupper($type) . "</strong><br />";
+				if( $type == 'taf' && $show_taf || $type == 'metar' ) {
+					echo '<strong>' . strtoupper( $type ) . "</strong><br />";
 				}
 				
-				if($type == "taf" && !$show_taf) continue;
-				if( is_array( $info )){
-					foreach ($info as $key => $value) {
-						if( !empty( $value)){
+				if( $type == "taf" && !$show_taf ) continue;
+				if( is_array( $info ) ) {
+					foreach ( $info as $key => $value ) {
+						if( !empty( $value ) ) {
 							echo  $value . "<br />\n";
 						}
 					}
@@ -235,29 +232,26 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 	static function get_metar( $icao, $hours ) {
 		$metar_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-		// $tafs_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&hoursBeforeNow={$hours}&mostRecent=true&stationString={$icao}";
-		// $tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 		$tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-		$xml['metar'] = simplexml_load_file($metar_url);
-		$xml['taf'] = simplexml_load_file($tafs_url);
-		// $wx['taf'] = $xml['taf']->data->TAF[0]->raw_text;
-		for( $i = 1; $i <= count($xml['taf']); $i++){
-			$wx['taf'][$i] = $xml['taf']->data->TAF[$i]->raw_text;
+		$xml[ 'metar' ] = simplexml_load_file( $metar_url );
+		$xml[ 'taf' ] = simplexml_load_file( $tafs_url );
+		for( $i = 1; $i <= count( $xml[ 'taf' ] ); $i++) {
+			$wx[ 'taf' ][$i] = $xml[ 'taf' ]->data->TAF[$i]->raw_text;
 		}
 
-		for( $i = 1; $i <= count($xml['metar']); $i++){
-			$wx['metar'][$i] = $xml['metar']->data->METAR[$i]->raw_text;
+		for( $i = 1; $i <= count( $xml[ 'metar' ] ); $i++) {
+			$wx[ 'metar' ][$i] = $xml[ 'metar' ]->data->METAR[$i]->raw_text;
 		}
 		
 		return $wx;
 	}
 
-	public static function get_apt_info($icao) {
+	public static function get_apt_info( $icao ) {
 		$url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
 		$xml = simplexml_load_file( $url );
-		$info['station_id'] = $xml->data->Station->station_id;
-		$info['lat'] = $xml->data->Station->latitude;
-		$info['lon'] = $xml->data->Station->longitude;
+		$info[ 'station_id' ] = $xml->data->Station->station_id;
+		$info[ 'lat' ] = $xml->data->Station->latitude;
+		$info[ 'lon' ] = $xml->data->Station->longitude;
 
 		return $info;
 	}
