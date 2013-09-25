@@ -73,6 +73,7 @@ register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 
 // Wireup actions
 // For now, only using widget and shortcode
+// 
 // add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
 add_shortcode( 'adds_weather', 'machouinard_adds_weather_short' );
@@ -105,20 +106,26 @@ function machouinard_adds_weather_short( $atts ) {
 	extract( shortcode_atts( array(
 		'apts' => 'KORD',
 		'hours' => '3',
-		'show_taf' => '1'               
+		'show_taf' => '1',
+		'title' => null               
 		), $atts ) );
 
 	$icao = machouinard_adds_weather_widget::clean_icao( $apts );
 	$hours = intval( $hours );
 	$show_taf = intval( $show_taf );
+	$title = sanitize_text_field( $title );
 	$data = '';
+
+	if( $title == null ) {
+		$title = sprintf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+	}
 
 	$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
 	arsort( $wx);
 
 	if( !empty( $wx[ 'metar' ] ) ) {
 		$data .= '<p><strong>';
-		$data .= sprintf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+		$data .= $title;
 		$data .= "</strong></p>";
 		foreach( $wx as $type=>$info ) {
 
@@ -128,7 +135,7 @@ function machouinard_adds_weather_short( $atts ) {
 
 			if( $type == "taf" && !$show_taf ) continue;
 			if( is_array( $info ) ) {
-				foreach ( $info as $key => $value ) {
+				foreach ( $info as $value ) {
 					if( !empty( $value ) ) {
 						$data .=  $value . "<br />\n";
 					}
@@ -154,12 +161,16 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 	function form( $instance ) {
 		// displays the widget form in the admin dashboard
-		$defaults = array( 'icao' => 'KZZV', 'hours' => 2, 'show_taf' => true );
+		$defaults = array( 'icao' => 'KZZV', 'hours' => 2, 'show_taf' => true, 'title' => null );
 		$instance = wp_parse_args(  (array) $instance, $defaults );
 		$icao = $instance[ 'icao' ];
 		$hours = $instance[ 'hours' ];
 		$show_taf = $instance[ 'show_taf' ];
+		$title = $instance[ 'title' ];
 		?>
+		<label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e('Title', 'machouinard_adds' ); ?></label>
+		<input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+
 		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (max 4)', 'machouinard_adds' ); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
@@ -181,8 +192,9 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		// process widget options to save
 		$instance = $old_instance;
 		$instance[ 'icao' ] = $this->clean_icao( $new_instance[ 'icao' ] );
-		$instance[ 'hours' ] = strip_tags( $new_instance[ 'hours' ] );
-		$instance[ 'show_taf' ] = strip_tags( $new_instance[ 'show_taf' ] );
+		$instance[ 'hours' ] = intval( $new_instance[ 'hours' ] );
+		$instance[ 'show_taf' ] = intval( $new_instance[ 'show_taf' ] );
+		$instance[ 'title' ] = sanitize_text_field( $new_instance[ 'title' ] );
 		return $instance;
 	}
 
@@ -199,6 +211,8 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$icao = empty( $instance[ 'icao' ] ) ? '' : strtoupper( $instance[ 'icao' ] );
 		$hours = empty( $instance[ 'hours' ] ) ? '' : $instance[ 'hours' ];
 		$show_taf = isset( $instance[ 'show_taf' ] ) ? $instance[ 'show_taf' ] : false;
+		$title = empty( $instance[ 'title' ] ) ? sprintf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance[ 'title' ];
+
 
 		$wx = $this->get_metar( $icao, $hours );
 		arsort( $wx );
@@ -207,7 +221,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 		if( !empty( $wx[ 'metar' ] ) ) {
 			echo '<p><strong>';
-			printf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+			echo $title;
 			echo "</strong></p>";
 			foreach( $wx as $type=>$info ) {
 
@@ -217,7 +231,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 				
 				if( $type == "taf" && !$show_taf ) continue;
 				if( is_array( $info ) ) {
-					foreach ( $info as $key => $value ) {
+					foreach ( $info as $value ) {
 						if( !empty( $value ) ) {
 							echo  $value . "<br />\n";
 						}
