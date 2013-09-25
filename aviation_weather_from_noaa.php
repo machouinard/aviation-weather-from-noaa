@@ -118,7 +118,7 @@ function machouinard_adds_weather_short( $atts ) {
 
 	if( !empty( $wx[ 'metar' ] ) ) {
 		$data .= '<p><strong>';
-		$data .= sprintf( _n('All available data for %s in the past hour', 'All available data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+		$data .= sprintf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 		$data .= "</strong></p>";
 		foreach( $wx as $type=>$info ) {
 
@@ -207,7 +207,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 		if( !empty( $wx[ 'metar' ] ) ) {
 			echo '<p><strong>';
-			printf( _n('All available data for %s in the past hour', 'All available data for %s in the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+			printf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 			echo "</strong></p>";
 			foreach( $wx as $type=>$info ) {
 
