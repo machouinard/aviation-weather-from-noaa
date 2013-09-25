@@ -20,7 +20,7 @@ Select up to 4 ICAOs.
 
 = Manual Installation =
 
-1. Upload the entire `/noaa-adds-weather` directory to the `/wp-content/plugins/` directory.
+1. Upload the entire `/aviation-weather-from-noaa` directory to the `/wp-content/plugins/` directory.
 2. Activate Aviation Weather from NOAA through the 'Plugins' menu in WordPress.
 
 == Frequently Asked Questions ==
