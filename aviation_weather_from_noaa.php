@@ -73,10 +73,10 @@ register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 
 // Wireup actions
 // For now, only using widget and shortcode
-// 
+//
 // add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
-add_shortcode( 'adds_weather', 'machouinard_adds_weather_short' );
+add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
 // Wireup filters
 
 
@@ -101,29 +101,42 @@ function machouinard_adds_register_widget() {
 }
 
 // Wireup shortcodes
-// 
-function machouinard_adds_weather_short( $atts ) {
+//
+function machouinard_adds_weather_shortcode( $atts ) {
 	extract( shortcode_atts( array(
 		'apts' => 'KORD',
-		'hours' => '3',
+		'hours' => '2',
 		'show_taf' => '1',
-		'title' => null               
-		), $atts ) );
+		'show_pireps' => '1',
+		'radial_dist' => '30',
+		'title' => null
+		), $atts, 'adds_weather' ) );
 
 	$icao = machouinard_adds_weather_widget::clean_icao( $apts );
 	$hours = intval( $hours );
 	$show_taf = intval( $show_taf );
+	$show_pireps = intval( $show_pireps );
+	$radial_dist = intval( $radial_dist );
 	$title = sanitize_text_field( $title );
+
 	$data = '';
 
 	if( $title == null ) {
-		$title = sprintf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+		$title = sprintf( _n('Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 	}
 
 	$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
-	arsort( $wx);
 
-	if( !empty( $wx[ 'metar' ] ) ) {
+	$icaos = preg_split( '~,\s~', $icao );
+
+	foreach( $icaos as $apt ) {
+		$pireps[] = machouinard_adds_weather_widget::get_pireps( $apt, $radial_dist );
+	}
+	// echo '<pre>';
+	// print_r( $pireps );
+	// echo '</pre>';
+	// die('149');
+	if( ! empty( $wx['metar'] ) ) {
 		$data .= '<p><strong>';
 		$data .= $title;
 		$data .= "</strong></p>";
@@ -134,15 +147,31 @@ function machouinard_adds_weather_short( $atts ) {
 			}
 
 			if( $type == "taf" && !$show_taf ) continue;
+
 			if( is_array( $info ) ) {
 				foreach ( $info as $value ) {
-					if( !empty( $value ) ) {
+					if( ! empty( $value ) ) {
 						$data .=  $value . "<br />\n";
 					}
 				}
 			} else {
 				$data .= $info . "<br />\n";
 			}
+		}
+	}
+
+// echo '<pre>';
+// print_r($pireps);
+// echo '</pre>';
+// die('166');
+	if( ! empty( $pireps[0] ) && $show_pireps ) {
+				// echo '<pre>';
+				// print_r( $pireps );
+				// echo '</pre>';
+				// die('174');
+		$data .= '<strong>PIREPS ' . $radial_dist . 'sm</strong><br />';
+		foreach( $pireps[0] as $pirep ) {
+			$data .= $pirep . '<br />';
 		}
 	}
 
@@ -161,17 +190,19 @@ class machouinard_adds_weather_widget extends WP_Widget {
 
 	function form( $instance ) {
 		// displays the widget form in the admin dashboard
-		$defaults = array( 'icao' => 'KZZV', 'hours' => 2, 'show_taf' => true, 'title' => null );
+		$defaults = array( 'icao' => 'KZZV', 'hours' => 2, 'show_taf' => true, 'show_pireps' => true, 'radial_dist' => '30', 'title' => null );
 		$instance = wp_parse_args(  (array) $instance, $defaults );
-		$icao = $instance[ 'icao' ];
-		$hours = $instance[ 'hours' ];
-		$show_taf = $instance[ 'show_taf' ];
-		$title = $instance[ 'title' ];
+		$icao = $instance['icao'];
+		$hours = $instance['hours'];
+		$show_taf = $instance['show_taf'];
+		$show_pireps = $instance['show_pireps'];
+		$radial_dist = $instance['radial_dist'];
+		$title = $instance['title'];
 		?>
 		<label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e('Title', 'machouinard_adds' ); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 
-		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO (max 4)', 'machouinard_adds' ); ?></label>
+		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO', 'machouinard_adds' ); ?></label>
 		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours' ); ?>" class="widefat">
@@ -184,17 +215,28 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		</select>
 		<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds' ); ?></label>
 		<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  />
-
+		<label for="<?php echo $this->get_field_id( 'show_pireps' ); ?>"><?php _e('Display PIREPS?', 'machouinard_adds' ); ?></label>
+		<input id="<?php echo $this->get_field_id( 'show_pireps' ); ?>" name="<?php echo $this->get_field_name( 'show_pireps' ); ?>" type="checkbox" value="1" <?php checked( true, $show_pireps ); ?> class="checkbox"  />
+		<label for="<?php echo $this->get_field_name( 'radial_dist' ); ?>">Radial Distance</label>
+		<select name="<?php echo $this->get_field_name( 'radial_dist' ); ?>" id="<?php echo $this->get_field_id('radial_dist' ); ?>" class="widefat">
+			<?php
+			for( $x = 10; $x < 210; $x = $x + 10) {
+				echo '<option value="' . $x . '" id="' . $x . '"', $radial_dist == $x ? ' selected="selected"' : '', '>', $x, '</option>';
+			}
+			?>
+		</select>
 		<?php
 	}
 
 	function update ( $new_instance, $old_instance ) {
 		// process widget options to save
 		$instance = $old_instance;
-		$instance[ 'icao' ] = $this->clean_icao( $new_instance[ 'icao' ] );
-		$instance[ 'hours' ] = intval( $new_instance[ 'hours' ] );
-		$instance[ 'show_taf' ] = intval( $new_instance[ 'show_taf' ] );
-		$instance[ 'title' ] = sanitize_text_field( $new_instance[ 'title' ] );
+		$instance['icao'] = $this->clean_icao( $new_instance['icao'] );
+		$instance['hours'] = intval( $new_instance['hours'] );
+		$instance['show_taf'] = intval( $new_instance['show_taf'] );
+		$instance['show_pireps'] = intval( $new_instance['show_pireps' ] );
+		$instance['radial_dist'] = intval( $new_instance['radial_dist'] );
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 		return $instance;
 	}
 
@@ -202,24 +244,41 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$ptrn = '~[-\s,.;:\/+]+~';
 		$icao = strtoupper(sanitize_text_field( $icao ) );
 		$icao_arr = preg_split( $ptrn, $icao);
-		$icao_arr = array_splice( $icao_arr, 0, 4);
+		$icao_arr = array_splice( $icao_arr, 0, 1); // Initially I was including up to 4, but I guess if more are needed, just use more widgets.
 		$icao_string = implode(', ', $icao_arr);
 		return $icao_string;
 	}
 
 	function widget ( $args, $instance ) {
+		// $this->get_pireps('KSFO');
 		$icao = empty( $instance[ 'icao' ] ) ? '' : strtoupper( $instance[ 'icao' ] );
 		$hours = empty( $instance[ 'hours' ] ) ? '' : $instance[ 'hours' ];
+		$radial_dist = empty( $instance[ 'radial_dist' ] ) ? '' : $instance[ 'radial_dist' ];
 		$show_taf = isset( $instance[ 'show_taf' ] ) ? $instance[ 'show_taf' ] : false;
-		$title = empty( $instance[ 'title' ] ) ? sprintf( _n('All available data for %s from the past hour', 'All available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance[ 'title' ];
-
+		$show_pireps = isset( $instance[ 'show_pireps' ] ) ? $instance[ 'show_pireps' ] : false;
+		$title = empty( $instance[ 'title' ] ) ? sprintf( _n('Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance[ 'title' ];
+		$hours = apply_filters( 'hours_before_now', $hours );
+		$radial_dist = apply_filters( 'radial_dist', $radial_dist );
+		$title = apply_filters( 'machouinard_title' , $title );
 
 		$wx = $this->get_metar( $icao, $hours );
-		arsort( $wx );
+		// echo $icao;die('<br />234');
+		$icaos = preg_split( '~,\s~', $icao );
+
+		foreach( $icaos as $apt ) {
+			$pireps[] = $this->get_pireps( $apt, $radial_dist );
+		}
+
+		// arsort( $wx );
 		extract( $args );
 		echo $before_widget;
 
-		if( !empty( $wx[ 'metar' ] ) ) {
+// echo '<pre>';
+// print_r( $wx );
+// echo '</pre>';
+// die('279');
+
+		if( ! empty( $wx[ 'metar' ] ) ) {
 			echo '<p><strong>';
 			echo $title;
 			echo "</strong></p>";
@@ -228,7 +287,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 				if( $type == 'taf' && $show_taf || $type == 'metar' ) {
 					echo '<strong>' . strtoupper( $type ) . "</strong><br />";
 				}
-				
+
 				if( $type == "taf" && !$show_taf ) continue;
 				if( is_array( $info ) ) {
 					foreach ( $info as $value ) {
@@ -241,31 +300,53 @@ class machouinard_adds_weather_widget extends WP_Widget {
 				}
 			}
 		}
+		if( ! empty( $pireps[0] ) && $show_pireps ) {
+			echo '<strong>PIREPS ' . $radial_dist . 'sm</strong><br />';
+			foreach( $pireps[0] as $pirep ) {
+				echo $pirep . '<br />';
+			}
+		}
 		echo $after_widget;
 	}
 
 	static function get_metar( $icao, $hours ) {
 		$metar_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 		$tafs_url = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-		$xml[ 'metar' ] = simplexml_load_file( $metar_url );
-		$xml[ 'taf' ] = simplexml_load_file( $tafs_url );
-		for( $i = 1; $i <= count( $xml[ 'taf' ] ); $i++) {
-			$wx[ 'taf' ][$i] = $xml[ 'taf' ]->data->TAF[$i]->raw_text;
+		$xml['metar'] = simplexml_load_file( $metar_url );
+		$xml['taf'] = simplexml_load_file( $tafs_url );
+
+		for( $i = 0; $i < count( $xml['metar'] ); $i++) {
+			$wx['metar'][ $i ] = $xml['metar']->data->METAR[ $i ]->raw_text;
+		}
+		for( $i = 0; $i < count( $xml['taf'] ); $i++) {
+			$wx['taf'][ $i ] = $xml['taf']->data->TAF[ $i ]->raw_text;
 		}
 
-		for( $i = 1; $i <= count( $xml[ 'metar' ] ); $i++) {
-			$wx[ 'metar' ][$i] = $xml[ 'metar' ]->data->METAR[$i]->raw_text;
-		}
-		
 		return $wx;
+	}
+
+	static function get_pireps( $icao, $radial_dist ) {
+		$info = self::get_apt_info( $icao );
+		$pirep_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance={$radial_dist};{$info['lon']},{$info['lat']}&hoursBeforeNow=3";
+		// echo $pirep_url . '<br />';// TESTING
+		$xml =  simplexml_load_file( $pirep_url );
+		// print_r($xml);die();
+		for( $i = 0; $i < count( $xml->data->AircraftReport ); $i++ ) {
+			$pireps[] = $xml->data->AircraftReport[$i]->raw_text;
+		}
+// echo '<pre>';
+// print_r( $pireps );
+// echo '</pre>';
+// die('337');
+		return $pireps;
 	}
 
 	public static function get_apt_info( $icao ) {
 		$url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
 		$xml = simplexml_load_file( $url );
-		$info[ 'station_id' ] = $xml->data->Station->station_id;
-		$info[ 'lat' ] = $xml->data->Station->latitude;
-		$info[ 'lon' ] = $xml->data->Station->longitude;
+		$info['station_id'] = $xml->data->Station->station_id;
+		$info['lat'] = $xml->data->Station->latitude;
+		$info['lon'] = $xml->data->Station->longitude;
 
 		return $info;
 	}

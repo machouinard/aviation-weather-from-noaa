@@ -1,7 +1,7 @@
 === Aviation Weather from NOAA ===
 Contributors:      10up
 Donate link:       http://plugins.machouinard.com/adds
-Tags: 
+Tags:
 Requires at least: 3.6.1
 Tested up to:      3.6.1
 Stable tag:        0.2.4
