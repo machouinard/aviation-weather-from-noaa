@@ -269,7 +269,6 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		foreach( $icaos as $apt ) {
 			$pireps[] = $this->get_pireps( $apt, $radial_dist );
 		}
-
 		extract( $args );
 		echo $before_widget;
 
