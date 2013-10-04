@@ -315,12 +315,13 @@ static function get_metar( $icao, $hours ) {
 	$xml['metar'] = simplexml_load_file( $metar_url );
 	$xml['taf'] = simplexml_load_file( $tafs_url );
 
+	// Store the METAR for display
 	for( $i = 0; $i < count( $xml['metar'] ); $i++) {
 		$wx['metar'][ $i ] = $xml['metar']->data->METAR[ $i ]->raw_text;
 	}
-	for( $i = 0; $i < count( $xml['taf'] ); $i++) {
-		$wx['taf'][ $i ] = $xml['taf']->data->TAF[ $i ]->raw_text;
-	}
+
+	// Only store the most recent forecast
+	$wx['taf'][ 0 ] = $xml['taf']->data->TAF[ 0 ]->raw_text;
 
 	return $wx;
 }
