@@ -1,10 +1,9 @@
 # Aviation Weather from NOAA #
-**Contributors:**      10up
 **Donate link:**       http://plugins.machouinard.com/adds
 Tags:
 **Requires at least:** 3.6.1
-**Tested up to:**      3.6.1
-**Stable tag:**        0.2.5
+**Tested up to:**      3.8
+**Stable tag:**        0.2.6
 **License:**           GPLv2 or later
 **License URI:**       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,10 +11,14 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
 ## Description ##
 Display METAR & TAF info from NOAA's Aviation Digital Data Service.
-Use widget in sidebars/footer or shortcode in posts/pages.
 Display up to 6 hours before now.
-Display PIREPS in 200sm or less radius
+PIREPs up to 200sm
 
+Shortcode Usage:
+( shown with defaults )
+[noaa-adds apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title=null]
+
+Uses the WordPress Transients API.  Data is cached for 15 minutes.  Data is flushed when widget is updated.
 ## Installation ##
 
 ### Manual Installation ###
@@ -30,10 +33,8 @@ Display PIREPS in 200sm or less radius
 
 
 ## Changelog ##
-### 0.2.5 ###
-* Added PIREPS
-* Added PIREP radial distance
-* Only store most recent TAF
+### 0.2.6 ###
+* Added Transients API so we don't hit NOAA with every page load
 
 ### 0.2.4 ###
 * Added custom title to widget + shortcode

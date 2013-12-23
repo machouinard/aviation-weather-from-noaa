@@ -3,7 +3,7 @@
  * Plugin Name: Aviation Weather from NOAA
  * Plugin URI:  http://plugins.machouinard.com/adds
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:     0.2.5
+ * Version:     0.2.6
  * Author:      Mark Chouinard
  * Author URI:  http://machouinard.com
  * License:     GPLv2+
@@ -214,7 +214,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		<label for="<?php echo $this->get_field_id( 'show_pireps' ); ?>"><?php _e('Display PIREPS?', 'machouinard_adds' ); ?></label>
 		<input id="<?php echo $this->get_field_id( 'show_pireps' ); ?>" name="<?php echo $this->get_field_name( 'show_pireps' ); ?>" type="checkbox" value="1" <?php checked( true, $show_pireps ); ?> class="checkbox"  />
 		<label for="<?php echo $this->get_field_id( 'show_taf' ); ?>"><?php _e('Display TAF?', 'machouinard_adds' ); ?></label>
-		<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  />
+		<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>" name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox" value="1" <?php checked( true, $show_taf ); ?> class="checkbox"  /><br />
 		<label for="<?php echo $this->get_field_name( 'radial_dist' ); ?>">Radial Distance</label>
 		<select name="<?php echo $this->get_field_name( 'radial_dist' ); ?>" id="<?php echo $this->get_field_id('radial_dist' ); ?>" class="widefat">
 			<?php
@@ -234,6 +234,12 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$instance['show_pireps'] = intval( $new_instance['show_pireps' ] );
 		$instance['radial_dist'] = intval( $new_instance['radial_dist'] );
 		$instance['title']       = sanitize_text_field( $new_instance['title'] );
+		if( !$this->get_apt_info( $instance['icao'] ) ) {
+			$instance['icao'] = 'Please enter valid ICAO';
+		}
+		// Delete transient data
+		delete_transient( 'noaa_wx' );
+		delete_transient( 'noaa_pireps' );
 		return $instance;
 	}
 	/**
@@ -307,19 +313,26 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	 * @return array        metar and taf arrays containing weather data
 	 */
 	static function get_metar( $icao, $hours ) {
-		$metar_url    = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-		$tafs_url     = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-		$xml['metar'] = simplexml_load_file( $metar_url );
-		$xml['taf']   = simplexml_load_file( $tafs_url );
 
-		// Store the METAR for display
-		for( $i = 0; $i < count( $xml['metar'] ); $i++) {
-			$wx['metar'][ $i ] = $xml['metar']->data->METAR[ $i ]->raw_text;
+		if( !get_transient( 'noaa_wx_' . $icao ) ) {
+			// echo 'no transient';die( 'line 315' );
+			$metar_url    = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
+			$tafs_url     = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
+			$xml['metar'] = simplexml_load_file( $metar_url );
+			$xml['taf']   = simplexml_load_file( $tafs_url );
+
+			// Store the METAR for display
+			$count = count( $xml['metar']->data->METAR );
+			for( $i = 0; $i < $count; $i++) {
+				$wx['metar'][ $i ] = (string)$xml['metar']->data->METAR[ $i ]->raw_text;
+			}
+			// Only store the most recent forecast
+			$wx['taf'][ 0 ] = (string)$xml['taf']->data->TAF[ 0 ]->raw_text;
+			// save wx data for 15 minutes
+			set_transient( 'noaa_wx_' . $icao, $wx, 60 * 15 );
 		}
 
-		// Only store the most recent forecast
-		$wx['taf'][ 0 ] = $xml['taf']->data->TAF[ 0 ]->raw_text;
-
+		$wx = get_transient( 'noaa_wx_' . $icao );
 		return $wx;
 	}
 	/**
@@ -329,14 +342,19 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	 * @return array               pirep data
 	 */
 	static function get_pireps( $icao, $radial_dist ) {
-		$info      = self::get_apt_info( $icao );
-		$pirep_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance={$radial_dist};{$info['lon']},{$info['lat']}&hoursBeforeNow=3";
-		$xml       =  simplexml_load_file( $pirep_url );
-			// print_r($xml);die();
-		for( $i = 0; $i < count( $xml->data->AircraftReport ); $i++ ) {
-			$pireps[] = $xml->data->AircraftReport[$i]->raw_text;
+		if( !get_transient( 'noaa_pireps_' . $icao ) ) {
+			$info      = self::get_apt_info( $icao );
+			$pirep_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance={$radial_dist};{$info['lon']},{$info['lat']}&hoursBeforeNow=3";
+			$xml       =  simplexml_load_file( $pirep_url );
+			$pireps = array();
+			for( $i = 0; $i < count( $xml->data->AircraftReport ); $i++ ) {
+				$pireps[] = (string)$xml->data->AircraftReport[$i]->raw_text;
+			}
+			// save pirep data for 15 minutes
+			set_transient( 'noaa_pireps_' . $icao, $pireps, 60 * 15 );
 		}
 
+		$pireps = get_transient( 'noaa_pireps_' . $icao );
 		return $pireps;
 	}
 	/**
@@ -347,9 +365,13 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	public static function get_apt_info( $icao ) {
 		$url                = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
 		$xml                = simplexml_load_file( $url );
-		$info['station_id'] = $xml->data->Station->station_id;
-		$info['lat']        = $xml->data->Station->latitude;
-		$info['lon']        = $xml->data->Station->longitude;
+		if( isset( $xml->data->Station ) ) {
+			$info['station_id'] = $xml->data->Station->station_id;
+			$info['lat']        = $xml->data->Station->latitude;
+			$info['lon']        = $xml->data->Station->longitude;
+		} else {
+			$info = false;
+		}
 
 		return $info;
 	}
