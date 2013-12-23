@@ -1,11 +1,10 @@
 <?php
 /**
  * Plugin Name: Aviation Weather from NOAA
- * Plugin URI:  http://plugins.machouinard.com/adds
+ * Plugin URI:  https://github.com/machouinard/NOAA-ADDS
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:     0.2.6
+ * Version:     0.2.7
  * Author:      Mark Chouinard
- * Author URI:  http://machouinard.com
  * License:     GPLv2+
  * Text Domain: machouinard_adds
  * Domain Path: /languages
@@ -36,7 +35,7 @@
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.2.5' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.2.7' );
 define( 'MACHOUINARD_ADDS_URL',     plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH',    dirname( __FILE__ ) . '/' );
 
@@ -111,7 +110,7 @@ function machouinard_adds_register_widget() {
  */
 function machouinard_adds_weather_shortcode( $atts ) {
 	extract( shortcode_atts( array(
-		'apts'        => 'KORD',
+		'apts'        => 'KSMF',
 		'hours'       => '2',
 		'show_taf'    => '1',
 		'show_pireps' => '1',
@@ -315,7 +314,6 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	static function get_metar( $icao, $hours ) {
 
 		if( !get_transient( 'noaa_wx_' . $icao ) ) {
-			// echo 'no transient';die( 'line 315' );
 			$metar_url    = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 			$tafs_url     = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 			$xml['metar'] = simplexml_load_file( $metar_url );
