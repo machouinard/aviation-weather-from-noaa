@@ -1,5 +1,4 @@
 # Aviation Weather from NOAA #
-**Donate link:**       http://plugins.machouinard.com/adds
 Tags:
 **Requires at least:** 3.6.1
 **Tested up to:**      3.8
