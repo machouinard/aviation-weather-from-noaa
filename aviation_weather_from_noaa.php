@@ -5,6 +5,7 @@
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
  * Version:     0.2.7
  * Author:      Mark Chouinard
+ * Author URI:	http://machouinard.com
  * License:     GPLv2+
  * Text Domain: machouinard_adds
  * Domain Path: /languages
