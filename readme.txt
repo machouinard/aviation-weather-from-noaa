@@ -2,7 +2,7 @@
 Contributors:		machouinard
 Tags: weather, noaa, aviation
 Requires at least: 3.6.1
-Tested up to:      3.8
+Tested up to:      3.8.1
 Stable tag:        0.2.7
 License:           GPLv2 or later
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,9 +18,9 @@ Shortcode Usage:
 ( shown with defaults )
 [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title=null]
 
-Uses the WordPress Transients API.  Data is cached for 15 minutes.  Data is flushed when widget is updated.
+Data is cached for 15 minutes using the WordPress Transients API.
 
-Code available at [GitHub](https://github.com/machouinard/NOAA-ADDS/ "GitHub Repo")
+Code available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 == Installation ==
 
 = Manual Installation =
@@ -28,18 +28,14 @@ Code available at [GitHub](https://github.com/machouinard/NOAA-ADDS/ "GitHub Rep
 1. Upload the entire `/aviation-weather-from-noaa` directory to the `/wp-content/plugins/` directory.
 2. Activate Aviation Weather from NOAA through the 'Plugins' menu in WordPress.
 
-== Frequently Asked Questions ==
-
-
-== Screenshots ==
-
 
 == Changelog ==
-== 0.2.7 ==
+
+= 0.2.7 =
 * Fixed readme errors
 * Added GitHub link
 
-== 0.2.6 ==
+= 0.2.6 =
 * Added transients API so we don't hit NOAA with every page load
 
 = 0.2.4 =
@@ -52,7 +48,3 @@ Code available at [GitHub](https://github.com/machouinard/NOAA-ADDS/ "GitHub Rep
 = 0.1.0 =
 * First release
 
-== Upgrade Notice ==
-
-= 0.1.0 =
-First Release
