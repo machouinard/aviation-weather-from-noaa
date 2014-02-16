@@ -317,8 +317,16 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		if( !get_transient( 'noaa_wx_' . $icao ) ) {
 			$metar_url    = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 			$tafs_url     = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-			$xml['metar'] = simplexml_load_file( $metar_url );
-			$xml['taf']   = simplexml_load_file( $tafs_url );
+			
+			$curl = curl_init($metar_url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$data = curl_exec($curl);
+			$xml['metar'] = simplexml_load_string($data);
+
+			$curl = curl_init($tafs_url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$data = curl_exec($curl);
+			$xml['taf'] = simplexml_load_string($data);
 
 			// Store the METAR for display
 			$count = count( $xml['metar']->data->METAR );
@@ -344,7 +352,10 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		if( !get_transient( 'noaa_pireps_' . $icao ) ) {
 			$info      = self::get_apt_info( $icao );
 			$pirep_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance={$radial_dist};{$info['lon']},{$info['lat']}&hoursBeforeNow=3";
-			$xml       =  simplexml_load_file( $pirep_url );
+			$curl = curl_init($pirep_url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$data = curl_exec($curl);
+			$xml = simplexml_load_string($data);
 			$pireps = array();
 			for( $i = 0; $i < count( $xml->data->AircraftReport ); $i++ ) {
 				$pireps[] = (string)$xml->data->AircraftReport[$i]->raw_text;
@@ -363,7 +374,10 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	 */
 	public static function get_apt_info( $icao ) {
 		$url                = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
-		$xml                = simplexml_load_file( $url );
+		$curl = curl_init($url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$data = curl_exec($curl);
+			$xml = simplexml_load_string($data);
 		if( isset( $xml->data->Station ) ) {
 			$info['station_id'] = $xml->data->Station->station_id;
 			$info['lat']        = $xml->data->Station->latitude;
