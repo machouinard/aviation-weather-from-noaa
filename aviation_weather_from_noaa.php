@@ -344,7 +344,10 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		if( !get_transient( 'noaa_pireps_' . $icao ) ) {
 			$info      = self::get_apt_info( $icao );
 			$pirep_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance={$radial_dist};{$info['lon']},{$info['lat']}&hoursBeforeNow=3";
-			$xml       =  simplexml_load_file( $pirep_url );
+			$curl = curl_init($pirep_url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$data = curl_exec($curl);
+			$xml = simplexml_load_string($data);
 			$pireps = array();
 			for( $i = 0; $i < count( $xml->data->AircraftReport ); $i++ ) {
 				$pireps[] = (string)$xml->data->AircraftReport[$i]->raw_text;
