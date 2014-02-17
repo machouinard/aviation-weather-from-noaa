@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Aviation Weather from NOAA
- * Plugin URI:  https://github.com/machouinard/NOAA-ADDS
+ * Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
  * Version:     0.3.0
  * Author:      Mark Chouinard
