@@ -3,7 +3,7 @@
  * Plugin Name: Aviation Weather from NOAA
  * Plugin URI:  https://github.com/machouinard/NOAA-ADDS
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:     0.2.8
+ * Version:     0.3.0
  * Author:      Mark Chouinard
  * Author URI:	http://machouinard.com
  * License:     GPLv2+
@@ -36,7 +36,7 @@
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.2.8' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.3.0' );
 define( 'MACHOUINARD_ADDS_URL',     plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH',    dirname( __FILE__ ) . '/' );
 
@@ -72,9 +72,7 @@ function machouinard_adds_deactivate() {
 register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 
 // Wireup actions
-// For now, only using widget and shortcode
-//
-// add_action( 'init', 'machouinard_adds_init' );
+add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
 add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
 // Wireup filters
@@ -105,9 +103,10 @@ function machouinard_adds_register_widget() {
 
 
 /**
- * [machouinard_adds_weather_shortcode description]
- * @param  array $atts defaults
- * @return string       Weather info to display
+ * Shortcode Usage: ( shown with defaults )
+ * [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title=null]
+ * @param  array  $atts 	defaults
+ * @return string $data     Weather info to display
  */
 function machouinard_adds_weather_shortcode( $atts ) {
 	extract( shortcode_atts( array(
@@ -243,7 +242,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		return $instance;
 	}
 	/**
-	 * [clean_icao description]
+	 * Leftover from multiple ICAO option
 	 * @param  string $icao string of airport identifiers
 	 * @return string       clean string of airport identifiers
 	 */
@@ -307,26 +306,20 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		echo $after_widget;
 	}
 	/**
-	 * [get_metar description]
+	 * Attempt to get METAR for selected ICAO in timeframe
 	 * @param  string $icao  string of airport identifieers
-	 * @param  int $hours number of hours history to include
-	 * @return array        metar and taf arrays containing weather data
+	 * @param  int    $hours number of hours history to include
+	 * @return array  $wx     metar and taf arrays containing weather data
 	 */
 	static function get_metar( $icao, $hours ) {
 
 		if( !get_transient( 'noaa_wx_' . $icao ) ) {
 			$metar_url    = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
 			$tafs_url     = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString={$icao}&hoursBeforeNow={$hours}";
-			
-			$curl = curl_init($metar_url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			$data = curl_exec($curl);
-			$xml['metar'] = simplexml_load_string($data);
 
-			$curl = curl_init($tafs_url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			$data = curl_exec($curl);
-			$xml['taf'] = simplexml_load_string($data);
+			$xml['metar'] = self::machoui_LoadXML( $metar_url );
+
+			$xml['taf'] = self::machoui_LoadXML( $tafs_url );
 
 			// Store the METAR for display
 			$count = count( $xml['metar']->data->METAR );
@@ -343,19 +336,16 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		return $wx;
 	}
 	/**
-	 * [get_pireps description]
+	 * Attempt to retrieve PIREPS for selected ICAO + distance
 	 * @param  string $icao        Airport Identifier
 	 * @param  int $radial_dist    include pireps this distance from airport
-	 * @return array               pirep data
+	 * @return array    $pireps           pirep data
 	 */
 	static function get_pireps( $icao, $radial_dist ) {
 		if( !get_transient( 'noaa_pireps_' . $icao ) ) {
 			$info      = self::get_apt_info( $icao );
 			$pirep_url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance={$radial_dist};{$info['lon']},{$info['lat']}&hoursBeforeNow=3";
-			$curl = curl_init($pirep_url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			$data = curl_exec($curl);
-			$xml = simplexml_load_string($data);
+			$xml = self::machoui_LoadXML( $pirep_url );
 			$pireps = array();
 			for( $i = 0; $i < count( $xml->data->AircraftReport ); $i++ ) {
 				$pireps[] = (string)$xml->data->AircraftReport[$i]->raw_text;
@@ -368,16 +358,14 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		return $pireps;
 	}
 	/**
-	 * [get_apt_info description]
-	 * @param  string $icao Airport Identifier
-	 * @return array       array containing lat & lon for provided airport
+	 * Attempt to validate ICAO
+	 * @param  string $icao 	Airport Identifier
+	 * @return array  $info | false     array containing lat & lon for provided airport or false if ICAO is not alpha-num or 4 chars
 	 */
 	public static function get_apt_info( $icao ) {
-		$url                = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
-		$curl = curl_init($url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			$data = curl_exec($curl);
-			$xml = simplexml_load_string($data);
+		if( !preg_match('~^[A-Za-z0-9]{4,4}$~', $icao) ) return false;
+		$url = "http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString={$icao}";
+		$xml = self::machoui_LoadXML( $url );
 		if( isset( $xml->data->Station ) ) {
 			$info['station_id'] = $xml->data->Station->station_id;
 			$info['lat']        = $xml->data->Station->latitude;
@@ -387,6 +375,34 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		}
 
 		return $info;
+	}
+
+	/**
+	 * Attempt to load NOAA XML
+	 * @param  string $url aviationweather.gov url
+	 * @return SimpleXMLElement object
+	 */
+	static function machoui_LoadXML($url) {
+		if (ini_get('allow_url_fopen') == true) {
+			return self::_load_fopen($url);
+		} else if (function_exists('curl_init')) {
+			return self::_load_curl($url);
+		} else {
+      // Enable 'allow_url_fopen' or install cURL.
+			throw new Exception("Can't load data.");
+		}
+	}
+
+	private static function _load_fopen($url) {
+		return simplexml_load_file($url);
+	}
+
+	private static function _load_curl($url) {
+		$curl = curl_init($url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($curl);
+		curl_close($curl);
+		return simplexml_load_string($result);
 	}
 
 }
