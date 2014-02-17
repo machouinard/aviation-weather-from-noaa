@@ -104,7 +104,7 @@ function machouinard_adds_register_widget() {
 
 /**
  * Shortcode Usage: ( shown with defaults )
- * [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title=null]
+ * [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title='']
  * @param  array  $atts 	defaults
  * @return string $data     Weather info to display
  */
