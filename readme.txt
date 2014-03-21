@@ -1,8 +1,8 @@
 === Aviation Weather from NOAA ===
 Contributors:		machouinard
-Tags: 				weather, noaa, aviation, metar
+Tags: 				weather, noaa, aviation, metar, pireps
 Requires at least: 	3.8.1
-Tested up to:      	3.8.1
+Tested up to:      	3.9-beta2
 Stable tag:        	0.3.0
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
@@ -10,16 +10,17 @@ License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
 Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
 == Description ==
-* Display METAR & TAF info from NOAA's Aviation Digital Data Service.
-* Display up to 6 hours before now.
+* Display METAR & TAF info from NOAA's Aviation Digital Data Service
+* Display up to 6 hours before now
 * PIREPs up to 200sm
+* Create multiple instances using either widget or shortcode
 
 = Shortcode Usage: ( shown with defaults ) =
     [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title='']
 
 Data is cached for 15 minutes using the WordPress Transients API.
 
-Code available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
+Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 == Installation ==
 
 = Manual Installation =
