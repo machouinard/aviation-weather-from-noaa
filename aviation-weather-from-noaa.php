@@ -1,14 +1,14 @@
 <?php
-/**
- * Plugin Name: Aviation Weather from NOAA
- * Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
- * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
-Version:     0.3.0
- * Author:      Mark Chouinard
- * Author URI:	http://machouinard.com
- * License:     GPLv2+
- * Text Domain: machouinard_adds
- * Domain Path: /languages
+/*
+Plugin Name: Aviation Weather from NOAA
+Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
+Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
+Version:     0.3.1
+Author:      Mark Chouinard
+Author URI:	 http://machouinard.com
+License:     GPLv2+
+Text Domain: machouinard_adds
+Domain Path: /languages
  */
 
 /**
@@ -36,7 +36,7 @@ Version:     0.3.0
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.3.0' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.3.1' );
 define( 'MACHOUINARD_ADDS_URL',     plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH',    dirname( __FILE__ ) . '/' );
 
@@ -119,10 +119,10 @@ function machouinard_adds_weather_shortcode( $atts ) {
 		), $atts, 'adds_weather' ) );
 
 	$icao        = machouinard_adds_weather_widget::clean_icao( $apts );
-	$hours       = intval( $hours );
-	$show_taf    = intval( $show_taf );
-	$show_pireps = intval( $show_pireps );
-	$radial_dist = intval( $radial_dist );
+	$hours       = absint( $hours );
+	$show_taf    = boolval( $show_taf );
+	$show_pireps = boolval( $show_pireps );
+	$radial_dist = absint( $radial_dist );
 	$title       = sanitize_text_field( $title );
 
 	$data        = '';
@@ -182,7 +182,7 @@ class machouinard_adds_weather_widget extends WP_Widget {
 			'classname'   => 'machouinard_adds_widget_class',
 			'description' => __( 'Displays METAR & other info from NOAA\'s Aviation Digital Data Service', 'machouinard_adds' )
 			);
-		$this->WP_Widget( 'machouinard_adds_weather_widget', 'ADDS Weather Info', $machouinard_options );
+		$this->WP_Widget( 'machouinard_adds_weather_widget', 'Aviation Weather Data', $machouinard_options );
 	}
 
 	function form( $instance ) {
@@ -196,10 +196,10 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$title       = $instance['title'];
 		?>
 		<label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e('Title', 'machouinard_adds' ); ?></label>
-		<input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		<input class="widefat" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" placeholder="Enter your optional custom title here" />
 
 		<label for="<?php echo $this->get_field_name( 'icao' ); ?>"><?php _e('ICAO', 'machouinard_adds' ); ?></label>
-		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" />
+		<input class="widefat" name="<?php echo $this->get_field_name( 'icao' ); ?>" type="text" value="<?php echo esc_attr( $icao ); ?>" placeholder="Please Enter a valid ICAO" />
 		<label for="<?php echo $this->get_field_name( 'hours' ); ?>">Hours before now</label>
 		<select name="<?php echo $this->get_field_name( 'hours' ); ?>" id="<?php echo $this->get_field_id('hours' ); ?>" class="widefat">
 
@@ -228,15 +228,15 @@ class machouinard_adds_weather_widget extends WP_Widget {
 	function update ( $new_instance, $old_instance ) {
 		$instance                = $old_instance;
 		$instance['icao']        = $this->clean_icao( $new_instance['icao'] );
-		$instance['hours']       = intval( $new_instance['hours'] );
-		$instance['show_taf']    = intval( $new_instance['show_taf'] );
-		$instance['show_pireps'] = intval( $new_instance['show_pireps' ] );
-		$instance['radial_dist'] = intval( $new_instance['radial_dist'] );
+		$instance['hours']       = absint( $new_instance['hours'] );
+		$instance['show_taf']    = boolval( $new_instance['show_taf'] );
+		$instance['show_pireps'] = boolval( $new_instance['show_pireps' ] );
+		$instance['radial_dist'] = absint( $new_instance['radial_dist'] );
 		$instance['title']       = sanitize_text_field( $new_instance['title'] );
 		if( !$this->get_apt_info( $instance['icao'] ) ) {
-			$instance['icao'] = 'Please enter valid ICAO';
+			$instance['icao'] = '';
 		}
-		// Delete transient data
+		// Delete transient data to force update
 		delete_transient( 'noaa_wx' );
 		delete_transient( 'noaa_pireps' );
 		return $instance;
@@ -259,8 +259,8 @@ class machouinard_adds_weather_widget extends WP_Widget {
 		$icao        = empty( $instance[ 'icao' ] ) ? '' : strtoupper( $instance[ 'icao' ] );
 		$hours       = empty( $instance[ 'hours' ] ) ? '' : $instance[ 'hours' ];
 		$radial_dist = empty( $instance[ 'radial_dist' ] ) ? '' : $instance[ 'radial_dist' ];
-		$show_taf    = isset( $instance[ 'show_taf' ] ) ? $instance[ 'show_taf' ] : false;
-		$show_pireps = isset( $instance[ 'show_pireps' ] ) ? $instance[ 'show_pireps' ] : false;
+		$show_taf    = boolval( $instance[ 'show_taf' ] ) ? $instance[ 'show_taf' ] : false;
+		$show_pireps = boolval( $instance[ 'show_pireps' ] ) ? $instance[ 'show_pireps' ] : false;
 		$title       = empty( $instance[ 'title' ] ) ? sprintf( _n('Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance[ 'title' ];
 		$hours       = apply_filters( 'hours_before_now', $hours );
 		$radial_dist = apply_filters( 'radial_dist', $radial_dist );
