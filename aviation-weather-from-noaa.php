@@ -125,7 +125,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 	wp_parse_args( $atts, $defaults );
 
 	$icao        = machouinard_adds_weather_widget::clean_icao( $atts['apts'] );
-	$hours       = intval( $atts['hours'] );
+	$hours       = $atts['hours'] <= 6 ? intval( $atts['hours'] ) : 6;
 	$show_taf    = intval( $atts['show_taf'] );
 	$show_pireps = intval( $atts['show_pireps'] );
 	$radial_dist = intval( $atts['radial_dist'] );
@@ -194,7 +194,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	}
 
 	function form( $instance ) {
-		$defaults    = array(
+		$defaults = array(
 			'icao'        => 'KZZV',
 			'hours'       => 2,
 			'show_taf'    => true,
@@ -202,7 +202,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			'radial_dist' => '30',
 			'title'       => null,
 		);
-		$instance    = wp_parse_args( $instance, $defaults );
+		$instance = wp_parse_args( $instance, $defaults );
 
 		$icao        = $instance['icao'];
 		$hours       = $instance['hours'];
@@ -239,7 +239,8 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		<input id="<?php echo $this->get_field_id( 'show_taf' ); ?>"
 		       name="<?php echo $this->get_field_name( 'show_taf' ); ?>" type="checkbox"
 		       value="1" <?php checked( true, $show_taf ); ?> class="checkbox"/><br/>
-		<label for="<?php echo $this->get_field_name( 'radial_dist' ); ?>"><?php _e( 'Radial Distance', 'machouinard_adds' ); ?></label>
+		<label
+			for="<?php echo $this->get_field_name( 'radial_dist' ); ?>"><?php _e( 'Radial Distance', 'machouinard_adds' ); ?></label>
 		<select name="<?php echo $this->get_field_name( 'radial_dist' ); ?>"
 		        id="<?php echo $this->get_field_id( 'radial_dist' ); ?>" class="widefat">
 			<?php
@@ -385,7 +386,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	 *
 	 * @param  string $icao Airport Identifier
 	 * @param  int $radial_dist include pireps this distance from airport
-	 * @param  int $hours   hours before now
+	 * @param  int $hours hours before now
 	 *
 	 * @return array    $pireps           pirep data
 	 */
