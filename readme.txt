@@ -32,7 +32,8 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 == Changelog ==
 
 = 0.3.1 =
-* Refactor per WordPress coding standards.
+* Refactor per WordPress coding standards
+* Replace cURL and allow_url_fopen() with wp_remote_get
 * Add check to limit hours before now to 6
 * Add checks for empty/missing values
 * Better sanitizing
