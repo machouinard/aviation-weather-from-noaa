@@ -2,8 +2,8 @@
 Contributors:		machouinard
 **Tags:** 				weather, noaa, aviation, metar, pireps  
 **Requires at least:** 	3.8.1  
-**Tested up to:**      	3.9  
-**Stable tag:**        	0.3.0  
+**Tested up to:**      	3.9.1  
+**Stable tag:**        	0.3.1  
 **License:**           	GPLv2 or later  
 **License URI:**       	http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -30,6 +30,13 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 
 ## Changelog ##
+
+### 0.3.1 ###
+* Refactor per WordPress coding standards
+* Replace cURL and allow_url_fopen() with wp_remote_get()
+* Add check to limit hours before now to 6 in shortcode
+* Add checks for empty/missing values
+* Better sanitizing
 
 ### 0.3.0 ###
 * Added ability to use cURL if allow_url_fopen() is disabled
