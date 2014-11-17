@@ -276,17 +276,17 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	}
 
 	static function clean_icao( $icao ) {
-		preg_match( '/^[A-Za-z]{4}$/', $icao, $matches );
+		preg_match( '/^[A-Za-z]{4,4}$/', $icao, $matches );
 
 		return strtoupper( $matches[0] );
 	}
 
 	function widget( $args, $instance ) {
-		$icao        = empty( $instance['icao'] ) ? '' : strtoupper( $instance['icao'] );
-		$hours       = empty( $instance['hours'] ) ? '' : $instance['hours'];
-		$radial_dist = empty( $instance['radial_dist'] ) ? '' : $instance['radial_dist'];
-		$show_taf    = isset( $instance['show_taf'] ) ? $instance['show_taf'] : false;
-		$show_pireps = isset( $instance['show_pireps'] ) ? $instance['show_pireps'] : false;
+		$icao        = empty( $instance['icao'] ) ? '' : self::clean_icao( $instance['icao'] );
+		$hours       = empty( $instance['hours'] ) ? '' : absint( $instance['hours'] );
+		$radial_dist = empty( $instance['radial_dist'] ) ? '' : absint( $instance['radial_dist'] );
+		$show_taf    = isset( $instance['show_taf'] ) ? boolval( $instance['show_taf'] ) : false;
+		$show_pireps = isset( $instance['show_pireps'] ) ? boolval( $instance['show_pireps'] ) : false;
 		$title       = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance['title'];
 		$hours       = apply_filters( 'hours_before_now', $hours );
 		$radial_dist = apply_filters( 'radial_dist', $radial_dist );
@@ -406,7 +406,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	 * @return array  $info | false     array containing lat & lon for provided airport or false if ICAO is not alpha-num or 4 chars
 	 */
 	public static function get_apt_info( $icao ) {
-		if ( ! preg_match( '~^[A-Za-z0-9]{4,4}$~', $icao ) ) {
+		if ( ! preg_match( '~^[A-Za-z]{4,4}$~', $icao, $matches ) ) {
 			return false;
 		}
 		$url = sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s', $icao );
