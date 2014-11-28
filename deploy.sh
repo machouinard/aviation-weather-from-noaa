@@ -5,7 +5,7 @@
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
 
 # main config
-PLUGINSLUG=${PWD##*/} # returns basename of current directory
+PLUGINSLUG="aviation-weather-from-noaa" # returns basename of current directory
 CURRENTDIR=`pwd`
 MAINFILE="aviation-weather-from-noaa.php" # this should be the name of your main php file in the wordpress plugin
 SVNUSER="machouinard" # your svn username (case sensitive)
@@ -59,6 +59,10 @@ svn propset svn:ignore "deploy.sh
 README.md
 .git
 .gitignore" "$SVNPATH/trunk/"
+bin
+tests
+phpunit.xml
+.travis.yml
 
 echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/
