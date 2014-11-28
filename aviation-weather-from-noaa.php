@@ -3,7 +3,7 @@
  * Plugin Name: Aviation Weather from NOAA
  * Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
  * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:     0.3.2
+ * Version:     0.3.3
  * Author:      Mark Chouinard
  * Author URI:  http://machouinard.com
  * License:     GPLv2+
@@ -36,7 +36,7 @@
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.3.2' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.3.3' );
 define( 'MACHOUINARD_ADDS_URL', plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH', dirname( __FILE__ ) . '/' );
 
@@ -113,16 +113,17 @@ function machouinard_adds_register_widget() {
  * @return string $data     Weather info to display
  */
 function machouinard_adds_weather_shortcode( $atts ) {
+
 	$defaults = array(
 		'apts'        => 'KSMF',
 		'hours'       => '2',
 		'show_taf'    => '1',
 		'show_pireps' => '1',
 		'radial_dist' => '30',
-		'title'       => null,
+		'title'       => null
 	);
 
-	wp_parse_args( $atts, $defaults );
+	$atts = wp_parse_args( $atts, $defaults );
 
 	$icao        = machouinard_adds_weather_widget::clean_icao( $atts['apts'] );
 	$hours       = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 6;
@@ -133,7 +134,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 
 	$data = '';
 
-	if ( $title == null ) {
+	if ( null === $title ) {
 		$title = sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 	}
 
