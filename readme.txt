@@ -3,7 +3,7 @@
 Contributors:		machouinard
 Tags: 				weather, noaa, aviation, metar, pireps
 Requires at least: 	3.8.1
-Tested up to:      	4.0
+Tested up to:      	4.0.1
 Stable tag:        	0.3.3
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
@@ -38,6 +38,7 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 = 0.3.3 =
 * Fix code that was preventing TAF from displaying
 * Fix transients not being deleted on update
+* Add check for USA, Canada and Australia if 3 characters entered for ICAO
 
 = 0.3.1 =
 * Refactor per WordPress coding standards
@@ -70,3 +71,4 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 = 0.3.3 =
 Fix faulty code that was preventing TAF from displaying
+Misc. tweaks
