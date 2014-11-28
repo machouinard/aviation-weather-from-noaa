@@ -1,9 +1,10 @@
 === Aviation Weather from NOAA ===
+
 Contributors:		machouinard
 Tags: 				weather, noaa, aviation, metar, pireps
 Requires at least: 	3.8.1
-Tested up to:      	3.9-beta2
-Stable tag:        	0.3.0
+Tested up to:      	4.0
+Stable tag:        	0.3.2
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,8 +29,22 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 1. Upload the entire `/aviation-weather-from-noaa` directory to the `/wp-content/plugins/` directory.
 2. Activate Aviation Weather from NOAA through the 'Plugins' menu in WordPress.
 
+= WP_CLI Installation =
+    wp plugin install aviation-weather-from-noaa --activate
+
 
 == Changelog ==
+
+= 0.3.2 =
+* Fix code that was preventing TAF from displaying
+* Fix transients not being deleted on update
+
+= 0.3.1 =
+* Refactor per WordPress coding standards
+* Replace cURL and allow_url_fopen() with wp_remote_get()
+* Add check to limit hours before now to 6 in shortcode
+* Add checks for empty/missing values
+* Better sanitizing
 
 = 0.3.0 =
 * Added ability to use cURL if allow_url_fopen() is disabled
@@ -53,5 +68,5 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 == Upgrade Notice ==
 
-= 0.3.0 =
-Added ability to use cURL if allow_url_fopen() is disabled
+= 0.3.2 =
+Fix faulty code that was preventing TAF from displaying
