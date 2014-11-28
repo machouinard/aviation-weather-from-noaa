@@ -1,67 +1,74 @@
-=== Aviation Weather from NOAA ===
+# Aviation Weather from NOAA #
 
-Tags: 				weather, noaa, aviation, metar, pireps
-Requires at least: 	3.8.1
-Tested up to:      	4.0
-Stable tag:        	0.3.1
-License:           	GPLv2 or later
-License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
+Contributors:		machouinard
+**Tags:** 				weather, noaa, aviation, metar, pireps  
+**Requires at least:** 	3.8.1  
+**Tested up to:**      	4.0.1  
+**Stable tag:**        	0.3.3  
+**License:**           	GPLv2 or later  
+**License URI:**       	http://www.gnu.org/licenses/gpl-2.0.html  
 
 Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
-== Description ==
+## Description ##
 * Display METAR & TAF info from NOAA's Aviation Digital Data Service
 * Display up to 6 hours before now
 * PIREPs up to 200sm
 * Create multiple instances using either widget or shortcode
 
-= Shortcode Usage: ( shown with defaults ) =
+### Shortcode Usage: ( shown with defaults ) ###
     [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 radial_dist=30 title='']
 
 Data is cached for 15 minutes using the WordPress Transients API.
 
 Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
-== Installation ==
+## Installation ##
 
-= Manual Installation =
+### Manual Installation ###
 
 1. Upload the entire `/aviation-weather-from-noaa` directory to the `/wp-content/plugins/` directory.
 2. Activate Aviation Weather from NOAA through the 'Plugins' menu in WordPress.
 
-= If you use WP_CLI =
+### WP_CLI Installation ###
     wp plugin install aviation-weather-from-noaa --activate
 
 
-== Changelog ==
+## Changelog ##
 
-= 0.3.1 =
+### 0.3.3 ###
+* Fix code that was preventing TAF from displaying
+* Fix transients not being deleted on update
+* Add check for USA, Canada and Australia if 3 characters entered for ICAO
+
+### 0.3.1 ###
 * Refactor per WordPress coding standards
 * Replace cURL and allow_url_fopen() with wp_remote_get()
 * Add check to limit hours before now to 6 in shortcode
 * Add checks for empty/missing values
 * Better sanitizing
 
-= 0.3.0 =
+### 0.3.0 ###
 * Added ability to use cURL if allow_url_fopen() is disabled
 
-= 0.2.7 =
+### 0.2.7 ###
 * Fixed readme errors
 * Added GitHub link
 
-= 0.2.6 =
+### 0.2.6 ###
 * Added transients API so we don't hit NOAA with every page load
 
-= 0.2.4 =
+### 0.2.4 ###
 * Added custom title to widget + shortcode
 
-= 0.2.0 =
+### 0.2.0 ###
 * Added ability to hide or display TAF
 * Added shortcode
 
-= 0.1.0 =
+### 0.1.0 ###
 * First release
 
-== Upgrade Notice ==
+## Upgrade Notice ##
 
-= 0.3.1 =
-Made better.  More WordPressy
+### 0.3.3 ###
+Fix faulty code that was preventing TAF from displaying
+Misc. tweaks
