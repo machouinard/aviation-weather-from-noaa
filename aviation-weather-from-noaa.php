@@ -277,7 +277,15 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	}
 
 	static function clean_icao( $icao ) {
-		preg_match( '/^[A-Za-z]{4,4}$/', $icao, $matches );
+		preg_match( '/^[A-Za-z]{3,4}$/', $icao, $matches );
+
+		if ( strlen( $matches[0] ) == 3 ) {
+			foreach( array('K', 'Y', 'C' ) as $a ) {
+				if ( $icao = self::get_apt_info( $a . $matches[0] ) ) {
+					return strtoupper( $a . $matches[0] );
+				}
+			}
+		}
 
 		return strtoupper( $matches[0] );
 	}
