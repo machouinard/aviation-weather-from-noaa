@@ -4,7 +4,7 @@ Contributors:		machouinard
 Tags: 				weather, noaa, aviation, metar, pireps
 Requires at least: 	3.8.1
 Tested up to:      	4.0.1
-Stable tag:        	0.3.4
+Stable tag:        	0.3.4a
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,7 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 == Changelog ==
 
-= 0.3.4 =
+= 0.3.4a =
 * Remove local development files from SVN ( basically v0.3.3 without the extra files )
 
 = 0.3.3 =
@@ -72,6 +72,6 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 == Upgrade Notice ==
 
-= 0.3.4 =
+= 0.3.4a =
 Fix faulty code that was preventing TAF from displaying
 Misc. tweaks
