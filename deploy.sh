@@ -5,7 +5,7 @@
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
 
 # main config
-PLUGINSLUG="aviation-weather-from-noaa" # returns basename of current directory
+PLUGINSLUG=${PWD##*/} # returns basename of current directory
 CURRENTDIR=`pwd`
 MAINFILE="aviation-weather-from-noaa.php" # this should be the name of your main php file in the wordpress plugin
 SVNUSER="machouinard" # your svn username (case sensitive)
@@ -28,7 +28,7 @@ echo
 # Check version in readme.txt is the same as plugin file
 NEWVERSION1=`grep "^Stable tag" "$GITPATH/readme.txt" | awk -F' ' '{print $3}' | sed 's/[[:space:]]//g'`
 echo "readme version: $NEWVERSION1"
-NEWVERSION2=`grep "[\s*]*Version:" "$GITPATH/$MAINFILE" | awk -F' ' '{print $3}' | sed 's/[[:space:]]//g'`
+NEWVERSION2=`grep "^Version" "$GITPATH/$MAINFILE" | awk -F' ' '{print $2}' | sed 's/[[:space:]]//g'`
 echo "$MAINFILE version: $NEWVERSION2"
 
 if [ "$NEWVERSION1" != "$NEWVERSION2" ]; then echo "Versions don't match. Exiting...."; exit 1; fi
@@ -57,12 +57,12 @@ git checkout-index -a -f --prefix=$SVNPATH/trunk/
 echo "Ignoring github specific files and deployment script"
 svn propset svn:ignore "deploy.sh
 README.md
+bin/
+.travis.yml
+phpunit.xml
+tests/
 .git
 .gitignore" "$SVNPATH/trunk/"
-bin
-tests
-phpunit.xml
-.travis.yml
 
 echo "Changing directory to SVN and committing to trunk"
 cd $SVNPATH/trunk/

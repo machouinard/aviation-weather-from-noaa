@@ -1,14 +1,14 @@
 <?php
-/**
- * Plugin Name: Aviation Weather from NOAA
- * Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
- * Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:     0.3.3
- * Author:      Mark Chouinard
- * Author URI:  http://machouinard.com
- * License:     GPLv2+
- * Text Domain: machouinard_adds
- * Domain Path: /languages
+/*
+Plugin Name: Aviation Weather from NOAA
+Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
+Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
+Version     0.3.4
+Author:      Mark Chouinard
+Author URI:  http://chouinard.me
+License:     GPLv2+
+Text Domain: machouinard_adds
+Domain Path: /languages
  */
 
 /**
@@ -36,7 +36,7 @@
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.3.3' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.3.4' );
 define( 'MACHOUINARD_ADDS_URL', plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH', dirname( __FILE__ ) . '/' );
 
