@@ -7,8 +7,8 @@
 # main config
 PLUGINSLUG=${PWD##*/} # returns basename of current directory
 CURRENTDIR=`pwd`
-MAINFILE="styles.php" # this should be the name of your main php file in the wordpress plugin
-SVNUSER="pdclark" # your svn username (case sensitive)
+MAINFILE="aviation-weather-from-noaa.php" # this should be the name of your main php file in the wordpress plugin
+SVNUSER="machouinard" # your svn username (case sensitive)
 
 # git config
 GITPATH="$CURRENTDIR/" # this file should be in the base of your git repository
@@ -57,10 +57,10 @@ git checkout-index -a -f --prefix=$SVNPATH/trunk/
 echo "Ignoring github specific files and deployment script"
 svn propset svn:ignore "deploy.sh
 README.md
+tests/
 bin/
 .travis.yml
 phpunit.xml
-tests/
 .git
 .gitignore" "$SVNPATH/trunk/"
 
