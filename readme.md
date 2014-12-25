@@ -1,12 +1,19 @@
 # Aviation Weather from NOAA #
 
-Contributors:		machouinard
-**Tags:** 				weather, noaa, aviation, metar, pireps  
-**Requires at least:** 	3.8.1  
-**Tested up to:**      	4.0.1  
-**Stable tag:**        	0.3.4
-**License:**           	GPLv2 or later  
-**License URI:**       	http://www.gnu.org/licenses/gpl-2.0.html  
+**Contributors:**		machouinard
+
+**Tags:** 				weather, noaa, aviation, metar, pireps
+  
+**Requires at least:** 	3.8.1
+  
+**Tested up to:**      	4.1
+  
+**Stable tag:**        	0.3.5
+  
+**License:**           	GPLv2 or later
+  
+**License URI:**       	http://www.gnu.org/licenses/gpl-2.0.html
+  
 
 Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
@@ -35,8 +42,11 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 ## Changelog ##
 
-### 0.3.4 ###
-* Remove local development files from SVN
+### 0.3.5 ###
+* Cast values as bool instead of using boolval(), which requires PHP >= 5.5
+
+### 0.3.4a ###
+* Remove local development files from SVN ( basically v0.3.3 without the extra files )
 
 ### 0.3.3 ###
 * Fix code that was preventing TAF from displaying
@@ -72,6 +82,5 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 ## Upgrade Notice ##
 
-### 0.3.3 ###
-Fix faulty code that was preventing TAF from displaying
-Misc. tweaks
+### 0.3.5 ###
+Adjust for PHP versions < 5.5
