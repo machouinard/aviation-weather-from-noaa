@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/machouinard/aviation-weather-from-noaa.png)](https://travis-ci.org/machouinard/aviation-weather-from-noaa.png)
 # Aviation Weather from NOAA #
 
 **Contributors:**		machouinard
