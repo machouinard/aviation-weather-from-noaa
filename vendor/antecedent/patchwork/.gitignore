@@ -1,0 +1,4 @@
+vendor/
+cache/*.php
+composer.phar
+.DS_Store
