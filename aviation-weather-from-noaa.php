@@ -3,7 +3,7 @@
 Plugin Name: Aviation Weather from NOAA
 Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
 Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
-Version:     0.3.5
+Version:     0.3.6
 Author:      Mark Chouinard
 Author URI:  http://machouinard.com
 License:     GPLv2+
@@ -36,7 +36,7 @@ Domain Path: /languages
  */
 
 // Useful global constants
-define( 'MACHOUINARD_ADDS_VERSION', '0.3.5' );
+define( 'MACHOUINARD_ADDS_VERSION', '0.3.6' );
 define( 'MACHOUINARD_ADDS_URL', plugin_dir_url( __FILE__ ) );
 define( 'MACHOUINARD_ADDS_PATH', dirname( __FILE__ ) . '/' );
 
