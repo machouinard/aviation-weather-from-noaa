@@ -1,1 +1,2 @@
-deploy.sh
+composer.lock
+vendor/
