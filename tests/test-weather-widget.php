@@ -66,5 +66,21 @@ class WeatherWidgetTest extends WP_UnitTestCase {
 		$this->assertGreaterThan( 0, $count );
 	}
 
+
+		/**
+	 * @covers Machouinard_Adds_Weather_Widget::get_apt_info()
+	 */
+	function testGet_apt_info() {
+		$apt = Machouinard_Adds_Weather_Widget::get_apt_info( 'kzzv' );
+		$bad_apt = Machouinard_Adds_Weather_Widget::get_apt_info( 'zzv' );
+		$count = count( $apt );
+		$bad_count = count( $bad_apt );
+		$expected = 4;
+		$this->assertEquals( $count, $expected );
+		$this->assertNotEquals($expected, $bad_count );
+		$expected_city = 'ZANESVILLE';
+		$this->assertEquals( $apt['city'], $expected_city );
+	}
+
 }
 
