@@ -2,7 +2,7 @@
 
 Contributors:		machouinard
 Tags: 				weather, noaa, aviation, metar, pireps
-Requires at least: 	3.8.1
+Requires at least: 	3.8
 Tested up to:      	4.1
 Stable tag:        	trunk
 License:           	GPLv2 or later
