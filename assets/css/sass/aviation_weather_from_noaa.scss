@@ -5,3 +5,31 @@
  * Copyright (c) 2013 Mark Chouinard
  * Licensed under the GPLv2+ license.
  */
+#adds-weather-wrapper {
+
+  p {
+    margin-bottom: .5em;
+
+    &.adds-heading {
+      font-weight: bolder;
+      text-transform: uppercase;
+
+      span.adds-sm {
+        text-transform: lowercase;
+      }
+    }
+
+  }
+
+  ul {
+    margin-bottom: 1.5em;
+  }
+
+  li {
+    list-style-type: none;
+
+    &:nth-child(even) {
+      background-color: rgba( 211, 211, 211, .5);
+    }
+  }
+}

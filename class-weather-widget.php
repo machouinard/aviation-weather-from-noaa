@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  */
@@ -124,35 +125,39 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		echo $before_widget;
 
 		if ( ! empty( $wx['metar'] ) ) {
-			echo '<p><strong>';
+			echo '<div id="' . apply_filters( 'adds_widget_wrapper', 'adds-weather-wrapper' ) . '"><p>';
 			echo esc_html( $title );
-			echo '</strong></p>';
+			echo '</p>';
 			foreach ( $wx as $type => $info ) {
 
 				if ( $type == 'taf' && $show_taf || $type == 'metar' ) {
-					echo '<strong>' . esc_html( strtoupper( $type ) ) . '</strong><br />';
+					echo '<p class="adds-heading">' . esc_html( $type ) . '</p>';
 				}
 
 				if ( $type == 'taf' && ! $show_taf ) {
 					continue;
 				}
 				if ( is_array( $info ) ) {
+					echo '<ul>';
 					foreach ( $info as $value ) {
 						if ( ! empty( $value ) ) {
-							echo esc_html( $value ) . "<br />\n";
+							echo '<li>' . esc_html( $value ) . "</li>";
 						}
 					}
+					echo '</ul>';
 				} else {
 					echo esc_html( $info ) . "<br />\n";
 				}
 			}
 		}
 		if ( ! empty( $pireps[0] ) && $show_pireps ) {
-			echo '<strong>PIREPS ' . absint( $radial_dist ) . 'sm</strong><br />';
+			echo '<p class="adds-heading">PIREPS ' . absint( $radial_dist ) . 'sm</p><ul>';
 			foreach ( $pireps[0] as $pirep ) {
-				echo esc_html( $pirep ) . '<br />';
+				echo '<li>' . esc_html( $pirep ) . '</li>';
 			}
+			echo '</ul>';
 		}
+		echo '</div>';
 		echo $after_widget;
 	}
 

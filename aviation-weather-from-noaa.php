@@ -78,9 +78,30 @@ register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 // Wireup actions
 add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
+add_action( 'wp_enqueue_scripts', 'machouinard_adds_scripts' );
 add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
 // Wireup filters
 
+
+function machouinard_adds_scripts() {
+	// Check child theme
+	$file = 'css/adds-override.css';
+	if ( file_exists( trailingslashit( get_stylesheet_directory() ) . $file ) ) {
+		$location = trailingslashit( get_stylesheet_directory_uri() ) . $file;
+		$handle   = 'adds-override-child-css';
+
+		// Check parent theme
+	} elseif ( file_exists( trailingslashit( get_template_directory() ) . $file ) ) {
+		$location = trailingslashit( get_template_directory_uri() ) . $file;
+		$handle   = 'adds-override-parent-css';
+
+		// use our style
+	} else {
+		$location = plugins_url( "/assets/css/aviation_weather_from_noaa.css", __FILE__ );
+		$handle   = 'machouinard_adds_style';
+	}
+	wp_enqueue_style( $handle, apply_filters( 'adds_custom_css', $location ) );
+}
 
 // Setup the settings menu option - For future use
 function machouinard_adds_admin_settings() {
@@ -144,14 +165,16 @@ function machouinard_adds_weather_shortcode( $atts ) {
 
 	$pireps[] = machouinard_adds_weather_widget::get_pireps( $icao, $radial_dist, $hours );
 
+	$title_wrap = apply_filters( 'adds_shortcode_title_wrap', 'h2' );
+
 	if ( ! empty( $wx['metar'] ) ) {
-		$data .= '<p><strong>';
+		$data .= '<div id="' . apply_filters( 'adds_shortcode_wrapper', 'adds-weather-wrapper' ) . '"><' . $title_wrap . '>';
 		$data .= sanitize_text_field( $title );
-		$data .= '</strong></p>';
+		$data .= "</{$title_wrap}>";
 		foreach ( $wx as $type => $info ) {
 
 			if ( ( $type == 'taf' && $show_taf ) || $type == 'metar' ) {
-				$data .= '<strong>' . strtoupper( $type ) . '</strong><br />';
+				$data .= '<p class="adds-heading">' . $type . '</p>';
 			}
 
 			if ( $type == 'taf' && ! $show_taf ) {
@@ -159,11 +182,13 @@ function machouinard_adds_weather_shortcode( $atts ) {
 			}
 
 			if ( is_array( $info ) ) {
+				$data .= '<ul>';
 				foreach ( $info as $value ) {
 					if ( ! empty( $value ) ) {
-						$data .= esc_html( $value ) . "<br />\n";
+						$data .= '<li>' . esc_html( $value ) . "</li>";
 					}
 				}
+				$data .= '</ul>';
 			} else {
 				$data .= $info . "<br />\n";
 			}
@@ -171,19 +196,27 @@ function machouinard_adds_weather_shortcode( $atts ) {
 	}
 
 	if ( ! empty( $pireps[0] ) && $show_pireps ) {
-		$data .= '<strong>PIREPS ' . $radial_dist . 'sm</strong><br />';
+		$data .= '<p class="adds-heading">pireps ' . $radial_dist . '<span class="adds-sm">sm</span></p><ul>';
 		foreach ( $pireps[0] as $pirep ) {
-			$data .= esc_html( $pirep ) . '<br />';
+			$data .= '<li>' . esc_html( $pirep ) . '</li>';
 		}
+		$data .= '</ul></div>';
 	}
 
 	$args = array(
-		'p'      => array(),
-		'strong' => array(),
-		'br'     => array()
+		'p'   => array(
+			'class' => array()
+		),
+		'span' => array(
+			'class' => array()
+		),
+		'ul'  => array(),
+		'li'  => array(),
+		'h2'  => array(),
+		'div' => array( 'id' => array() ),
 	);
 
-	return wp_kses( $data, $args );
+	return wp_kses( $data, apply_filters( 'adds_kses', $args ) );
 }
 
 
