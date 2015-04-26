@@ -118,9 +118,6 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$show_taf    = isset( $instance['show_taf'] ) ? (bool) $instance['show_taf'] : false;
 		$show_pireps = isset( $instance['show_pireps'] ) ? (bool) $instance['show_pireps'] : false;
 		$title       = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance['title'];
-		$hours       = apply_filters( 'hours_before_now', $hours );
-		$radial_dist = apply_filters( 'radial_dist', $radial_dist );
-		$title       = apply_filters( 'machouinard_title', $title );
 
 		if ( empty( $icao ) ) {
 			return;
@@ -155,7 +152,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 					}
 					echo '</ul>';
 				} else {
-					echo esc_html( $info ) . "<br />\n";
+					echo '<p>' . esc_html( $info ) . '</p>';
 				}
 			}
 		}
