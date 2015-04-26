@@ -92,6 +92,11 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		return $instance;
 	}
 
+	/**
+	 * @param $icao
+	 *
+	 * @return string  Uppercase ICAO
+	 */
 	static function clean_icao( $icao ) {
 		preg_match( '/^[A-Za-z]{3,4}$/', $icao, $matches );
 
@@ -116,6 +121,10 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$hours       = apply_filters( 'hours_before_now', $hours );
 		$radial_dist = apply_filters( 'radial_dist', $radial_dist );
 		$title       = apply_filters( 'machouinard_title', $title );
+
+		if ( empty( $icao ) ) {
+			return;
+		}
 
 		$wx = $this->get_metar( $icao, $hours );
 
@@ -210,7 +219,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	 * @return array    $pireps           pirep data
 	 */
 	static function get_pireps( $icao, $radial_dist, $hours ) {
-		if ( ! get_transient( 'noaa_pireps_' . $icao ) ) {
+		if ( false == ( $pireps =  get_transient( 'noaa_pireps_' . $icao ) ) ) {
 			$info      = self::get_apt_info( $icao );
 			$pirep_url = sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d', $radial_dist, $info['lon'], $info['lat'], $hours );
 			$xml       = self::load_xml( $pirep_url );
@@ -221,8 +230,6 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			// save pirep data for 15 minutes
 			set_transient( 'noaa_pireps_' . $icao, $pireps, 60 * 15 );
 		}
-
-		$pireps = get_transient( 'noaa_pireps_' . $icao );
 
 		return $pireps;
 	}

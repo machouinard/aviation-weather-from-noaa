@@ -50,7 +50,6 @@ function machouinard_adds_init() {
 	$locale = apply_filters( 'plugin_locale', get_locale(), 'machouinard_adds' );
 	load_textdomain( 'machouinard_adds', WP_LANG_DIR . '/machouinard_adds/machouinard_adds-' . $locale . '.mo' );
 	load_plugin_textdomain( 'machouinard_adds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	// add_action( 'admin_menu', 'machouinard_adds_admin_settings' );
 }
 
 /**
@@ -82,7 +81,9 @@ add_action( 'wp_enqueue_scripts', 'machouinard_adds_scripts' );
 add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
 // Wireup filters
 
-
+/**
+ * Enqueue stylesheet, allowing for override by theme
+ */
 function machouinard_adds_scripts() {
 	// Check child theme
 	$file = 'css/adds-override.css';
@@ -101,25 +102,6 @@ function machouinard_adds_scripts() {
 		$handle   = 'machouinard_adds_style';
 	}
 	wp_enqueue_style( $handle, apply_filters( 'adds_custom_css', $location ) );
-}
-
-// Setup the settings menu option - For future use
-function machouinard_adds_admin_settings() {
-	add_options_page(
-		__( 'ADDS Weather Settings', 'machouinard_adds' ),
-		__( 'ADDS Weather Settings', 'machouinard_adds' ),
-		'manage_options',
-		'machouinard_adds_settings',
-		'machouinard_adds_settings_page'
-	);
-}
-
-/**
- * Setup the settings page - For future use
- */
-
-function machouinard_adds_settings_page() {
-
 }
 
 function machouinard_adds_register_widget() {
@@ -204,16 +186,16 @@ function machouinard_adds_weather_shortcode( $atts ) {
 	}
 
 	$args = array(
-		'p'   => array(
+		'p'    => array(
 			'class' => array()
 		),
 		'span' => array(
 			'class' => array()
 		),
-		'ul'  => array(),
-		'li'  => array(),
-		'h2'  => array(),
-		'div' => array( 'id' => array() ),
+		'ul'   => array(),
+		'li'   => array(),
+		'h2'   => array(),
+		'div'  => array( 'id' => array() ),
 	);
 
 	return wp_kses( $data, apply_filters( 'adds_kses', $args ) );
