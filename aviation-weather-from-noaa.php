@@ -125,7 +125,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 		'show_taf'    => '1',
 		'show_pireps' => '1',
 		'radial_dist' => '30',
-		'title'       => null
+		'title'       => ''
 	);
 
 	$atts = wp_parse_args( $atts, $defaults );
@@ -139,7 +139,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 
 	$data = '';
 
-	if ( null === $title ) {
+	if ( empty ( $title ) ) {
 		$title = sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 	}
 
