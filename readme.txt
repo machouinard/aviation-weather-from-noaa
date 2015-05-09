@@ -3,7 +3,7 @@
 Contributors:		machouinard
 Tags: 				weather, noaa, aviation, metar, pireps
 Requires at least: 	3.8
-Tested up to:      	4.1
+Tested up to:      	4.2
 Stable tag:        	trunk
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
@@ -21,6 +21,13 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
 Data is cached for 15 minutes using the WordPress Transients API.
 
+= Included Filter Hooks: =
+* adds_shortcode_title_wrap: Tag used for shortcode title.  Defaults to "h2".
+* adds_shortcode_wrapper: Class of the div enclosing shortcode output.
+* adds_kses: Array of permitted HTML tags.
+* adds_custom_css: URL of a user-supplied stylesheet.  Supplying a stylesheet in theme's directory ( 'css/aviation_weather_from_noaa.css' ) will also override stylesheet.
+* adds_widget_wrapper: Class of the div enclosing the widget
+
 Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 == Installation ==
 
@@ -34,6 +41,11 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 
 == Changelog ==
+
+= 0.3.7 =
+* Add styling
+* Add hooks to filter styling
+* Add option for theme supplied stylesheet
 
 = 0.3.6 =
 * Add unit tests

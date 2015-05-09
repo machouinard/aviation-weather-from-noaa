@@ -1,14 +1,14 @@
 <?php
 
 /**
- *
+ *  Widget to display aviation weather
  */
 class Machouinard_Adds_Weather_Widget extends WP_Widget {
 
 	function machouinard_adds_weather_widget() {
 		$options = array(
 			'classname'   => 'machouinard_adds_widget_class',
-			'description' => __( 'Displays METAR & other info from NOAA\'s Aviation Digital Data Service', 'machouinard_adds' )
+			'description' => __( "Displays METAR & other info from NOAA's Aviation Digital Data Service", 'machouinard_adds' )
 		);
 		$this->WP_Widget( 'machouinard_adds_weather_widget', 'ADDS Weather Info', $options );
 	}
@@ -20,7 +20,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			'show_taf'    => true,
 			'show_pireps' => true,
 			'radial_dist' => '30',
-			'title'       => null,
+			'title'       => '',
 		);
 		$instance = wp_parse_args( $instance, $defaults );
 
@@ -66,7 +66,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		<select name="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"
 		        id="<?php echo esc_attr( $this->get_field_id( 'radial_dist' ) ); ?>" class="widefat">
 			<?php
-			for ( $i = 10; $i < 210; $i += 10 ) {
+			for ( $i = 10; $i < 201; $i += 10 ) {
 				echo '<option value="' . absint( $i ) . '" id="' . absint( $i ) . '"', $radial_dist == $i ? ' selected="selected"' : '', '>', $i, '</option>';
 			}
 			?>
@@ -100,15 +100,16 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	static function clean_icao( $icao ) {
 		preg_match( '/^[A-Za-z]{3,4}$/', $icao, $matches );
 
-		if ( strlen( $matches[0] ) == 3 ) {
-			foreach ( array( 'K', 'Y', 'C' ) as $a ) {
-				if ( $icao = self::get_apt_info( $a . $matches[0] ) ) {
-					return strtoupper( $a . $matches[0] );
+		$temp_icao = strtoupper( $matches[0] );
+		if ( strlen( $temp_icao ) == 3 ) {
+			foreach ( array( 'K', 'Y', 'C', 'E' ) as $first_letter ) {
+				if ( self::get_apt_info( $first_letter . $temp_icao ) ) {
+					return $first_letter . $temp_icao;
 				}
 			}
 		}
 
-		return strtoupper( $matches[0] );
+		return $temp_icao;
 	}
 
 	function widget( $args, $instance ) {
@@ -131,7 +132,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		echo $before_widget;
 
 		if ( ! empty( $wx['metar'] ) ) {
-			echo '<div id="' . apply_filters( 'adds_widget_wrapper', 'adds-weather-wrapper' ) . '"><p>';
+			echo '<div class="' . apply_filters( 'adds_widget_wrapper', 'adds-weather-wrapper' ) . '"><p>';
 			echo esc_html( $title );
 			echo '</p>';
 			foreach ( $wx as $type => $info ) {

@@ -86,7 +86,7 @@ add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
  */
 function machouinard_adds_scripts() {
 	// Check child theme
-	$file = 'css/adds-override.css';
+	$file = 'css/aviation_weather_from_noaa.css';
 	if ( file_exists( trailingslashit( get_stylesheet_directory() ) . $file ) ) {
 		$location = trailingslashit( get_stylesheet_directory_uri() ) . $file;
 		$handle   = 'adds-override-child-css';
@@ -140,7 +140,8 @@ function machouinard_adds_weather_shortcode( $atts ) {
 	$data = '';
 
 	if ( empty ( $title ) ) {
-		$title = sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
+		$title = sprintf( _n( 'Available data for %s from the past hour',
+			'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours );
 	}
 
 	$wx = machouinard_adds_weather_widget::get_metar( $icao, $hours );
@@ -150,7 +151,8 @@ function machouinard_adds_weather_shortcode( $atts ) {
 	$title_wrap = apply_filters( 'adds_shortcode_title_wrap', 'h2' );
 
 	if ( ! empty( $wx['metar'] ) ) {
-		$data .= '<div id="' . apply_filters( 'adds_shortcode_wrapper', 'adds-weather-wrapper' ) . '"><' . $title_wrap . '>';
+		$data .= '<div class="' . apply_filters( 'adds_shortcode_wrapper',
+				'adds-weather-wrapper' ) . '"><' . $title_wrap . '>';
 		$data .= sanitize_text_field( $title );
 		$data .= "</{$title_wrap}>";
 		foreach ( $wx as $type => $info ) {
@@ -195,7 +197,10 @@ function machouinard_adds_weather_shortcode( $atts ) {
 		'ul'   => array(),
 		'li'   => array(),
 		'h2'   => array(),
-		'div'  => array( 'id' => array() ),
+		'div'  => array(
+			'id'    => array(),
+			'class' => array()
+		),
 	);
 
 	return wp_kses( $data, apply_filters( 'adds_kses', $args ) );

@@ -5,18 +5,16 @@
  * Copyright (c) 2013 Mark Chouinard
  * Licensed under the GPLv2+ license.
  */
-#adds-weather-wrapper p {
+.adds-weather-wrapper p {
   margin-bottom: .5em; }
-  #adds-weather-wrapper p.adds-heading {
+  .adds-weather-wrapper p.adds-heading {
     font-weight: bolder;
     text-transform: uppercase; }
-    #adds-weather-wrapper p.adds-heading span.adds-sm {
+    .adds-weather-wrapper p.adds-heading span.adds-sm {
       text-transform: lowercase; }
-#adds-weather-wrapper ul {
+.adds-weather-wrapper ul {
   margin-bottom: 1.5em; }
-#adds-weather-wrapper li {
+.adds-weather-wrapper li {
   list-style-type: none; }
-  #adds-weather-wrapper li:nth-child(even) {
+  .adds-weather-wrapper li:nth-child(even) {
     background-color: rgba(211, 211, 211, 0.5); }
-
-/*# sourceMappingURL=aviation_weather_from_noaa.css.map */
