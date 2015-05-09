@@ -100,16 +100,16 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	static function clean_icao( $icao ) {
 		preg_match( '/^[A-Za-z]{3,4}$/', $icao, $matches );
 
-		$temp_icao = strtoupper( $matches[0] );
-		if ( strlen( $temp_icao ) == 3 ) {
+//		$temp_icao = strtoupper( $matches[0] );
+		if ( strlen( $matches[0] ) == 3 ) {
 			foreach ( array( 'K', 'Y', 'C', 'E' ) as $first_letter ) {
-				if ( self::get_apt_info( $first_letter . $temp_icao ) ) {
-					return $first_letter . $temp_icao;
+				if ( self::get_apt_info( $first_letter . $matches[0] ) ) {
+					return strtoupper( $first_letter . $matches[0] );
 				}
 			}
 		}
 
-		return $temp_icao;
+		return strtoupper( $icao );
 	}
 
 	function widget( $args, $instance ) {
@@ -261,8 +261,12 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	private static function load_xml( $url ) {
 		$xml_raw = wp_remote_get( $url );
 		$body    = wp_remote_retrieve_body( $xml_raw );
+		if ( false === strpos( $body, '<!DOCTYPE HTML PUBLIC' ) ) {
+			return simplexml_load_string( $body );
+		} else {
+			return false;
+		}
 
-		return simplexml_load_string( $body );
 	}
 
 }
