@@ -104,7 +104,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		if ( strlen( $matches[0] ) == 3 ) {
 			foreach ( array( 'K', 'Y', 'C', 'E' ) as $first_letter ) {
 				if ( self::get_apt_info( $first_letter . $matches[0] ) ) {
-					return strtoupper( $first_letter . $matches[0] );
+					$icao = $first_letter . $matches[0];
 				}
 			}
 		}
@@ -178,7 +178,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	 */
 	static function get_metar( $icao, $hours ) {
 
-		if ( false == $wx = get_transient( 'noaa_wx_' . $icao ) ) {
+		if ( false === $wx = get_transient( 'noaa_wx_' . $icao ) ) {
 			$metar_url = sprintf( 'http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString=%s&hoursBeforeNow=%d', $icao, absint( $hours ) );
 			$tafs_url  = sprintf( 'http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString=%s&hoursBeforeNow=%d', $icao, absint( $hours ) );
 
@@ -258,10 +258,10 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	}
 
 	// Retrieve XML from URL
-	private static function load_xml( $url ) {
+	public static function load_xml( $url ) {
 		$xml_raw = wp_remote_get( $url );
 		$body    = wp_remote_retrieve_body( $xml_raw );
-		if ( false === strpos( $body, '<!DOCTYPE HTML PUBLIC' ) ) {
+		if ( false === strpos( $body, '<!DOCTYPE' ) ) {
 			return simplexml_load_string( $body );
 		} else {
 			return false;
