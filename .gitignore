@@ -2,3 +2,4 @@ deploy.sh
 composer.lock
 vendor/
 npm-debug.log
+coverage/
