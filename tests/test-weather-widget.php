@@ -25,11 +25,6 @@ class WeatherWidgetTest extends WP_UnitTestCase {
 		\WP_Mock::tearDown();
 	}
 
-	function testSample() {
-		// replace this with some actual testing code
-		$this->assertTrue( true );
-	}
-
 	/**
 	 * @covers  Machouinard_Adds_Weather_Widget::clean_icao()
 	 */
@@ -54,7 +49,7 @@ class WeatherWidgetTest extends WP_UnitTestCase {
 		$metar = Machouinard_Adds_Weather_Widget::get_metar( 'KSMF', 4 );
 		$this->assertArrayHasKey( 'metar', $metar );
 		$count = count( $metar['metar'] );
-//		$this->assertGreaterThan(1, $count, '1 should be greater than ' . $count );;
+		$this->assertGreaterThanOrEqual( 1, $count );;
 	}
 
 	/**
@@ -80,6 +75,7 @@ class WeatherWidgetTest extends WP_UnitTestCase {
 		$this->assertNotEquals($expected, $bad_count );
 		$expected_city = 'ZANESVILLE';
 		$this->assertEquals( $apt['city'], $expected_city );
+		$this->assertArrayHasKey( 'station_id', $apt );
 	}
 
 }
