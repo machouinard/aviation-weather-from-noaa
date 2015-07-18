@@ -4,36 +4,14 @@ Plugin Name: Aviation Weather from NOAA
 Plugin URI:  https://github.com/machouinard/aviation-weather-from-noaa
 Description: Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 Version:     0.3.7
-Author:      Mark Chouinard
+Author:      Mark A. Chouinard
 Author URI:  http://machouinard.com
 License:     GPLv2+
 Text Domain: machouinard_adds
 Domain Path: /languages
  */
 
-/**
- * Copyright (c) 2013 Mark Chouinard (email : mark@chouinard.me)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, version 2 or, at
- * your discretion, any later version, as published by the Free
- * Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
 
-/**
- * Built using grunt-wp-plugin
- * Copyright (c) 2013 10up, LLC
- * https://github.com/10up/grunt-wp-plugin
- */
 
 // Useful global constants
 define( 'MACHOUINARD_ADDS_VERSION', '0.3.7' );
@@ -56,6 +34,12 @@ function machouinard_adds_init() {
  * Activate the plugin
  */
 function machouinard_adds_activate() {
+
+	if ( 0 > version_compare( PHP_VERSION, '5.2' ) ) {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+		wp_die( 'This plugin requires PHP version 5.3' );
+	}
+
 	// First load the init scripts in case any rewrite functionality is being loaded
 	machouinard_adds_init();
 
@@ -78,6 +62,7 @@ register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
 add_action( 'wp_enqueue_scripts', 'machouinard_adds_scripts' );
+add_action( 'admin_enqueue_scripts', 'machouinard_adds_scripts' );
 add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
 // Wireup filters
 
