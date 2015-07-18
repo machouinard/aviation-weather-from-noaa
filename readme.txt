@@ -3,7 +3,7 @@
 Contributors:		machouinard
 Tags: 				weather, noaa, aviation, metar, pireps
 Requires at least: 	3.8
-Tested up to:      	4.2
+Tested up to:      	4.2.2
 Stable tag:        	trunk
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,9 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 
 == Changelog ==
+= 0.3.8 =
+* Add ability to not display Metar
+* Add check for PHP version 3.3
 
 = 0.3.7 =
 * Add styling
@@ -88,7 +91,3 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 = 0.1.0 =
 * First release
 
-== Upgrade Notice ==
-
-= 0.3.6 =
-Add unit tests
