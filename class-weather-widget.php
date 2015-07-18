@@ -17,6 +17,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$defaults = array(
 			'icao'        => 'KZZV',
 			'hours'       => 2,
+			'show_metar'  => true,
 			'show_taf'    => true,
 			'show_pireps' => true,
 			'radial_dist' => '30',
@@ -26,6 +27,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 
 		$icao        = $instance['icao'];
 		$hours       = absint( $instance['hours'] );
+		$show_metar  = (bool) $instance['show_metar'];
 		$show_taf    = (bool) $instance['show_taf'];
 		$show_pireps = (bool) $instance['show_pireps'];
 		$radial_dist = absint( $instance['radial_dist'] );
@@ -50,27 +52,37 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			}
 			?>
 		</select>
-
-		<label
-			for="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"><?php _e( 'Display PIREPS?', 'machouinard_adds' ); ?></label>
-		<input id="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"
-		       name="<?php echo esc_attr( $this->get_field_name( 'show_pireps' ) ); ?>" type="checkbox"
-		       value="1" <?php checked( true, $show_pireps ); ?> class="checkbox"/>
-		<label
-			for="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"><?php _e( 'Display TAF?', 'machouinard_adds' ); ?></label>
-		<input id="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"
+<table>
+	<thead>Display:</thead>
+	<tr><td><label
+				for="<?php echo esc_attr( $this->get_field_id( 'show_metar' ) ); ?>"><?php _e( 'METAR', 'machouinard_adds' ); ?></label></td>
+			<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_metar' ) ); ?>"
+			       name="<?php echo esc_attr( $this->get_field_name( 'show_metar' ) ); ?>" type="checkbox"
+			       value="1" <?php checked( true, $show_metar ); ?> class="checkbox"/></td></tr>
+	<tr><td><label
+			for="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"><?php _e( 'TAF', 'machouinard_adds' ); ?></label></td>
+		<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"
 		       name="<?php echo esc_attr( $this->get_field_name( 'show_taf' ) ); ?>" type="checkbox"
-		       value="1" <?php checked( true, $show_taf ); ?> class="checkbox"/><br/>
-		<label
-			for="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"><?php _e( 'Radial Distance', 'machouinard_adds' ); ?></label>
-		<select name="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"
+		       value="1" <?php checked( true, $show_taf ); ?> class="checkbox"/></td></tr>
+	<tr><td><label
+				for="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"><?php _e( 'PIREPS', 'machouinard_adds' ); ?></label></td>
+		<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"
+		           name="<?php echo esc_attr( $this->get_field_name( 'show_pireps' ) ); ?>" type="checkbox"
+		           value="1" <?php checked( true, $show_pireps ); ?> class="checkbox"/></td></tr>
+	<tr><td><label
+			for="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"><?php _e( 'Radial Distance', 'machouinard_adds' ); ?></label></td>
+		<td><select name="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"
 		        id="<?php echo esc_attr( $this->get_field_id( 'radial_dist' ) ); ?>" class="widefat">
 			<?php
 			for ( $i = 10; $i < 201; $i += 10 ) {
 				echo '<option value="' . absint( $i ) . '" id="' . absint( $i ) . '"', $radial_dist == $i ? ' selected="selected"' : '', '>', $i, '</option>';
 			}
 			?>
-		</select>
+		</select></td></tr>
+</table>
+
+
+
 	<?php
 	}
 
@@ -78,6 +90,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$instance                = $old_instance;
 		$instance['icao']        = $this->clean_icao( $new_instance['icao'] );
 		$instance['hours']       = absint( $new_instance['hours'] );
+		$instance['show_metar']    = (bool) $new_instance['show_metar'];
 		$instance['show_taf']    = (bool) $new_instance['show_taf'];
 		$instance['show_pireps'] = (bool) $new_instance['show_pireps'];
 		$instance['radial_dist'] = absint( $new_instance['radial_dist'] );
@@ -116,6 +129,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$icao        = empty( $instance['icao'] ) ? '' : self::clean_icao( $instance['icao'] );
 		$hours       = empty( $instance['hours'] ) ? '' : absint( $instance['hours'] );
 		$radial_dist = empty( $instance['radial_dist'] ) ? '' : absint( $instance['radial_dist'] );
+		$show_metar    = isset( $instance['show_metar'] ) ? (bool) $instance['show_metar'] : false;
 		$show_taf    = isset( $instance['show_taf'] ) ? (bool) $instance['show_taf'] : false;
 		$show_pireps = isset( $instance['show_pireps'] ) ? (bool) $instance['show_pireps'] : false;
 		$title       = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance['title'];
@@ -137,11 +151,11 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			echo '</p>';
 			foreach ( $wx as $type => $info ) {
 
-				if ( $type == 'taf' && $show_taf || $type == 'metar' ) {
+				if ( ( $type == 'taf' && $show_taf ) || ( $type == 'metar' && $show_metar ) ) {
 					echo '<p class="adds-heading">' . esc_html( $type ) . '</p>';
 				}
 
-				if ( $type == 'taf' && ! $show_taf ) {
+				if ( ( $type == 'taf' && ! $show_taf ) || ( 'metar' == $type && ! $show_metar ) ) {
 					continue;
 				}
 				if ( is_array( $info ) ) {
@@ -158,7 +172,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			}
 		}
 		if ( ! empty( $pireps[0] ) && $show_pireps ) {
-			echo '<p class="adds-heading">PIREPS ' . absint( $radial_dist ) . 'sm</p><ul>';
+			echo '<p class="adds-heading">PIREPS <span class="adds-sm">' . absint( $radial_dist ) . 'sm</span></p><ul>';
 			foreach ( $pireps[0] as $pirep ) {
 				echo '<li>' . esc_html( $pirep ) . '</li>';
 			}
