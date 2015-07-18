@@ -172,7 +172,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			}
 		}
 		if ( ! empty( $pireps[0] ) && $show_pireps ) {
-			echo '<p class="adds-heading">PIREPS <span class="adds-sm">' . absint( $radial_dist ) . 'sm</span></p><ul>';
+			echo '<p class="adds-heading">pireps <span class="adds-sm">' . absint( $radial_dist ) . 'sm</span></p><ul>';
 			foreach ( $pireps[0] as $pirep ) {
 				echo '<li>' . esc_html( $pirep ) . '</li>';
 			}
