@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": ";;;;;;;AASE,uBAAE;EACA,aAAa,EAAE,IAAI;EAEnB,oCAAe;IACb,WAAW,EAAE,MAAM;IACnB,cAAc,EAAE,SAAS;IAEzB,iDAAa;MACX,cAAc,EAAE,SAAS;AAM/B,wBAAG;EACD,aAAa,EAAE,KAAK;AAGtB,wBAAG;EACD,eAAe,EAAE,IAAI;EAErB,wCAAkB;IAChB,gBAAgB,EAAE,wBAAwB",
+"mappings": ";;;;;;;AASE,wBAAG;EACD,KAAK,EAAE,GAAG;AAEZ,uBAAE;EACA,aAAa,EAAE,IAAI;EAEnB,oCAAe;IACb,WAAW,EAAE,MAAM;IACnB,cAAc,EAAE,SAAS;IAEzB,iDAAa;MACX,cAAc,EAAE,SAAS;AAM/B,wBAAG;EACD,aAAa,EAAE,KAAK;AAGtB,wBAAG;EACD,eAAe,EAAE,IAAI;EAErB,wCAAkB;IAChB,gBAAgB,EAAE,wBAAwB",
 "sources": ["sass/aviation_weather_from_noaa.scss"],
 "names": [],
 "file": "aviation_weather_from_noaa.css"
