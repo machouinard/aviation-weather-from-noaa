@@ -34,6 +34,12 @@ function machouinard_adds_init() {
  * Activate the plugin
  */
 function machouinard_adds_activate() {
+
+	if ( 0 > version_compare( PHP_VERSION, '5.2' ) ) {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+		wp_die( 'This plugin requires PHP version 5.3' );
+	}
+
 	// First load the init scripts in case any rewrite functionality is being loaded
 	machouinard_adds_init();
 
@@ -56,6 +62,7 @@ register_deactivation_hook( __FILE__, 'machouinard_adds_deactivate' );
 add_action( 'init', 'machouinard_adds_init' );
 add_action( 'widgets_init', 'machouinard_adds_register_widget' );
 add_action( 'wp_enqueue_scripts', 'machouinard_adds_scripts' );
+add_action( 'admin_enqueue_scripts', 'machouinard_adds_scripts' );
 add_shortcode( 'adds_weather', 'machouinard_adds_weather_shortcode' );
 // Wireup filters
 
