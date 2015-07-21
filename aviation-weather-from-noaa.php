@@ -35,7 +35,7 @@ function machouinard_adds_init() {
  */
 function machouinard_adds_activate() {
 
-	if ( 0 > version_compare( PHP_VERSION, '5.2' ) ) {
+	if ( version_compare( PHP_VERSION, '5.3' ) < 0 ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 		wp_die( 'This plugin requires PHP version 5.3' );
 	}
