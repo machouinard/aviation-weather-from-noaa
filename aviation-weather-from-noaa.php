@@ -107,6 +107,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 	$defaults = array(
 		'apts'        => 'KSMF',
 		'hours'       => '2',
+		'show_metar'  => '1',
 		'show_taf'    => '1',
 		'show_pireps' => '1',
 		'radial_dist' => '30',
@@ -117,6 +118,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 
 	$icao        = machouinard_adds_weather_widget::clean_icao( $atts['apts'] );
 	$hours       = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 6;
+	$show_metar  = (bool) $atts['show_metar'];
 	$show_taf    = (bool) $atts['show_taf'];
 	$show_pireps = (bool) $atts['show_pireps'];
 	$radial_dist = absint( $atts['radial_dist'] );
@@ -142,11 +144,11 @@ function machouinard_adds_weather_shortcode( $atts ) {
 		$data .= "</{$title_wrap}>";
 		foreach ( $wx as $type => $info ) {
 
-			if ( ( $type == 'taf' && $show_taf ) || $type == 'metar' ) {
+			if ( ( 'taf' == $type && $show_taf ) || ( 'metar' == $type && $show_metar ) ) {
 				$data .= '<p class="adds-heading">' . $type . '</p>';
 			}
 
-			if ( $type == 'taf' && ! $show_taf ) {
+			if ( ( 'taf' == $type && ! $show_taf ) || ( 'metar' == $type && ! $show_metar) ) {
 				continue;
 			}
 
