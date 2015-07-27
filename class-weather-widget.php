@@ -147,7 +147,9 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 
 		if ( ! empty( $wx['metar'] ) ) {
 			echo '<div class="' . apply_filters( 'adds_widget_wrapper', 'adds-weather-wrapper' ) . '"><p>';
-			echo esc_html( $title );
+			if ( $show_metar || $show_taf || $show_pireps ) {
+				echo esc_html( $title );
+			}
 			echo '</p>';
 			foreach ( $wx as $type => $info ) {
 
