@@ -110,7 +110,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 		'show_metar'  => '1',
 		'show_taf'    => '1',
 		'show_pireps' => '1',
-		'radial_dist' => '30',
+		'radial_dist' => '100',
 		'title'       => ''
 	);
 

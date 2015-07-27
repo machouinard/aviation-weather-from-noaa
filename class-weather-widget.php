@@ -15,12 +15,12 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 
 	function form( $instance ) {
 		$defaults = array(
-			'icao'        => 'KZZV',
+			'icao'        => 'KSMF',
 			'hours'       => 2,
 			'show_metar'  => true,
 			'show_taf'    => true,
 			'show_pireps' => true,
-			'radial_dist' => '30',
+			'radial_dist' => '100',
 			'title'       => '',
 		);
 		$instance = wp_parse_args( $instance, $defaults );
