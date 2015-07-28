@@ -47,7 +47,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		        id="<?php echo esc_attr( $this->get_field_id( 'hours' ) ); ?>" class="widefat">
 
 			<?php
-			for ( $i = 1; $i < 7; $i ++ ) {
+			foreach ( range( 1, 6, 1 ) as $i ) {
 				echo '<option value="' . absint( $i ) . '" id="' . absint( $i ) . '"', $hours == $i ? ' selected="selected"' : '', '>', $i, '</option>';
 			}
 			?>
@@ -74,7 +74,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		<td><select name="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"
 		        id="<?php echo esc_attr( $this->get_field_id( 'radial_dist' ) ); ?>" class="widefat">
 			<?php
-			for ( $i = 10; $i < 201; $i += 10 ) {
+			foreach ( range( 10, 200, 10) as $i ) {
 				echo '<option value="' . absint( $i ) . '" id="' . absint( $i ) . '"', $radial_dist == $i ? ' selected="selected"' : '', '>', $i, '</option>';
 			}
 			?>
@@ -90,7 +90,7 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$instance                = $old_instance;
 		$instance['icao']        = $this->clean_icao( $new_instance['icao'] );
 		$instance['hours']       = absint( $new_instance['hours'] );
-		$instance['show_metar']    = (bool) $new_instance['show_metar'];
+		$instance['show_metar']  = (bool) $new_instance['show_metar'];
 		$instance['show_taf']    = (bool) $new_instance['show_taf'];
 		$instance['show_pireps'] = (bool) $new_instance['show_pireps'];
 		$instance['radial_dist'] = absint( $new_instance['radial_dist'] );
