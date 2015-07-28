@@ -12,7 +12,6 @@ Domain Path: /languages
  */
 
 
-
 // Useful global constants
 define( 'MACHOUINARD_ADDS_VERSION', '0.3.7' );
 define( 'MACHOUINARD_ADDS_URL', plugin_dir_url( __FILE__ ) );
@@ -148,7 +147,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 				$data .= '<p class="adds-heading">' . $type . '</p>';
 			}
 
-			if ( ( 'taf' == $type && ! $show_taf ) || ( 'metar' == $type && ! $show_metar) ) {
+			if ( ( 'taf' == $type && ! $show_taf ) || ( 'metar' == $type && ! $show_metar ) ) {
 				continue;
 			}
 

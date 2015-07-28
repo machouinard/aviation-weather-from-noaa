@@ -8,7 +8,8 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	function machouinard_adds_weather_widget() {
 		$options = array(
 			'classname'   => 'machouinard_adds_widget_class',
-			'description' => __( "Displays METAR & other info from NOAA's Aviation Digital Data Service", 'machouinard_adds' )
+			'description' => __( "Displays METAR & other info from NOAA's Aviation Digital Data Service",
+				'machouinard_adds' )
 		);
 		$this->WP_Widget( 'machouinard_adds_weather_widget', 'ADDS Weather Info', $options );
 	}
@@ -34,12 +35,14 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$title       = sanitize_text_field( $instance['title'] );
 		?>
 		<label
-			for="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"><?php _e( 'Title', 'machouinard_adds' ); ?></label>
+			for="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"><?php _e( 'Title',
+				'machouinard_adds' ); ?></label>
 		<input class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text"
 		       value="<?php echo esc_html( $title ); ?>"/>
 
 		<label
-			for="<?php echo esc_attr( $this->get_field_name( 'icao' ) ); ?>"><?php _e( 'ICAO', 'machouinard_adds' ); ?></label>
+			for="<?php echo esc_attr( $this->get_field_name( 'icao' ) ); ?>"><?php _e( 'ICAO',
+				'machouinard_adds' ); ?></label>
 		<input class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'icao' ) ); ?>" type="text"
 		       value="<?php echo esc_attr( $icao ); ?>" placeholder="Please Enter a Valid ICAO"/>
 		<label for="<?php echo esc_attr( $this->get_field_name( 'hours' ) ); ?>">Hours before now</label>
@@ -52,38 +55,49 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 			}
 			?>
 		</select>
-<table>
-	<thead>Display:</thead>
-	<tr><td><label
-				for="<?php echo esc_attr( $this->get_field_id( 'show_metar' ) ); ?>"><?php _e( 'METAR', 'machouinard_adds' ); ?></label></td>
-			<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_metar' ) ); ?>"
-			       name="<?php echo esc_attr( $this->get_field_name( 'show_metar' ) ); ?>" type="checkbox"
-			       value="1" <?php checked( true, $show_metar ); ?> class="checkbox"/></td></tr>
-	<tr><td><label
-			for="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"><?php _e( 'TAF', 'machouinard_adds' ); ?></label></td>
-		<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"
-		       name="<?php echo esc_attr( $this->get_field_name( 'show_taf' ) ); ?>" type="checkbox"
-		       value="1" <?php checked( true, $show_taf ); ?> class="checkbox"/></td></tr>
-	<tr><td><label
-				for="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"><?php _e( 'PIREPS', 'machouinard_adds' ); ?></label></td>
-		<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"
-		           name="<?php echo esc_attr( $this->get_field_name( 'show_pireps' ) ); ?>" type="checkbox"
-		           value="1" <?php checked( true, $show_pireps ); ?> class="checkbox"/></td></tr>
-	<tr><td><label
-			for="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"><?php _e( 'Radial Distance', 'machouinard_adds' ); ?></label></td>
-		<td><select name="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"
-		        id="<?php echo esc_attr( $this->get_field_id( 'radial_dist' ) ); ?>" class="widefat">
-			<?php
-			foreach ( range( 10, 200, 10) as $i ) {
-				echo '<option value="' . absint( $i ) . '" id="' . absint( $i ) . '"', $radial_dist == $i ? ' selected="selected"' : '', '>', $i, '</option>';
-			}
-			?>
-		</select></td></tr>
-</table>
+		<table>
+			<thead>Display:</thead>
+			<tr>
+				<td><label
+						for="<?php echo esc_attr( $this->get_field_id( 'show_metar' ) ); ?>"><?php _e( 'METAR',
+							'machouinard_adds' ); ?></label></td>
+				<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_metar' ) ); ?>"
+				           name="<?php echo esc_attr( $this->get_field_name( 'show_metar' ) ); ?>" type="checkbox"
+				           value="1" <?php checked( true, $show_metar ); ?> class="checkbox"/></td>
+			</tr>
+			<tr>
+				<td><label
+						for="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"><?php _e( 'TAF',
+							'machouinard_adds' ); ?></label></td>
+				<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_taf' ) ); ?>"
+				           name="<?php echo esc_attr( $this->get_field_name( 'show_taf' ) ); ?>" type="checkbox"
+				           value="1" <?php checked( true, $show_taf ); ?> class="checkbox"/></td>
+			</tr>
+			<tr>
+				<td><label
+						for="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"><?php _e( 'PIREPS',
+							'machouinard_adds' ); ?></label></td>
+				<td><input id="<?php echo esc_attr( $this->get_field_id( 'show_pireps' ) ); ?>"
+				           name="<?php echo esc_attr( $this->get_field_name( 'show_pireps' ) ); ?>" type="checkbox"
+				           value="1" <?php checked( true, $show_pireps ); ?> class="checkbox"/></td>
+			</tr>
+			<tr>
+				<td><label
+						for="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"><?php _e( 'Radial Distance',
+							'machouinard_adds' ); ?></label></td>
+				<td><select name="<?php echo esc_attr( $this->get_field_name( 'radial_dist' ) ); ?>"
+				            id="<?php echo esc_attr( $this->get_field_id( 'radial_dist' ) ); ?>" class="widefat">
+						<?php
+						foreach ( range( 10, 200, 10 ) as $i ) {
+							echo '<option value="' . absint( $i ) . '" id="' . absint( $i ) . '"', $radial_dist == $i ? ' selected="selected"' : '', '>', $i, '</option>';
+						}
+						?>
+					</select></td>
+			</tr>
+		</table>
 
 
-
-	<?php
+		<?php
 	}
 
 	function update( $new_instance, $old_instance ) {
@@ -128,10 +142,12 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		$icao        = empty( $instance['icao'] ) ? '' : self::clean_icao( $instance['icao'] );
 		$hours       = empty( $instance['hours'] ) ? '' : absint( $instance['hours'] );
 		$radial_dist = empty( $instance['radial_dist'] ) ? '' : absint( $instance['radial_dist'] );
-		$show_metar    = isset( $instance['show_metar'] ) ? (bool) $instance['show_metar'] : false;
+		$show_metar  = isset( $instance['show_metar'] ) ? (bool) $instance['show_metar'] : false;
 		$show_taf    = isset( $instance['show_taf'] ) ? (bool) $instance['show_taf'] : false;
 		$show_pireps = isset( $instance['show_pireps'] ) ? (bool) $instance['show_pireps'] : false;
-		$title       = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour', 'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao, $hours ) : $instance['title'];
+		$title       = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour',
+			'Available data for %s from the past %d hours', $hours, 'machouinard_adds' ), $icao,
+			$hours ) : $instance['title'];
 
 		if ( empty( $icao ) ) {
 			return;
@@ -194,8 +210,10 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	static function get_metar( $icao, $hours ) {
 
 		if ( false === $wx = get_transient( 'noaa_wx_' . $icao ) ) {
-			$metar_url = sprintf( 'http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString=%s&hoursBeforeNow=%d', $icao, absint( $hours ) );
-			$tafs_url  = sprintf( 'http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString=%s&hoursBeforeNow=%d', $icao, absint( $hours ) );
+			$metar_url = sprintf( 'http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString=%s&hoursBeforeNow=%d',
+				$icao, absint( $hours ) );
+			$tafs_url  = sprintf( 'http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString=%s&hoursBeforeNow=%d',
+				$icao, absint( $hours ) );
 
 			$xml['metar'] = self::load_xml( esc_url_raw( $metar_url ) );
 
@@ -232,9 +250,10 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	 * @return array    $pireps           pirep data
 	 */
 	static function get_pireps( $icao, $radial_dist, $hours ) {
-		if ( false == ( $pireps =  get_transient( 'noaa_pireps_' . $icao ) ) ) {
+		if ( false == ( $pireps = get_transient( 'noaa_pireps_' . $icao ) ) ) {
 			$info      = self::get_apt_info( $icao );
-			$pirep_url = sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d', $radial_dist, $info['lon'], $info['lat'], $hours );
+			$pirep_url = sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d',
+				$radial_dist, $info['lon'], $info['lat'], $hours );
 			$xml       = self::load_xml( $pirep_url );
 			$pireps    = array();
 			for ( $i = 0; $i < count( $xml->data->AircraftReport ); $i ++ ) {
@@ -258,7 +277,8 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 		if ( ! preg_match( '~^[A-Za-z0-9]{4,4}$~', $icao, $matches ) ) {
 			return false;
 		}
-		$url = sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s', $icao );
+		$url = sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s',
+			$icao );
 		$xml = self::load_xml( esc_url_raw( $url ) );
 		if ( isset( $xml->data->Station ) ) {
 			$info['station_id'] = $xml->data->Station->station_id;
