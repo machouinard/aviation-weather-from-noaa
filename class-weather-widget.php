@@ -113,7 +113,6 @@ class Machouinard_Adds_Weather_Widget extends WP_Widget {
 	static function clean_icao( $icao ) {
 		preg_match( '/^[A-Za-z]{3,4}$/', $icao, $matches );
 
-//		$temp_icao = strtoupper( $matches[0] );
 		if ( strlen( $matches[0] ) == 3 ) {
 			foreach ( array( 'K', 'Y', 'C', 'E' ) as $first_letter ) {
 				if ( self::get_apt_info( $first_letter . $matches[0] ) ) {
