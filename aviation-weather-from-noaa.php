@@ -137,7 +137,7 @@ function machouinard_adds_weather_shortcode( $atts ) {
 
 	$title_wrap = apply_filters( 'adds_shortcode_title_wrap', 'h2' );
 
-	if ( ! empty( $wx['metar'] ) ) {
+	if ( ! empty( $wx ) ) {
 		$data .= '<div class="' . apply_filters( 'adds_shortcode_wrapper',
 				'adds-weather-wrapper' ) . '"><' . $title_wrap . '>';
 		$data .= sanitize_text_field( $title );
