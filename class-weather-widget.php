@@ -5,12 +5,13 @@
  */
 class Machouinard_Adds_Weather_Widget extends WP_Widget {
 
-	function machouinard_adds_weather_widget() {
-		$options = array(
-			'classname'   => 'machouinard_adds_widget_class',
-			'description' => __( "Displays METAR & other info from NOAA's Aviation Digital Data Service", 'machouinard_adds' )
-		);
-		$this->WP_Widget( 'machouinard_adds_weather_widget', 'ADDS Weather Info', $options );
+	function __construct() {
+		parent::__construct( 'machouinard_adds_weather_widget',
+			__( 'ADDS Weather Info', 'machouinard_adds' ),
+			$options = array(
+				'classname'   => 'machouinard_adds_widget_class',
+				'description' => __( "Displays METAR & other info from NOAA's Aviation Digital Data Service", 'machouinard_adds' )
+			) );
 	}
 
 	function form( $instance ) {
