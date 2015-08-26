@@ -6,7 +6,7 @@ Contributors:		machouinard
   
 **Requires at least:** 	3.8
   
-**Tested up to:**      	4.2
+**Tested up to:**      	4.3
   
 **Stable tag:**        	trunk
   
