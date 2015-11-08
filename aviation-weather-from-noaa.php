@@ -11,7 +11,7 @@ Text Domain: machouinard_adds
 Domain Path: /languages
  */
 
-
+//force git
 // Useful global constants
 define( 'MACHOUINARD_ADDS_VERSION', '0.3.7' );
 define( 'MACHOUINARD_ADDS_URL', plugin_dir_url( __FILE__ ) );
