@@ -1,20 +1,20 @@
 language: php
-
+notifications:
+  slack:
+    secure: a49WzMzk/5fq8RzxIWF9PCB55IyMufffMKCncoL9sIGn9B9QvlX8Ay5tpoTPMPX8Oax7CAPR2FJjke3x+9cTeibq4uxvKd636JldSFXE7JUPWC7Le+tlmbIXjZfcJQfJ2rQjPMzfVS/ss/Xw/pByfYjf8sxrzWXQo4YKMVDm9ew=
 php:
-    - 5.3
-    - 5.5
-
+- 5.3
+- 5.5
 env:
-    - WP_VERSION=latest WP_MULTISITE=0
-    - WP_VERSION=latest WP_MULTISITE=1
-    - WP_VERSION=3.8 WP_MULTISITE=0
-    - WP_VERSION=3.8 WP_MULTISITE=1
-
+- WP_VERSION=latest WP_MULTISITE=0
+- WP_VERSION=latest WP_MULTISITE=1
+- WP_VERSION=3.8 WP_MULTISITE=0
+- WP_VERSION=3.8 WP_MULTISITE=1
 before_script:
-    - mkdir -p build/logs
-    - if [ "$(phpenv version-name)" != "5.2" ]; then composer install --dev; fi;
-    - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-    - sleep 5 
-
+- mkdir -p build/logs
+- if [ "$(phpenv version-name)" != "5.2" ]; then composer install --dev; fi;
+- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+- sleep 5
 script:
-    - if [ "$(phpenv version-name)" != "5.2" ]; then phpunit --coverage-clover build/logs/clover.xml; else phpunit; fi;
+- if [ "$(phpenv version-name)" != "5.2" ]; then phpunit --coverage-clover build/logs/clover.xml;
+  else phpunit; fi;
