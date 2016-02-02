@@ -1,0 +1,128 @@
+<?php
+
+use MetarDecoder\MetarDecoder;
+
+/**
+ * Class AwfnMetar
+ *
+ * This class retrieves the most current METAR report, decodes it and builds the HTML output
+ *
+ * @package     Aviation Weather from NOAA
+ * @subclass    Metar
+ * @since       0.4.0
+ */
+class AwfnMetar extends Awfn {
+
+	/**
+	 * AwfnMetar constructor.
+	 *
+	 * Setup log name - late static binding, build URL for Awfn::load_xml()
+	 *
+	 * @param string $station
+	 * @param int    $hours
+	 * @param bool   $show
+	 * @since 0.4.0
+	 */
+	public function __construct( $station = 'KSMF', $hours = 1, $show = true ) {
+
+		self::$log_name = 'METAR';
+		$base_url       = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
+		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
+		$this->url     = sprintf( $base_url, $station, $hours );
+		$this->station = $station;
+		$this->hours   = $hours;
+		$this->show    = $show;
+
+		parent::__construct();
+
+	}
+
+	/**
+	 * Assigns most recent metar to $this->data and begins the decoding process
+	 */
+	public function decode_data() {
+
+		if ( $this->xmlData ) {
+			$this->data = $this->xmlData['raw_text'];
+			$this->decode_metar();
+		} else {
+//			$this->log->debug( 'No metar data returned' );
+		}
+	}
+
+	/**
+	 * Decodes raw metar into friendlier display
+	 *
+	 * @since 0.4.0
+	 */
+	private function decode_metar() {
+		$decoder = new MetarDecoder();
+		$d       = $decoder->parse( $this->data );
+		if ( $d->isValid() ) {
+			$time                 = $d->getTime();
+			$sw                   = $d->getSurfaceWind();
+			$wind                 = $sw->getMeanDirection();
+			$wind_dir             = null == $wind ? '' : $sw->getMeanDirection()->getValue();
+			$speed                = $sw->getMeanSpeed();
+			$wind_speed           = null == $speed ? '' : $sw->getMeanSpeed()->getValue();
+			$wind_unit            = null == $speed ? '' : $sw->getMeanSpeed()->getUnit();
+			$v                    = $d->getVisibility();
+			$visibility           = null == $v ? '' : $v->getVisibility()->getValue();
+			$v_units              = null == $v ? '' : $v->getVisibility()->getUnit();
+			$cld                  = $d->getClouds();
+			$cld_amount           = isset( $cld[0] ) ? $cld[0]->getAmount() : '';
+			$cld_base_height      = isset( $cld[0] ) ? $cld[0]->getBaseHeight()->getValue() : '';
+			$cld_base_height_unit = isset( $cld[0] ) ? $cld[0]->getBaseHeight()->getUnit() : '';
+			$t                    = $d->getAirTemperature();
+			$tmp                  = null == $t ? '' : $d->getAirTemperature()->getValue();
+			$tmp_unit             = null == $t ? '' : $d->getAirTemperature()->getUnit();
+			$dp                   = $d->getDewPointTemperature();
+			$tmp_dewpoint         = null == $dp ? '' : $d->getDewPointTemperature()->getValue();
+			$p                    = $d->getPressure();
+			$pressure             = null == $p ? '' : $d->getPressure()->getValue();
+			$pressure_unit        = null == $p ? '' : $d->getPressure()->getUnit();
+
+			$this->decoded
+				= <<<MAC
+<p>{$time}</p>
+<p>Wind: {$wind_dir}&deg; {$wind_speed}{$wind_unit}</p>
+<p>Visibility: {$visibility} {$v_units}</p>
+<p>Sky: {$cld_amount} {$cld_base_height} {$cld_base_height_unit}</p>
+<p>Temp: {$tmp} {$tmp_unit}</p>
+<p>Dewpoint: {$tmp_dewpoint} {$tmp_unit}</p>
+<p>Pressure: {$pressure} {$pressure_unit}</p>
+MAC;
+
+
+		} else {
+			$this->decoded = false;
+//			$this->log->debug( 'Invalid METAR' );
+
+		}
+	}
+
+	/**
+	 * Builds HTML output for display on front-end
+	 *
+	 * @since 0.4.0
+	 */
+	public function build_display() {
+
+		if ( $this->data ) {
+			$this->display_data = '<section id="metar"><header>Metar<span class="fa fa-sort-desc"></span></header><article class="metar">'
+			                      . esc_html( $this->data ) .
+			                      '</article>';
+			if ( $this->decoded ) {
+				$this->display_data .= '<article class="decoded-metar">' . $this->decoded . '</article>';
+			}
+			$this->display_data .= '</section>';
+		} else {
+//			$this->log->debug( 'No metar to build display' );
+			$this->display_data = '<article class="metar">' . __( 'No METAR returned', Adds_Weather_Widget::get_widget_slug() )
+			                      . '</article>';
+		}
+
+	}
+
+
+}

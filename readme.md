@@ -2,17 +2,17 @@
 
 Contributors:		machouinard
 **Tags:** 				weather, noaa, aviation, metar, pireps
-  
+
 **Requires at least:** 	3.8
-  
-**Tested up to:**      	4.3
-  
+
+**Tested up to:**      	4.4.1
+
 **Stable tag:**        	trunk
-  
+
 **License:**           	GPLv2 or later
-  
+
 **License URI:**       	http://www.gnu.org/licenses/gpl-2.0.html
-  
+
 
 Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
@@ -23,7 +23,7 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 * Create multiple instances using either widget or shortcode
 
 ### Shortcode Usage: ( shown with defaults ) ###
-    [adds_weather apts='KSMF' hours=2 show_metar=1 show_taf=1 show_pireps=1 radial_dist=30 title='']
+    [adds_weather apts='KSMF' hours=2 show_metar=1 show_taf=1 show_pireps=1 show_station_info=1 radial_dist=30 title='']
 
 Data is cached for 15 minutes using the WordPress Transients API.
 
@@ -37,7 +37,8 @@ Data is cached for 15 minutes using the WordPress Transients API.
 Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 ## Installation ##
 
-### Manual Installation ###
+### Manual Installation (Requires PHP 5.3+) ###
+
 
 1. Upload the entire `/aviation-weather-from-noaa` directory to the `/wp-content/plugins/` directory.
 2. Activate Aviation Weather from NOAA through the 'Plugins' menu in WordPress.
@@ -47,6 +48,12 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 
 ## Changelog ##
+### 0.4.0 ###
+* Separate functionality into individual classes
+* Improve use of transients and options including deletion on uninstall
+* Only display most recent METAR & TAF
+* Add decoded METAR
+
 ### 0.3.8 ###
 * Add ability to not display Metar
 * Add check for PHP version 3.3
@@ -96,4 +103,3 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 ### 0.1.0 ###
 * First release
-

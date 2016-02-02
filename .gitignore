@@ -1,5 +1,3 @@
-deploy.sh
-composer.lock
+.DS_Store
 vendor/
-npm-debug.log
-coverage/
+composer.lock

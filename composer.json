@@ -1,5 +1,6 @@
 {
-    "require-dev": {
-        "10up/wp_mock": "dev-master"
-    }
+  "require": {
+    "sagem-cassiopee/php-metar-decoder": "dev-master",
+    "monolog/monolog": "~1.11"
+  }
 }
