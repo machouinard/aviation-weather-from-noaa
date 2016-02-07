@@ -53,7 +53,7 @@ abstract class Awfn {
 
 	protected function maybelog( $severity, $msg ) {
 
-		if( false !== $this->log ) {
+		if ( false !== $this->log ) {
 			$this->log->$severity( $msg );
 		}
 
@@ -65,10 +65,16 @@ abstract class Awfn {
 	 * @since 0.4.0
 	 */
 	public function go( $return = false ) {
+
 		if ( $this->load_xml() ) {
+
 			$this->decode_data();
 			$this->build_display();
-			$this->display_data( $return );
+
+			if ( ! $return ) {
+
+				$this->display_data();
+			}
 		}
 
 	}
@@ -92,14 +98,12 @@ abstract class Awfn {
 	 *
 	 * @since 0.4.0
 	 */
-	public function display_data( $return = false ) {
+	public function display_data() {
 
 		if ( $this->display_data && $this->show ) {
-			if ( $return ) {
-				return print_r( $this->display_data, true );
-			} else {
-				echo $this->display_data;
-			}
+
+			echo $this->display_data;
+
 		}
 
 	}
@@ -123,6 +127,7 @@ abstract class Awfn {
 		if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
 			$this->maybelog( 'debug', print_r( $xml_raw, true ) );
 			$this->maybelog( 'debug', $body );
+
 			return false;
 		}
 
