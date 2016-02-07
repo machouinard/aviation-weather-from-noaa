@@ -29,6 +29,7 @@ class AwfnPirep extends Awfn {
 		parent::__construct();
 
 		$this->show     = (bool) $show;
+		$this->hours = (int) $hours;
 		self::$log_name = 'AircraftReport';
 		$base           = 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve';
 		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';

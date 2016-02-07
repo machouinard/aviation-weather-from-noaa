@@ -18,13 +18,21 @@ abstract class Awfn {
 	protected $log = false;
 	protected $hours;
 	public $station;
-	protected $station_name;
+//	protected $station_name;
 	protected $show;
 	protected $url;
 	protected $data = false;
 	protected $display_data = false;
 	public $xmlData = false;
 	protected $decoded = false;
+
+	public function get_hours() {
+		return $this->hours;
+	}
+
+	public function get_show() {
+		return $this->show;
+	}
 
 	/**
 	 * Awfn constructor.
