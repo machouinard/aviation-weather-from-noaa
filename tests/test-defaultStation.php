@@ -13,7 +13,6 @@ class TestDefaultStation extends WP_UnitTestCase {
 	public function setUp() {
 
 		$this->smf = new AwfnStation( 'KSMF' );
-		$this->smf->go( true );
 	}
 
 	public function tearDown() {
@@ -25,6 +24,8 @@ class TestDefaultStation extends WP_UnitTestCase {
 	}
 
 	public function testDefaultXml() {
+		$this->smf->go( true );
+
 //		print_r( $this->smf->xmlData );
 		$xmlData = $this->smf->xmlData;
 		$this->assertEquals( 'KSMF', $xmlData['station_id'] );

@@ -8,7 +8,6 @@ class TestMetarZanesville extends WP_UnitTestCase {
 	public function setUp() {
 
 		$this->zzv = new AwfnMetar( 'kzzv', 4, false );
-		$this->zzv->go( true );
 	}
 
 	public function tearDown() {
@@ -28,6 +27,8 @@ class TestMetarZanesville extends WP_UnitTestCase {
 	}
 
 	function testMetarXmlData() {
+		$this->zzv->go( true );
+
 		$xmlData = $this->zzv->xmlData;
 		$this->assertEquals( 'KZZV', $xmlData['station_id'] );
 		$this->assertEquals( 39.95, (float) $xmlData['latitude'] );

@@ -8,7 +8,6 @@ class TestDefaultMetar extends WP_UnitTestCase {
 	public function setUp() {
 
 		$this->smf = new AwfnMetar();
-		$this->smf->go( true );
 	}
 
 	public function tearDown() {
@@ -28,6 +27,8 @@ class TestDefaultMetar extends WP_UnitTestCase {
 	}
 
 	function testDefaultMetarXmlData() {
+		$this->smf->go( true );
+
 		$xmlData = $this->smf->xmlData;
 		$this->assertEquals( 'KSMF', $xmlData['station_id'] );
 		$this->assertEquals( 38.7, (float) $xmlData['latitude'] );

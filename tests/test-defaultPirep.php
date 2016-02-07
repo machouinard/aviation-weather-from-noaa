@@ -13,7 +13,7 @@ class TestDefaultPirep extends WP_UnitTestCase {
 	public function setUp() {
 
 		$this->smf = new AwfnPirep( 38.7, -121.6 );
-		$this->smf->go( true );
+//		$this->smf->go( true );
 	}
 
 	public function tearDown() {
