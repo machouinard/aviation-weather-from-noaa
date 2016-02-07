@@ -22,7 +22,7 @@ matrix:
 
 before_script:
 #  - mkdir -p build/logs
-#  - composer install
+  - composer install
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 
 script: phpunit
