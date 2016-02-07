@@ -25,15 +25,18 @@ class AwfnMetar extends Awfn {
 	 */
 	public function __construct( $station = 'KSMF', $hours = 1, $show = true ) {
 
+		self::$log_name = 'METAR';
+
 		parent::__construct();
 
-		self::$log_name = 'METAR';
 		$base_url       = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
 		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
 		$this->url     = sprintf( $base_url, $station, $hours );
 		$this->station = $station;
 		$this->hours   = $hours;
 		$this->show    = $show;
+
+		$this->maybelog( 'debug', 'metar line: ' . __LINE__ );
 
 	}
 

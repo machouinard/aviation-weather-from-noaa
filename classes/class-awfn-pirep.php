@@ -26,14 +26,17 @@ class AwfnPirep extends Awfn {
 	 */
 	public function __construct( $lat, $lng, $distance = 100, $hours = 1, $show = true ) {
 
+		self::$log_name = 'AircraftReport';
+
 		parent::__construct();
 
 		$this->show     = (bool) $show;
 		$this->hours = (int) $hours;
-		self::$log_name = 'AircraftReport';
 		$base           = 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve';
 		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';
 		$this->url = sprintf( $base, $distance, $lng, $lat, $hours );
+
+		$this->maybelog( 'debug', 'pirep line: ' . __LINE__ );
 	}
 
 	/**

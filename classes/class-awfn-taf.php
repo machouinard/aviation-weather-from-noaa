@@ -20,9 +20,9 @@ class AwfnTaf extends Awfn {
 	 */
 	public function __construct( $station = 'KSMF', $hours = 1, $show = true ) {
 
-		parent::__construct();
-
 		self::$log_name = 'TAF';
+
+		parent::__construct();
 
 		$url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml';
 		$url .= '&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
@@ -31,6 +31,8 @@ class AwfnTaf extends Awfn {
 		$this->station = $station;
 		$this->hours   = $hours;
 		$this->show    = $show;
+
+		$this->maybelog( 'debug', 'taf line: ' . __LINE__ );
 
 	}
 
