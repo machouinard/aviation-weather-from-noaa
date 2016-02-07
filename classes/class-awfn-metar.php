@@ -25,6 +25,8 @@ class AwfnMetar extends Awfn {
 	 */
 	public function __construct( $station = 'KSMF', $hours = 1, $show = true ) {
 
+		parent::__construct();
+
 		self::$log_name = 'METAR';
 		$base_url       = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
 		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
@@ -32,8 +34,6 @@ class AwfnMetar extends Awfn {
 		$this->station = $station;
 		$this->hours   = $hours;
 		$this->show    = $show;
-
-		parent::__construct();
 
 	}
 
@@ -46,7 +46,7 @@ class AwfnMetar extends Awfn {
 			$this->data = $this->xmlData['raw_text'];
 			$this->decode_metar();
 		} else {
-//			$this->log->debug( 'No metar data returned' );
+//			$this->maybelog( 'debug', 'No metar data returned' );
 		}
 	}
 
@@ -96,8 +96,7 @@ MAC;
 
 		} else {
 			$this->decoded = false;
-//			$this->log->debug( 'Invalid METAR' );
-
+			$this->maybelog( 'debug', 'Invalid METAR' );
 		}
 	}
 
@@ -117,7 +116,6 @@ MAC;
 			}
 			$this->display_data .= '</section>';
 		} else {
-//			$this->log->debug( 'No metar to build display' );
 			$this->display_data = '<article class="metar">' . __( 'No METAR returned', Adds_Weather_Widget::get_widget_slug() )
 			                      . '</article>';
 		}

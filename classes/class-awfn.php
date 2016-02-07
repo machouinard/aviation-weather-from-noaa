@@ -15,7 +15,7 @@ use Monolog\Handler\StreamHandler;
 abstract class Awfn {
 
 	protected static $log_name;
-	protected $log;
+	protected $log = false;
 	protected $hours;
 	public $station;
 	protected $station_name;
@@ -35,9 +35,19 @@ abstract class Awfn {
 	 */
 	public function __construct() {
 		// Prepare logger
-//		$this->log = new Logger( static::$log_name );
-//		$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . '/logs/development.log', Logger::DEBUG ) );
-//		$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . '/logs/production.log', Logger::WARNING ) );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$this->log = new Logger( static::$log_name );
+			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . '/logs/development.log', Logger::DEBUG ) );
+			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . '/logs/production.log', Logger::WARNING ) );
+		}
+
+	}
+
+	protected function maybelog( $severity, $msg ) {
+
+		if( false !== $this->log ) {
+			$this->log->$severity( $msg );
+		}
 
 	}
 
@@ -92,18 +102,21 @@ abstract class Awfn {
 	public function load_xml() {
 		$xml_raw = wp_remote_get( esc_url_raw( $this->url ) );
 		if ( is_wp_error( $xml_raw ) ) {
-//			$this->log->warn( $xml_raw->get_error_message() );
+			$this->maybelog( 'warn', $xml_raw->get_error_message() );
 			$this->xmlData = false;
 
 			return false;
 		}
 		$body = wp_remote_retrieve_body( $xml_raw );
-		if ( '' == $body ) {
+		if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
+			$this->maybelog( 'debug', print_r( $xml_raw, true ) );
+			$this->maybelog( 'debug', $body );
 			return false;
 		}
+
 		$loaded = simplexml_load_string( $body );
 		if ( ! empty( $loaded->errors ) ) {
-//			$this->log->debug( (string) $loaded->errors->error );
+			$this->maybelog( 'debug', (string) $loaded->errors->error );
 
 			return false;
 		}

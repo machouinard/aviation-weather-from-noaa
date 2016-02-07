@@ -23,6 +23,8 @@ class AwfnStation extends Awfn {
 	 */
 	public function __construct( $station, $show = false ) {
 
+		parent::__construct();
+
 		self::$log_name = 'Station';
 
 		$this->station = strtoupper( sanitize_text_field( $station ) );
@@ -31,8 +33,6 @@ class AwfnStation extends Awfn {
 		$base = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations';
 		$base .= '&requestType=retrieve&format=xml&stationString=%s';
 		$this->url = sprintf( $base, $this->station );
-
-		parent::__construct();
 
 	}
 

@@ -19,6 +19,9 @@ class AwfnTaf extends Awfn {
 	 * @since 0.4.0
 	 */
 	public function __construct( $station = 'KSMF', $hours = 1, $show = true ) {
+
+		parent::__construct();
+
 		self::$log_name = 'TAF';
 
 		$url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml';
@@ -29,7 +32,6 @@ class AwfnTaf extends Awfn {
 		$this->hours   = $hours;
 		$this->show    = $show;
 
-		parent::__construct();
 	}
 
 	/**
@@ -42,7 +44,7 @@ class AwfnTaf extends Awfn {
 		if ( $this->xmlData ) {
 			$this->data = $this->xmlData['raw_text'];
 		} else {
-//			$this->log->debug( 'No taf data found' );
+//			$this->maybelog( 'debug', 'No taf data found' );
 		}
 	}
 
