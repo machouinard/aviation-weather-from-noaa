@@ -56,11 +56,11 @@ abstract class Awfn {
 	 *
 	 * @since 0.4.0
 	 */
-	public function go() {
+	public function go( $return = false ) {
 		if ( $this->load_xml() ) {
 			$this->decode_data();
 			$this->build_display();
-			$this->display_data();
+			$this->display_data( $return );
 		}
 
 	}
@@ -84,10 +84,14 @@ abstract class Awfn {
 	 *
 	 * @since 0.4.0
 	 */
-	public function display_data() {
+	public function display_data( $return = false ) {
 
 		if ( $this->display_data && $this->show ) {
-			echo $this->display_data;
+			if ( $return ) {
+				return print_r( $this->display_data, true );
+			} else {
+				echo $this->display_data;
+			}
 		}
 
 	}
