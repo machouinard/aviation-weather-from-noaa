@@ -98,7 +98,7 @@ abstract class Awfn {
 			return false;
 		}
 		$body = wp_remote_retrieve_body( $xml_raw );
-		if ( is_wp_error( $body ) ) {
+		if ( '' == $body ) {
 			return false;
 		}
 		$loaded = simplexml_load_string( $body );
