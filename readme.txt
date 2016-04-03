@@ -15,6 +15,7 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 * Display up to 6 hours before now
 * PIREPs up to 200sm
 * Create multiple instances using either widget or shortcode
+* WP-CLI Integration
 
 = Shortcode Usage: ( shown with defaults ) =
     [adds_weather apts='KSMF' hours=2 show_metar=1 show_taf=1 show_pireps=1 show_station_info=1 radial_dist=100 title='']
@@ -29,6 +30,7 @@ Data is cached for 30 minutes using the WordPress Transients API.
 * adds_widget_wrapper: Class of the div enclosing the widget
 
 Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
+
 == Installation ==
 
 = Manual Installation =
@@ -46,7 +48,8 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 * Improve use of transients and options including deletion on uninstall
 * Only display most recent METAR & TAF
 * Add decoded METAR
-
+* Show/hide decoded METAR and PIREPS
+* WP-CLI Integration
 
 = 0.3.8 =
 * Add ability to not display Metar
