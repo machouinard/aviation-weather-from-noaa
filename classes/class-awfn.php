@@ -18,7 +18,6 @@ abstract class Awfn {
 	protected $log = false;
 	protected $hours;
 	public $station;
-//	protected $station_name;
 	protected $show;
 	protected $url;
 	protected $data = false;
@@ -32,6 +31,10 @@ abstract class Awfn {
 
 	public function get_show() {
 		return $this->show;
+	}
+
+	public function has_data() {
+		return $this->display_data;
 	}
 
 	/**
