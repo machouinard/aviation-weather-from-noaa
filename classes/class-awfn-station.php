@@ -34,7 +34,6 @@ class AwfnStation extends Awfn {
 		$base .= '&requestType=retrieve&format=xml&stationString=%s';
 		$this->url = sprintf( $base, $this->station );
 
-		$this->maybelog( 'debug', 'station line: ' . __LINE__ );
 
 	}
 
@@ -205,6 +204,8 @@ class AwfnStation extends Awfn {
 
 			$location           = implode( ', ', array_filter( $location_array ) );
 			$this->display_data = '<header>' . esc_html( $location ) . '</header>';
+		} else {
+			return $this->data;
 		}
 
 

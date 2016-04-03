@@ -37,20 +37,40 @@ abstract class Awfn {
 	/**
 	 * Awfn constructor.
 	 *
-	 * Set up logger for individual subclasses
+	 * Set up logger for individual subclasses.
+	 * Due to permissin issues we use AWFN_DEBUG instead of WP_DEBUG in case that is set true for other reasons.
+	 *
+	 * TODO: Fix file permission issues
 	 *
 	 * @since 0.4.0
 	 */
 	public function __construct() {
+
 		// Prepare logger
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		if ( defined( 'AWFN_DEBUG' ) && AWFN_DEBUG ) {
+
+			$dev_log_dir = PLUGIN_ROOT . 'logs';
+
+			// Permissions for his one are up to you, for now. Sorry.
+			if ( ! file_exists( $dev_log_dir ) ) {
+				mkdir( $dev_log_dir, 0755, true );
+			}
+			$prod_log_dir = PLUGIN_ROOT . 'logs';
+			if ( ! file_exists( $prod_log_dir ) ) {
+				mkdir( $prod_log_dir, 0755, true );
+			}
 			$this->log = new Logger( static::$log_name );
-			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . '/logs/development.log', Logger::DEBUG ) );
-			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . '/logs/production.log', Logger::WARNING ) );
+			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG ) );
+			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . 'logs/warning.log', Logger::WARNING ) );
 		}
 
 	}
 
+	/**
+	 * Log debug or warning messages if our logger is set up.
+	 * @param $severity     string debug | warning
+	 * @param $msg          string Message to log
+	 */
 	protected function maybelog( $severity, $msg ) {
 
 		if ( false !== $this->log ) {
@@ -64,14 +84,14 @@ abstract class Awfn {
 	 *
 	 * @since 0.4.0
 	 */
-	public function go( $return = false ) {
+	public function go( $display = true ) {
 
 		if ( $this->load_xml() ) {
 
 			$this->decode_data();
 			$this->build_display();
 
-			if ( ! $return ) {
+			if ( $display ) {
 
 				$this->display_data();
 			}
@@ -104,6 +124,8 @@ abstract class Awfn {
 
 			echo $this->display_data;
 
+		} else {
+			return $this->display_data;
 		}
 
 	}

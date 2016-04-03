@@ -40,6 +40,10 @@ if ( ! defined( 'EXPIRE_TIME' ) ) {
 
 require_once 'vendor/autoload.php';
 
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once dirname( __FILE__) . '/admin/class-awfn-cli.php';
+}
+
 // Require our classes
 $classes = glob( plugin_dir_path( __FILE__ ) . 'classes/*.php' );
 rsort( $classes );
@@ -189,7 +193,6 @@ class Adds_Weather_Widget extends WP_Widget {
 
 			$taf = new AwfnTaf( $icao, $hours, $show_taf );
 			$taf->go();
-
 
 			$pirep = new AwfnPirep( $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
 			$pirep->go();
