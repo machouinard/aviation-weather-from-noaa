@@ -14,7 +14,7 @@ class AWFN_Shortcode {
 
 	/**
 	 * Shortcode Usage: ( shown with defaults )
-	 * [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 show_station_info=1 radial_dist=30 title='']
+	 * [adds_weather apts='KSMF' hours=2 show_taf=1 show_pireps=1 show_station_info=1 radial_dist=100 title='']
 	 *
 	 * @param  array $atts defaults
 	 *

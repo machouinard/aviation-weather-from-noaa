@@ -36,7 +36,6 @@ class AwfnPirep extends Awfn {
 		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';
 		$this->url = sprintf( $base, $distance, $lng, $lat, $hours );
 
-		$this->maybelog( 'debug', 'pirep line: ' . __LINE__ );
 	}
 
 	/**
@@ -69,6 +68,7 @@ class AwfnPirep extends Awfn {
 			$count = count( $this->data );
 
 			$count_display = sprintf( '<span class="awfn-min">(%d)</span>', $count );
+			$this->maybelog('debug', 'Pirep count: ' . $count );
 
 			$this->display_data = '<section id="pirep"><header>';
 			$this->display_data .= sprintf( _n( 'Pirep %s', 'Pireps %s', $count, Adds_Weather_Widget::get_widget_slug() ), $count_display );
