@@ -23,7 +23,7 @@ class AwfnMetar extends Awfn {
 	 * @param bool   $show
 	 * @since 0.4.0
 	 */
-	public function __construct( $station = 'KSMF', $hours = 1, $show = true ) {
+	public function __construct( $station = 'KSMF', $hours = 2, $show = true ) {
 
 		self::$log_name = 'METAR';
 
