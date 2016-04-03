@@ -111,13 +111,12 @@ MAC;
 	public function build_display() {
 
 		if ( $this->data ) {
-			$this->display_data = '<section id="metar"><header>Metar<span class="fa fa-sort-desc"></span></header><article class="metar">'
+			$this->display_data = '<header>Metar<span class="fa fa-sort-desc"></span></header><article class="metar">'
 			                      . esc_html( $this->data ) .
 			                      '</article>';
 			if ( $this->decoded ) {
 				$this->display_data .= '<article class="decoded-metar">' . $this->decoded . '</article>';
 			}
-			$this->display_data .= '</section>';
 		} else {
 			$this->display_data = '<article class="metar">' . __( 'No METAR returned', Adds_Weather_Widget::get_widget_slug() )
 			                      . '</article>';

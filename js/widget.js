@@ -30,7 +30,7 @@
          *
          * @type {*|HTMLElement}
          */
-        pireps = $('section#pirep');
+        pireps = $('section#aircraftreport');
 
         /**
          * Slide PIREPS into and out of view when clicked as well as change icons

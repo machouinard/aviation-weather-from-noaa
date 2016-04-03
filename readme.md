@@ -29,11 +29,8 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 Data is cached for 15 minutes using the WordPress Transients API.
 
 ### Included Filter Hooks: ###
-* adds\_shortcode\_title_wrap: Tag used for shortcode title.  Defaults to "h2".
-* adds\_shortcode_wrapper: Class of the div enclosing shortcode output.
 * adds_kses: Array of permitted HTML tags.
-* adds\_custom\_css: URL of a user-supplied stylesheet.  Supplying a stylesheet in theme's directory ( 'css/aviation_weather_from_noaa.css' ) will also override stylesheet.
-* adds\_widget_wrapper: Class of the div enclosing the widget
+* adds_custom_css: URL of a user-supplied stylesheet.  Supplying a stylesheet in theme's directory ( 'css/aviation_weather_from_noaa.css' ) will also override stylesheet.
 
 Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
@@ -57,6 +54,7 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 * Add decoded METAR
 * Show/hide decoded METAR and PIREPS
 * WP-CLI Integration
+* Removed filter hooks for styling wrappers
 
 ### 0.3.8 ###
 * Add ability to not display Metar

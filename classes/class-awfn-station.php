@@ -194,7 +194,7 @@ class AwfnStation extends Awfn {
 	public function build_display() {
 
 		// TODO: improve
-		if ( $this->data && $this->show ) {
+		if ( $this->data ) {
 			$keys = array( 'site', 'state' );
 			foreach ( $keys as $key ) {
 				if ( isset( $this->data[ $key ] ) ) {
@@ -207,7 +207,6 @@ class AwfnStation extends Awfn {
 		} else {
 			return $this->data;
 		}
-
 
 	}
 }

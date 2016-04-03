@@ -57,8 +57,8 @@ class AwfnTaf extends Awfn {
 	 */
 	public function build_display() {
 		if ( $this->data ) {
-			$this->display_data = '<section id="taf"><header>TAF</header><article class="taf">' . esc_html( $this->data )
-			                      . '</article></section>';
+			$this->display_data = '<header>TAF</header><article class="taf">' . esc_html( $this->data )
+			                      . '</article>';
 		} else {
 			$this->display_data = '<article class="taf">No TAF returned</article>';
 		}
