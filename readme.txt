@@ -1,9 +1,9 @@
 === Aviation Weather from NOAA ===
 
 Contributors:		machouinard
-Tags: 				weather, noaa, aviation, metar, pireps
+Tags: 				aviation, metar, pireps, weather, noaa
 Requires at least: 	3.8
-Tested up to:      	4.4
+Tested up to:      	4.4.2
 Stable tag:        	trunk
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html

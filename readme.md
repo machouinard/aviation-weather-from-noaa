@@ -1,11 +1,11 @@
 # Aviation Weather from NOAA #
 
 Contributors:		machouinard
-**Tags:** 				weather, noaa, aviation, metar, pireps
+**Tags:** 				aviation, metar, pireps, weather, noaa
 
 **Requires at least:** 	3.8
 
-**Tested up to:**      	4.4.1
+**Tested up to:**      	4.4.2
 
 **Stable tag:**        	trunk
 
