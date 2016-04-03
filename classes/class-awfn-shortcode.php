@@ -67,7 +67,7 @@ class AWFN_Shortcode {
 			// Start output buffering
 			ob_start();
 
-			echo '<section class="' . apply_filters( 'adds_shortcode_wrapper', 'adds-weather-shortcode-wrapper' ) . '">';
+			echo '<section class="adds-weather-shortcode-wrapper">';
 
 			// Do we have station data?
 			if ( $station->station_exist() ) {

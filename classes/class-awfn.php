@@ -125,7 +125,9 @@ abstract class Awfn {
 
 		if ( $this->display_data && $this->show ) {
 
+			echo '<section id="' . strtolower( static::$log_name ) . '">';
 			echo $this->display_data;
+			echo '</section>';
 
 		} else {
 			return $this->display_data;

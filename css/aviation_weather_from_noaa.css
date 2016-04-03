@@ -23,18 +23,18 @@ section.adds-weather-wrapper section, section.adds-weather-shortcode-wrapper sec
       -webkit-border-radius: 5px;
       -moz-border-radius: 5px;
       border-radius: 5px; }
-  section.adds-weather-wrapper section#pirep header span, section.adds-weather-shortcode-wrapper section#pirep header span {
+  section.adds-weather-wrapper section#aircraftreport header span, section.adds-weather-shortcode-wrapper section#aircraftreport header span {
     font-size: .75em;
     font-weight: lighter;
     vertical-align: baseline; }
-    section.adds-weather-wrapper section#pirep header span.fa, section.adds-weather-shortcode-wrapper section#pirep header span.fa {
+    section.adds-weather-wrapper section#aircraftreport header span.fa, section.adds-weather-shortcode-wrapper section#aircraftreport header span.fa {
       margin-left: .5em;
       color: #500000; }
-  section.adds-weather-wrapper section#pirep section#all-pireps, section.adds-weather-shortcode-wrapper section#pirep section#all-pireps {
+  section.adds-weather-wrapper section#aircraftreport section#all-pireps, section.adds-weather-shortcode-wrapper section#aircraftreport section#all-pireps {
     display: none;
     width: 100%;
     height: 100%; }
-  section.adds-weather-wrapper section#pirep article:nth-of-type(even), section.adds-weather-shortcode-wrapper section#pirep article:nth-of-type(even) {
+  section.adds-weather-wrapper section#aircraftreport article:nth-of-type(even), section.adds-weather-shortcode-wrapper section#aircraftreport article:nth-of-type(even) {
     background-color: #a5a5a5;
     color: #ffffff;
     -webkit-border-radius: 5px;

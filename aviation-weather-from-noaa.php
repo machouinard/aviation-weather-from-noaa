@@ -178,7 +178,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		ob_start();
 
-		echo '<section class="' . apply_filters( 'adds_widget_wrapper', 'adds-weather-wrapper' ) . '">';
+		echo '<section class="adds-weather-wrapper">';
 
 
 		if ( $station->station_exist() ) {
