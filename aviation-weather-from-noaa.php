@@ -7,7 +7,7 @@
  * @copyright 2015 Me, you and all the others
  *
  * @wordpress-plugin
- * Plugin Name:       Aviation Weather From NOAA*
+ * Plugin Name:       Aviation Weather From NOAA
  * Plugin URI:        http://plugins.chouinard.me/awfn
  * Description:       Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
  * Version:           0.4.0
