@@ -45,7 +45,6 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
     wp plugin install aviation-weather-from-noaa --activate
 
 ### WP_CLI Configuration ###
-* WP_CLI commands should work as expected out of the box.
     wp awfn --help
 
 ## Frequently Asked Questions ##
