@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A Class to verify and/or troubleshoot AWFN plugin functionality.  It returns the same formatted results that are displayed using the widget and shortcode, HTML tags and all.  To tell you the truth, I hadn't worked with WP-CLI in a couple years and wanted a basic refresher.
+ * A Class to verify and/or troubleshoot AWFN plugin functionality.  It returns the same formatted results that are displayed using the widget and shortcode; HTML tags and all.  To tell you the truth, I hadn't worked with WP-CLI in a couple years and wanted a basic refresher.
  */
 class AwfnCli extends WP_CLI_Command {
 
@@ -25,6 +25,10 @@ class AwfnCli extends WP_CLI_Command {
 
 		$station = new AwfnStation( $icao );
 		$station->go( false );
+		if ( ! $station->station_exist() ) {
+			WP_CLI::error( 'Invalid ICAO' );
+			return;
+		}
 		$this->lat = $station->lat();
 		$this->lng = $station->lng();
 
@@ -59,14 +63,10 @@ class AwfnCli extends WP_CLI_Command {
 	 *
 	 */
 	public function get_metar( $args ) {
-		$defaults = array(
-			'icao'  => 'ksmf',
-			'hours' => 1,
-			'show'  => false,
-		);
-		$args     = wp_parse_args( $args, $defaults );
 
-		list( $icao, $hours, $show ) = $args;
+		list( $icao, $hours ) = $args;
+		$hours = null === $hours ? 2 : (int) $hours;
+		$show = false;
 
 		$metar = new AwfnMetar( $icao, $hours, $show );
 		$metar->go( false );
@@ -102,14 +102,10 @@ class AwfnCli extends WP_CLI_Command {
 	 *
 	 */
 	public function get_taf( $args ) {
-		$defaults = array(
-			'icao'  => 'ksmf',
-			'hours' => 1,
-			'show'  => false,
-		);
-		$args     = wp_parse_args( $args, $defaults );
 
-		list( $icao, $hours, $show ) = $args;
+		list( $icao, $hours ) = $args;
+		$hours = null === $hours ? 2 : (int) $hours;
+		$show = false;
 
 		$taf = new AwfnTaf( $icao, $hours, $show );
 		$taf->go( false );
@@ -149,14 +145,11 @@ class AwfnCli extends WP_CLI_Command {
 	 *
 	 */
 	public function get_pireps( $args ) {
-		$defaults = array(
-			'icao'     => 'ksmf',
-			'distance' => 100,
-			'hours'    => 1,
-			'show'     => false,
-		);
-		$args     = wp_parse_args( $args, $defaults );
-		list( $icao, $distance, $hours, $show ) = $args;
+
+		list( $icao, $distance, $hours ) = $args;
+		$distance = ( null === $distance ) ? 100 : (int) $distance;
+		$hours = null === $hours ? 2 : (int) $hours;
+		$show = false;
 
 		$airport = new AwfnStation( $icao );
 		$airport->go( false );
@@ -169,7 +162,7 @@ class AwfnCli extends WP_CLI_Command {
 		if ( $output ) {
 			WP_CLI::success( $output );
 		} else {
-			WP_CLI::error( 'There was no output.  Try increasing distance/time' );
+			WP_CLI::error( 'There was no output.  Try increasing distance/time or verifying ICAO ( wp awfn info ' . $icao . ' ).' );
 		}
 
 	}

@@ -95,7 +95,7 @@ class AwfnStation extends Awfn {
 			// $this->station has no chance of being legit
 			$this->station = '';
 
-			return;
+			return false;
 		}
 
 		// If ICAO is only 3 chars we'll check some possibilities; filterable
@@ -141,7 +141,7 @@ class AwfnStation extends Awfn {
 			// Use cached station data
 			$this->xmlData = $stations[ $station_name ];
 		} else {
-			// No match found in cache so we need to go external
+			// No match found in option so we need to go external
 			$this->url
 				= sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s',
 				$this->station );
@@ -194,7 +194,7 @@ class AwfnStation extends Awfn {
 	public function build_display() {
 
 		// TODO: improve
-		if ( $this->data ) {
+		if ( $this->data && $this->show ) {
 			$keys = array( 'site', 'state' );
 			foreach ( $keys as $key ) {
 				if ( isset( $this->data[ $key ] ) ) {

@@ -1,5 +1,5 @@
 <?php
-
+require_once PLUGIN_ROOT . 'vendor/autoload.php';
 use MetarDecoder\MetarDecoder;
 
 /**
@@ -36,7 +36,6 @@ class AwfnMetar extends Awfn {
 		$this->hours   = $hours;
 		$this->show    = $show;
 
-		$this->maybelog( 'debug', 'metar line: ' . __LINE__ );
 
 	}
 
@@ -85,14 +84,17 @@ class AwfnMetar extends Awfn {
 			$pressure             = null == $p ? '' : $d->getPressure()->getValue();
 			$pressure_unit        = null == $p ? '' : $d->getPressure()->getUnit();
 
+			$tf = $this->to_farenheit( $tmp );
+			$df = $this->to_farenheit( $tmp_dewpoint );
+
 			$this->decoded
 				= <<<MAC
 <p>{$time}</p>
 <p>Wind: {$wind_dir}&deg; {$wind_speed}{$wind_unit}</p>
 <p>Visibility: {$visibility} {$v_units}</p>
 <p>Sky: {$cld_amount} {$cld_base_height} {$cld_base_height_unit}</p>
-<p>Temp: {$tmp} {$tmp_unit}</p>
-<p>Dewpoint: {$tmp_dewpoint} {$tmp_unit}</p>
+<p>Temp: {$tmp} {$tmp_unit} / {$tf} deg F</p>
+<p>Dewpoint: {$tmp_dewpoint} {$tmp_unit} / {$df} deg F</p>
 <p>Pressure: {$pressure} {$pressure_unit}</p>
 MAC;
 
@@ -122,6 +124,11 @@ MAC;
 			                      . '</article>';
 		}
 
+	}
+
+
+	private function to_farenheit( $c ) {
+		return  (float) $c * 9/5 + 32;
 	}
 
 

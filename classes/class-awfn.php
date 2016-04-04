@@ -44,6 +44,7 @@ abstract class Awfn {
 	 * Due to permissin issues we use AWFN_DEBUG instead of WP_DEBUG in case that is set true for other reasons.
 	 *
 	 * TODO: Fix file permission issues
+	 * Inside plugin dir: "sudo mkdir logs", "sudo chown `whoami` logs", "chmod 700 logs"
 	 *
 	 * @since 0.4.0
 	 */
