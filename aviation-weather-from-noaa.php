@@ -8,11 +8,11 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Aviation Weather From NOAA
- * Plugin URI:        http://plugins.chouinard.me/awfn
+ * Plugin URI:        https://github.com/machouinard/aviation-weather-from-noaa
  * Description:       Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
  * Version:           0.4.0
  * Author:            Mark Chouinard
- * Author URI:        http://chouinard.me
+ * Author URI:        https://machouinard.com
  * Text Domain:       aviation-weather-from-noaa
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
