@@ -38,6 +38,13 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 = WP_CLI Installation =
     wp plugin install aviation-weather-from-noaa --activate
 
+= WP_CLI Configuration =
+* WP_CLI commands should work as expected out of the box.
+    wp awfn --help
+
+== Frequently Asked Questions ==
+= Can you... =
+Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 == Changelog ==
 = 0.4.0 =
@@ -46,7 +53,7 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 * Only display most recent METAR & TAF
 * Add decoded METAR
 * Show/hide decoded METAR and PIREPS
-* WP-CLI Integration
+* WP-CLI Integration with error logging
 * Removed filter hooks for styling wrappers
 
 = 0.3.8 =
@@ -98,3 +105,10 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 = 0.1.0 =
 * First release
+
+== Upgrade Notice ==
+
+= 0.4.0 =
+Separate functionality into individual classes, Improve use of transients and options including deletion on uninstall,
+Only display most recent METAR & TAF, Add decoded METAR, Show/hide decoded METAR and PIREPS, WP-CLI Integration with error logging,
+Removed filter hooks for styling wrappers

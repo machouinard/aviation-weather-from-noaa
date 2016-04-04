@@ -2,17 +2,17 @@
 
 Contributors:		machouinard
 **Tags:** 				aviation, metar, pireps, weather, noaa
-
+  
 **Requires at least:** 	3.8
-
+  
 **Tested up to:**      	4.4.2
-
+  
 **Stable tag:**        	trunk
-
+  
 **License:**           	GPLv2 or later
-
+  
 **License URI:**       	http://www.gnu.org/licenses/gpl-2.0.html
-
+  
 
 Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 
@@ -26,7 +26,7 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 ### Shortcode Usage: ( shown with defaults ) ###
     [adds_weather apts='KSMF' hours=2 show_metar=1 show_taf=1 show_pireps=1 show_station_info=1 radial_dist=100 title='']
 
-Data is cached for 15 minutes using the WordPress Transients API.
+Data is cached for 30 minutes using the WordPress Transients API.
 
 ### Included Filter Hooks: ###
 * adds_kses: Array of permitted HTML tags.
@@ -36,8 +36,7 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 ## Installation ##
 
-### Manual Installation (Requires PHP 5.3+) ###
-
+### Manual Installation ###
 
 1. Upload the entire `/aviation-weather-from-noaa` directory to the `/wp-content/plugins/` directory.
 2. Activate Aviation Weather from NOAA through the 'Plugins' menu in WordPress.
@@ -45,6 +44,13 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 ### WP_CLI Installation ###
     wp plugin install aviation-weather-from-noaa --activate
 
+### WP_CLI Configuration ###
+* WP_CLI commands should work as expected out of the box.
+    wp awfn --help
+
+## Frequently Asked Questions ##
+### Can you... ###
+Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Changelog ##
 ### 0.4.0 ###
@@ -53,7 +59,7 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 * Only display most recent METAR & TAF
 * Add decoded METAR
 * Show/hide decoded METAR and PIREPS
-* WP-CLI Integration
+* WP-CLI Integration with error logging
 * Removed filter hooks for styling wrappers
 
 ### 0.3.8 ###
@@ -105,3 +111,10 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 
 ### 0.1.0 ###
 * First release
+
+## Upgrade Notice ##
+
+### 0.4.0 ###
+Separate functionality into individual classes, Improve use of transients and options including deletion on uninstall,
+Only display most recent METAR & TAF, Add decoded METAR, Show/hide decoded METAR and PIREPS, WP-CLI Integration with error logging,
+Removed filter hooks for styling wrappers
