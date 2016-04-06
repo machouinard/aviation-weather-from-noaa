@@ -44,6 +44,27 @@ class AWFN_Shortcode {
 		$show_station_info = (bool) $atts['show_station_info'];
 		$distance          = absint( $atts['radial_dist'] );
 		$title             = $atts['title'];
+		?>
+
+		<section class='awfn-shortcode'
+		         data-atts='<?php echo json_encode( $atts ); ?>'></section>
+
+		<?php
+
+	}
+
+	public static function ajax_weather_shortcode() {
+
+
+		$atts = $_POST['atts'];
+
+		$hours             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
+		$show_metar        = (bool) $atts['show_metar'];
+		$show_taf          = (bool) $atts['show_taf'];
+		$show_pireps       = (bool) $atts['show_pireps'];
+		$show_station_info = (bool) $atts['show_station_info'];
+		$distance          = absint( $atts['radial_dist'] );
+		$title             = $atts['title'];
 
 		// Calling this up here so we can set $icao and not have to call it again
 		$station = new AwfnStation( $atts['apts'], $show_station_info );
@@ -55,7 +76,7 @@ class AWFN_Shortcode {
 		$shortcode_id = SHORTCODE_SLUG . md5( serialize( $atts ) );
 
 		// Check for cached output
-		$output       = get_transient( $shortcode_id );
+		$output = get_transient( $shortcode_id );
 
 		if ( ! $output ) {
 
@@ -146,6 +167,8 @@ class AWFN_Shortcode {
 		);
 
 		// Run output through KSES
-		return wp_kses( $output, apply_filters( 'adds_kses', $kses_args ) );
+		$output = wp_kses( $output, apply_filters( 'adds_kses', $kses_args ) );
+
+		wp_send_json_success( $output );
 	}
 }

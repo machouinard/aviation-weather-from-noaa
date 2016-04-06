@@ -41,7 +41,7 @@ if ( ! defined( 'EXPIRE_TIME' ) ) {
 require_once 'vendor/autoload.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once dirname( __FILE__) . '/admin/class-awfn-cli.php';
+	require_once dirname( __FILE__ ) . '/admin/class-awfn-cli.php';
 }
 
 // Require our classes
@@ -112,7 +112,8 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ), 15 );
+//		add_action( 'wp_enqueue_scripts', array( $this, 'register_ajax_scripts' ) );
 
 		// Add shortcode
 		add_shortcode( 'adds_weather', array( 'AWFN_Shortcode', 'adds_weather_shortcode' ) );
@@ -421,10 +422,20 @@ class Adds_Weather_Widget extends WP_Widget {
 		wp_enqueue_script( self::get_widget_slug() . '-script', plugins_url( 'js/widget.js', __FILE__ ), array(
 			'jquery'
 		) );
+		wp_localize_script( self::get_widget_slug() . '-script', 'ajax_url', admin_url( 'admin-ajax.php' ) );
+
 
 	} // end register_widget_scripts
+
+	public function register_ajax_scripts() {
+		wp_enqueue_script( self::get_widget_slug() . '-ajax', plugins_url( 'js/shortcode-cache-buster.js', __FILE__ ), array( 'jquery' ) );
+		wp_localize_script( self::get_widget_slug() . '-ajax', 'ajax_url', admin_url( 'admin-ajax.php' ) );
+	}
 
 
 } // end class
 
 add_action( 'widgets_init', create_function( '', 'register_widget( "Adds_Weather_Widget" );' ) );
+
+add_action( 'wp_ajax_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
+add_action( 'wp_ajax_nopriv_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
