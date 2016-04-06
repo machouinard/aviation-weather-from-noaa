@@ -113,7 +113,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ), 15 );
-//		add_action( 'wp_enqueue_scripts', array( $this, 'register_ajax_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_ajax_scripts' ) );
 
 		// Add shortcode
 		add_shortcode( 'adds_weather', array( 'AWFN_Shortcode', 'adds_weather_shortcode' ) );
