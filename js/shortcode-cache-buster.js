@@ -1,5 +1,5 @@
 (function ($) {
-    var apts, hours, show_metar, show_taf, show_pireps, show_station_info, radial_dist, title;
+    
     $(function () {
         console.log($);
 
