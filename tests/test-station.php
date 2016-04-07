@@ -20,4 +20,10 @@ class StationTest extends WP_UnitTestCase {
 		$this->assertTrue( $this->station->station_exist() );
 	}
 
+	function testStationNotExists() {
+		$station = new AwfnStation('wxyz');
+		$station->go( false );
+		$this->assertFalse( $station->station_exist() );
+	}
+
 }
