@@ -11,4 +11,9 @@ class StationTest extends WP_UnitTestCase {
 	function testSimpleFalse() {
 		$this->assertFalse( $this->station->will_show() );
 	}
+
+	function testStaticInfo() {
+		$this->assertArrayHasKey( 'country', AwfnStation::static_apt_info('ksmf') );
+	}
+
 }
