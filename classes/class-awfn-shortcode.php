@@ -45,6 +45,27 @@ class AWFN_Shortcode {
 		$distance          = absint( $atts['radial_dist'] );
 		$title             = $atts['title'];
 
+		$spinner_url = plugin_dir_url( dirname( __FILE__ ) ) . 'css/loading.gif';
+		$atts['spinner'] = $spinner_url;
+
+		$out = "<section class='awfn-shortcode' data-atts='" . json_encode( $atts ) . "'><img class='sc-loading' src='{$spinner_url}'/></section>";
+		return $out;
+
+	}
+
+	public static function ajax_weather_shortcode() {
+
+
+		$atts = $_POST['atts'];
+
+		$hours             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
+		$show_metar        = filter_var( $atts['show_metar'], FILTER_VALIDATE_BOOLEAN );
+		$show_taf          = filter_var( $atts['show_taf'], FILTER_VALIDATE_BOOLEAN );
+		$show_pireps       = filter_var( $atts['show_pireps'], FILTER_VALIDATE_BOOLEAN );
+		$show_station_info = filter_var( $atts['show_station_info'], FILTER_VALIDATE_BOOLEAN );
+		$distance          = absint( $atts['radial_dist'] );
+		$title             = $atts['title'];
+
 		// Calling this up here so we can set $icao and not have to call it again
 		$station = new AwfnStation( $atts['apts'], $show_station_info );
 		$station->clean_icao();
@@ -55,7 +76,7 @@ class AWFN_Shortcode {
 		$shortcode_id = SHORTCODE_SLUG . md5( serialize( $atts ) );
 
 		// Check for cached output
-		$output       = get_transient( $shortcode_id );
+		$output = get_transient( $shortcode_id );
 
 		if ( ! $output ) {
 
@@ -87,7 +108,7 @@ class AWFN_Shortcode {
 				$taf->go();
 
 				// Handle PIREPS
-				$pirep = new AwfnPirep( $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+				$pirep = new AwfnPirep( $station->station, $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
 				$pirep->go();
 
 			} else {
@@ -103,6 +124,7 @@ class AWFN_Shortcode {
 			set_transient( $shortcode_id, $output, EXPIRE_TIME );
 
 		}
+
 
 		// Allowed markup in shortcode. This is filterable.
 		$kses_args = array(
@@ -146,6 +168,9 @@ class AWFN_Shortcode {
 		);
 
 		// Run output through KSES
-		return wp_kses( $output, apply_filters( 'adds_kses', $kses_args ) );
+		$output = wp_kses( $output, apply_filters( 'adds_kses', $kses_args ) );
+
+		wp_send_json_success( $output );
 	}
+
 }

@@ -19,8 +19,9 @@ class AwfnMetar extends Awfn {
 	 * Setup log name - late static binding, build URL for Awfn::load_xml()
 	 *
 	 * @param string $station
-	 * @param int    $hours
-	 * @param bool   $show
+	 * @param int $hours
+	 * @param bool $show
+	 *
 	 * @since 0.4.0
 	 */
 	public function __construct( $station = 'KSMF', $hours = 2, $show = true ) {
@@ -29,7 +30,7 @@ class AwfnMetar extends Awfn {
 
 		parent::__construct();
 
-		$base_url       = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
+		$base_url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
 		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
 		$this->url     = sprintf( $base_url, $station, $hours );
 		$this->station = $station;
@@ -48,7 +49,7 @@ class AwfnMetar extends Awfn {
 			$this->data = $this->xmlData['raw_text'];
 			$this->decode_metar();
 		} else {
-//			$this->maybelog( 'debug', 'No metar data returned' );
+			$this->maybelog( 'debug', 'No metar data returned for ' . $this->station );
 		}
 	}
 
@@ -101,7 +102,8 @@ MAC;
 
 		} else {
 			$this->decoded = false;
-			$this->maybelog( 'debug', 'Invalid METAR' );
+			$this->maybelog( 'debug', 'Invalid METAR for ' . $this->station );
+			$this->maybelog( 'debug', $this->data );
 		}
 	}
 
@@ -113,7 +115,7 @@ MAC;
 	public function build_display() {
 
 		if ( $this->data ) {
-			$this->display_data = '<header>Metar<span class="fa fa-sort-desc"></span></header><article class="metar">'
+			$this->display_data = '<header>METAR<span class="fa fa-sort-desc"></span></header><article class="metar">'
 			                      . esc_html( $this->data ) .
 			                      '</article>';
 			if ( $this->decoded ) {
@@ -128,7 +130,7 @@ MAC;
 
 
 	private function to_farenheit( $c ) {
-		return  (float) $c * 9/5 + 32;
+		return (float) $c * 9 / 5 + 32;
 	}
 
 

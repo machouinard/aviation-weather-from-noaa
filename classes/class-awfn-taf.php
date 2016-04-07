@@ -31,9 +31,6 @@ class AwfnTaf extends Awfn {
 		$this->station = $station;
 		$this->hours   = $hours;
 		$this->show    = $show;
-
-		$this->maybelog( 'debug', 'taf line: ' . __LINE__ );
-
 	}
 
 	/**
@@ -61,6 +58,7 @@ class AwfnTaf extends Awfn {
 			                      . '</article>';
 		} else {
 			$this->display_data = '<article class="taf">No TAF returned</article>';
+			$this->maybelog( 'debug', 'No TAF returned for ' . $this->station . '/' . $this->hours . ' hours' );
 		}
 	}
 

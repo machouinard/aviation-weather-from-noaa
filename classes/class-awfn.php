@@ -43,7 +43,7 @@ abstract class Awfn {
 	 * Set up logger for individual subclasses.
 	 * Due to permissin issues we use AWFN_DEBUG instead of WP_DEBUG in case that is set true for other reasons.
 	 *
-	 * TODO: Fix file permission issues
+	 * TODO: Research file permission issues
 	 * Inside plugin dir: "sudo mkdir logs", "sudo chown `whoami` logs", "chmod 700 logs"
 	 *
 	 * @since 0.4.0
@@ -57,11 +57,11 @@ abstract class Awfn {
 
 			// Permissions for his one are up to you, for now. Sorry.
 			if ( ! file_exists( $dev_log_dir ) ) {
-				mkdir( $dev_log_dir, 0755, true );
+				mkdir( $dev_log_dir, 0700, true );
 			}
 			$prod_log_dir = PLUGIN_ROOT . 'logs';
 			if ( ! file_exists( $prod_log_dir ) ) {
-				mkdir( $prod_log_dir, 0755, true );
+				mkdir( $prod_log_dir, 0700, true );
 			}
 			$this->log = new Logger( static::$log_name );
 			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG ) );
@@ -72,13 +72,18 @@ abstract class Awfn {
 
 	/**
 	 * Log debug or warning messages if our logger is set up.
+	 *
 	 * @param $severity     string debug | warning
 	 * @param $msg          string Message to log
 	 */
 	protected function maybelog( $severity, $msg ) {
 
 		if ( false !== $this->log ) {
-			$this->log->$severity( $msg );
+			if ( is_array( $msg ) ) {
+				$this->log->$severity( print_r( $msg, true ) );
+			} else {
+				$this->log->$severity( $msg );
+			}
 		}
 
 	}
@@ -144,27 +149,40 @@ abstract class Awfn {
 	 * @since 0.4.0
 	 */
 	public function load_xml() {
-		$xml_raw = wp_remote_get( esc_url_raw( $this->url ) );
-		if ( is_wp_error( $xml_raw ) ) {
-			$this->maybelog( 'warn', $xml_raw->get_error_message() );
-			$this->xmlData = false;
+		try {
+			$xml_raw = wp_remote_get( esc_url_raw( $this->url ) );
+			if ( is_wp_error( $xml_raw ) ) {
+				$this->maybelog( 'warn', $xml_raw->get_error_message() );
+				$this->xmlData = false;
 
-			return false;
+				return false;
+			}
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
 		}
-		$body = wp_remote_retrieve_body( $xml_raw );
-		if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
-			$this->maybelog( 'debug', print_r( $xml_raw, true ) );
-			$this->maybelog( 'debug', $body );
+		try {
+			$body = wp_remote_retrieve_body( $xml_raw );
+			if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
+				$this->maybelog( 'debug', print_r( $xml_raw, true ) );
+				$this->maybelog( 'debug', $body );
 
-			return false;
+				return false;
+			}
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
 		}
 
-		$loaded = simplexml_load_string( $body );
-		if ( ! empty( $loaded->errors ) ) {
-			$this->maybelog( 'debug', (string) $loaded->errors->error );
+		try {
+			$loaded = simplexml_load_string( $body );
+			if ( ! empty( $loaded->errors ) ) {
+				$this->maybelog( 'debug', (string) $loaded->errors->error );
 
-			return false;
+				return false;
+			}
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
 		}
+
 		$atts = $loaded->data->attributes();
 		if ( 0 < $atts['num_results'] ) {
 			if ( 'AircraftReport' == static::$log_name ) {
