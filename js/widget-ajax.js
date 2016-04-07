@@ -3,6 +3,9 @@
     $(function () {
 
         var wrap = $('.adds-weather-wrapper');
+        // Our debug setting was localized in main file
+        var awfn_debug = ( '1' === options.awfn_debug ) ? true : false;
+
         $.each( wrap, function (i, v) {
 
             var $this = $(this);
@@ -16,11 +19,15 @@
                     instance: instance
                 },
                 success : function( resp ) {
-                    // console.log( resp );
+                    if ( awfn_debug ) {
+                        console.log( 'widget ajax success' );
+                    }
                     $this.html(resp.data);
                 },
                 error : function( x ) {
-                    console.log('widget error posting to weather_widget' );
+                    if ( awfn_debug ) {
+                        console.log('widget error posting to weather_widget' );
+                    }
                 }
             })
         });

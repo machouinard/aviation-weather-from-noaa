@@ -74,6 +74,8 @@ class Adds_Weather_Widget extends WP_Widget {
 	protected static $shortcode_slug = 'awfn_';
 
 	public static $expire_time = 900;
+	private $awfn_debug;
+
 
 	/*--------------------------------------------------*/
 	/* Constructor
@@ -85,12 +87,17 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 
+		$this->awfn_debug = ( defined( 'AWFN_DEBUG' ) && AWFN_DEBUG ) ? true : false;
+
 		// load plugin text domain
 		add_action( 'init', array( $this, 'widget_textdomain' ) );
 
 		// Hook to widget delete so we can delete transient when widget is deleted
 		add_action( 'sidebar_admin_setup', array( $this, 'awfn_sidebar_admin_setup' ) );
 
+		// Hook up our AJAX functions
+		add_action( 'wp_ajax_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
+		add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
 
 		// Hooks fired when the Widget is activated and deactivated
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -108,11 +115,11 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Register admin styles and scripts
 		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+//		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 
 		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ), 15 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_ajax_scripts' ) );
 
 		// Add shortcode
@@ -137,7 +144,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 	/**
 	 * Outputs a static wrapper for the widget content.
-	 * Includes necessary details to be picked up and processed by JS/AJAX
+	 * Includes necessary details to be picked up and processed by JS/AJAX.
 	 *
 	 * @param array args  The array of form elements
 	 * @param array instance The current instance of the widget
@@ -162,6 +169,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		extract( $args, EXTR_SKIP );
 
 		echo $before_widget;
+
 		?>
 
 		<section class='adds-weather-wrapper' data-instance='<?php echo json_encode( $instance ); ?>'><img
@@ -402,8 +410,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function register_admin_scripts() {
 
-		// No admin JS currently
-//		wp_enqueue_script( self::get_widget_slug() . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( self::get_widget_slug() . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
 
 	} // end register_admin_scripts
 
@@ -437,7 +444,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function register_widget_scripts() {
 
-		wp_enqueue_script( self::get_widget_slug() . '-script', plugins_url( 'js/widget.min.js', __FILE__ ), array(
+		wp_enqueue_script( self::get_widget_slug() . '-script', plugins_url( 'js/widget.js', __FILE__ ), array(
 			'jquery'
 		) );
 		wp_localize_script( self::get_widget_slug() . '-script', 'ajax_url', admin_url( 'admin-ajax.php' ) );
@@ -446,18 +453,13 @@ class Adds_Weather_Widget extends WP_Widget {
 	} // end register_widget_scripts
 
 	public function register_ajax_scripts() {
-		wp_enqueue_script( self::get_widget_slug() . '-sc-ajax', plugins_url( 'js/shortcode-ajax.min.js', __FILE__ ), array( 'jquery' ) );
-		wp_enqueue_script( self::get_widget_slug() . '-w-ajax', plugins_url( 'js/widget-ajax.min.js', __FILE__ ), array( 'jquery' ) );
-		wp_localize_script( self::get_widget_slug() . '-sc-ajax', 'ajax_url', admin_url( 'admin-ajax.php' ) );
-		wp_localize_script( self::get_widget_slug() . '-w-ajax', 'ajax_url', admin_url( 'admin-ajax.php' ) );
+		wp_enqueue_script( self::get_widget_slug() . '-sc-ajax', plugins_url( 'js/shortcode-ajax.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( self::get_widget_slug() . '-w-ajax', plugins_url( 'js/widget-ajax.js', __FILE__ ), array( 'jquery' ) );
+		wp_localize_script( self::get_widget_slug() . '-sc-ajax', 'options', array( 'awfn_debug' => $this->awfn_debug ) );
+		wp_localize_script( self::get_widget_slug() . '-w-ajax', 'options', array( 'awfn_debug' => $this->awfn_debug ) );
 	}
 
 
 } // end class
 
 add_action( 'widgets_init', create_function( '', 'register_widget( "Adds_Weather_Widget" );' ) );
-
-add_action( 'wp_ajax_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
-add_action( 'wp_ajax_nopriv_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
-add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
-add_action( 'wp_ajax_nopriv_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
