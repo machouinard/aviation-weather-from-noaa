@@ -393,8 +393,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function register_admin_styles() {
 
-		// No admin styles currently
-//		wp_enqueue_style( self::get_widget_slug() . '-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
+		wp_enqueue_style( self::get_widget_slug() . '-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
 
 	} // end register_admin_styles
 
