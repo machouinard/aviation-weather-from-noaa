@@ -97,7 +97,9 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Hook up our AJAX functions
 		add_action( 'wp_ajax_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
+		add_action( 'wp_ajax_nopriv_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
 		add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
+		add_action( 'wp_ajax_nopriv_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
 
 		// Hooks fired when the Widget is activated and deactivated
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
