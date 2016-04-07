@@ -37,6 +37,17 @@ class AwfnStation extends Awfn {
 
 	}
 
+	public function go( $display = true ) {
+		if ( $this->get_apt_info() ) {
+			$this->decode_data();
+			$this->build_display();
+
+			if ( $display ) {
+				$this->display_data();
+			}
+		}
+	}
+
 	/**
 	 * Does airport exist?
 	 *
