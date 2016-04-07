@@ -18,21 +18,22 @@ class AwfnPirep extends Awfn {
 	 *
 	 * @param      $lat
 	 * @param      $lng
-	 * @param int  $distance
-	 * @param int  $hours
+	 * @param int $distance
+	 * @param int $hours
 	 * @param bool $show
 	 *
 	 * @since 0.4.0
 	 */
-	public function __construct( $lat, $lng, $distance = 100, $hours = 2, $show = true ) {
+	public function __construct( $station = '', $lat, $lng, $distance = 100, $hours = 2, $show = true ) {
 
 		self::$log_name = 'AircraftReport';
 
 		parent::__construct();
 
-		$this->show     = (bool) $show;
-		$this->hours = (int) $hours;
-		$base           = 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve';
+		$this->station = $station;
+		$this->show    = (bool) $show;
+		$this->hours   = (int) $hours;
+		$base          = 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve';
 		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';
 		$this->url = sprintf( $base, $distance, $lng, $lat, $hours );
 
@@ -68,7 +69,7 @@ class AwfnPirep extends Awfn {
 			$count = count( $this->data );
 
 			$count_display = sprintf( '<span class="awfn-min">(%d)</span>', $count );
-			$this->maybelog('debug', 'Pirep count: ' . $count );
+			$this->maybelog( 'debug', 'Pirep count for ' . $this->station . ': ' . $count );
 
 			$this->display_data = '<header>';
 			$this->display_data .= sprintf( _n( 'Pirep %s', 'Pireps %s', $count, Adds_Weather_Widget::get_widget_slug() ), $count_display );

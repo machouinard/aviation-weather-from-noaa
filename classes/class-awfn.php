@@ -78,7 +78,11 @@ abstract class Awfn {
 	protected function maybelog( $severity, $msg ) {
 
 		if ( false !== $this->log ) {
-			$this->log->$severity( $msg );
+			if ( is_array( $msg ) ) {
+				$this->log->$severity( print_r( $msg, true ) );
+			} else {
+				$this->log->$severity( $msg );
+			}
 		}
 
 	}
@@ -144,27 +148,40 @@ abstract class Awfn {
 	 * @since 0.4.0
 	 */
 	public function load_xml() {
-		$xml_raw = wp_remote_get( esc_url_raw( $this->url ) );
-		if ( is_wp_error( $xml_raw ) ) {
-			$this->maybelog( 'warn', $xml_raw->get_error_message() );
-			$this->xmlData = false;
+		try {
+			$xml_raw = wp_remote_get( esc_url_raw( $this->url ) );
+			if ( is_wp_error( $xml_raw ) ) {
+				$this->maybelog( 'warn', $xml_raw->get_error_message() );
+				$this->xmlData = false;
 
-			return false;
+				return false;
+			}
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
 		}
-		$body = wp_remote_retrieve_body( $xml_raw );
-		if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
-			$this->maybelog( 'debug', print_r( $xml_raw, true ) );
-			$this->maybelog( 'debug', $body );
+		try {
+			$body = wp_remote_retrieve_body( $xml_raw );
+			if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
+				$this->maybelog( 'debug', print_r( $xml_raw, true ) );
+				$this->maybelog( 'debug', $body );
 
-			return false;
+				return false;
+			}
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
 		}
 
-		$loaded = simplexml_load_string( $body );
-		if ( ! empty( $loaded->errors ) ) {
-			$this->maybelog( 'debug', (string) $loaded->errors->error );
+		try {
+			$loaded = simplexml_load_string( $body );
+			if ( ! empty( $loaded->errors ) ) {
+				$this->maybelog( 'debug', (string) $loaded->errors->error );
 
-			return false;
+				return false;
+			}
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
 		}
+
 		$atts = $loaded->data->attributes();
 		if ( 0 < $atts['num_results'] ) {
 			if ( 'AircraftReport' == static::$log_name ) {

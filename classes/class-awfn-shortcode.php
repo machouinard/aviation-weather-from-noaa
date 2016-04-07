@@ -108,7 +108,7 @@ class AWFN_Shortcode {
 				$taf->go();
 
 				// Handle PIREPS
-				$pirep = new AwfnPirep( $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+				$pirep = new AwfnPirep( $station->station, $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
 				$pirep->go();
 
 			} else {

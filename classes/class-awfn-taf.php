@@ -31,9 +31,6 @@ class AwfnTaf extends Awfn {
 		$this->station = $station;
 		$this->hours   = $hours;
 		$this->show    = $show;
-
-		$this->maybelog( 'debug', 'taf line: ' . __LINE__ );
-
 	}
 
 	/**

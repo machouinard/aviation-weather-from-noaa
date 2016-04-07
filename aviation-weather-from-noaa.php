@@ -224,7 +224,7 @@ class Adds_Weather_Widget extends WP_Widget {
 			$taf = new AwfnTaf( $icao, $hours, $show_taf );
 			$taf->go();
 
-			$pirep = new AwfnPirep( $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+			$pirep = new AwfnPirep( $station->station, $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
 			$pirep->go();
 		} else {
 			echo '<header class="awfn-no-station">ICAO ' . esc_html( $icao ) . ' not found.</header>';
