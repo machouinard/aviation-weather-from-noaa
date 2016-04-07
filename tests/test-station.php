@@ -16,4 +16,8 @@ class StationTest extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'country', AwfnStation::static_apt_info('ksmf') );
 	}
 
+	function testStationExists() {
+		$this->assertTrue( $this->station->station_exist() );
+	}
+
 }
