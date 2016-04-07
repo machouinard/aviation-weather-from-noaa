@@ -125,6 +125,7 @@ class AWFN_Shortcode {
 
 		}
 
+
 		// Allowed markup in shortcode. This is filterable.
 		$kses_args = array(
 			'p'       => array(
@@ -171,4 +172,5 @@ class AWFN_Shortcode {
 
 		wp_send_json_success( $output );
 	}
+
 }

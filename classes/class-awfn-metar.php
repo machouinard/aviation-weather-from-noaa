@@ -49,7 +49,7 @@ class AwfnMetar extends Awfn {
 			$this->data = $this->xmlData['raw_text'];
 			$this->decode_metar();
 		} else {
-//			$this->maybelog( 'debug', 'No metar data returned' );
+			$this->maybelog( 'debug', 'No metar data returned for ' . $this->station );
 		}
 	}
 
@@ -103,7 +103,7 @@ MAC;
 		} else {
 			$this->decoded = false;
 			$this->maybelog( 'debug', 'Invalid METAR for ' . $this->station );
-			$this->maybelog( 'debug', 'Data: ' . $this->data );
+			$this->maybelog( 'debug', $this->data );
 		}
 	}
 
@@ -115,7 +115,7 @@ MAC;
 	public function build_display() {
 
 		if ( $this->data ) {
-			$this->display_data = '<header>Metar<span class="fa fa-sort-desc"></span></header><article class="metar">'
+			$this->display_data = '<header>METAR<span class="fa fa-sort-desc"></span></header><article class="metar">'
 			                      . esc_html( $this->data ) .
 			                      '</article>';
 			if ( $this->decoded ) {

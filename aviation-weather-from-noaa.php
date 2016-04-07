@@ -136,7 +136,8 @@ class Adds_Weather_Widget extends WP_Widget {
 	/*--------------------------------------------------*/
 
 	/**
-	 * Outputs the content of the widget.
+	 * Outputs a static wrapper for the widget content.
+	 * Includes necessary details to be picked up and processed by JS/AJAX
 	 *
 	 * @param array args  The array of form elements
 	 * @param array instance The current instance of the widget
@@ -156,27 +157,28 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		$instance              = wp_parse_args( $instance, $defaults );
 		$instance['widget_id'] = $this->id;
-		$spinner_url = plugin_dir_url( __FILE__ ) . 'css/loading.gif';
-		$instance['spinner'] = $spinner_url;
+		$spinner_url           = plugin_dir_url( __FILE__ ) . 'css/loading.gif';
+		$instance['spinner']   = $spinner_url;
 		extract( $args, EXTR_SKIP );
-
-
-//echo '<pre>';
-//		print_r( $instance );
-
 
 		echo $before_widget;
 		?>
 
-		<section class='adds-weather-wrapper' data-instance='<?php echo json_encode( $instance ); ?>'><img id="<?php echo $this->id; ?>-loading" src="<?php echo $spinner_url; ?>" /></section>
+		<section class='adds-weather-wrapper' data-instance='<?php echo json_encode( $instance ); ?>'><img
+				id="<?php echo $this->id; ?>-loading" src="<?php echo $spinner_url; ?>"/></section>
 		<?php
 		echo $after_widget;
 
 
 	} // end widget
 
+	/**
+	 * Outputs the content of the widget.
+	 * This is done using AJAX so our widget is not affected by page caching.
+	 */
 	public static function ajax_weather_widget() {
 
+		// Coming from our jQuery/AJAX POST
 		$instance = $_POST['instance'];
 
 		$hours             = absint( $instance['hours'] ) <= 6 ? absint( $instance['hours'] ) : 1;
@@ -191,6 +193,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		$cache = get_transient( $widget_id );
 
 		if ( $cache ) {
+			// If we have good cached data, use it.
 			wp_send_json_success( $cache );
 		}
 
@@ -201,7 +204,7 @@ class Adds_Weather_Widget extends WP_Widget {
 			'Available data for %s from the past %d hours', $hours, self::get_widget_slug() ), $icao,
 			$hours ) : $instance['title'];
 
-
+		// If we somehow end up with a bogus ICAO, bail.
 		if ( empty( $icao ) ) {
 			return;
 		}
@@ -232,10 +235,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		$widget_string .= ob_get_clean();
 
-
-		$cache = $widget_string;
-
-		set_transient( $widget_id, $cache, EXPIRE_TIME );
+		set_transient( $widget_id, $widget_string, EXPIRE_TIME );
 
 		wp_send_json_success( $widget_string );
 	}
@@ -260,10 +260,6 @@ class Adds_Weather_Widget extends WP_Widget {
 
 	}
 
-	public static function flush_shortcode_cache() {
-//		delete_transient( self::$shortcode_cache_name );
-	}
-
 	/**
 	 * Processes the widget's options to be saved.
 	 *
@@ -274,8 +270,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		$instance = $old_instance;
 
-		$instance['icao'] = AwfnStation::static_clean_icao( $new_instance['icao'] );
-
+		$instance['icao']              = AwfnStation::static_clean_icao( $new_instance['icao'] );
 		$instance['hours']             = absint( $new_instance['hours'] );
 		$instance['show_metar']        = (bool) $new_instance['show_metar'];
 		$instance['show_taf']          = (bool) $new_instance['show_taf'];
@@ -286,7 +281,6 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Delete old transient data
 		delete_transient( $this->id );
-		delete_transient( $this->id, EXPIRE_TIME );
 
 		return $instance;
 
@@ -295,7 +289,6 @@ class Adds_Weather_Widget extends WP_Widget {
 
 	/**
 	 * Generates the administration form for the widget.
-	 * Uses
 	 *
 	 * @param array instance The array of keys and values for the widget.
 	 */

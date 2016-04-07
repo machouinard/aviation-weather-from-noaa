@@ -43,7 +43,7 @@ abstract class Awfn {
 	 * Set up logger for individual subclasses.
 	 * Due to permissin issues we use AWFN_DEBUG instead of WP_DEBUG in case that is set true for other reasons.
 	 *
-	 * TODO: Fix file permission issues
+	 * TODO: Research file permission issues
 	 * Inside plugin dir: "sudo mkdir logs", "sudo chown `whoami` logs", "chmod 700 logs"
 	 *
 	 * @since 0.4.0
@@ -57,11 +57,11 @@ abstract class Awfn {
 
 			// Permissions for his one are up to you, for now. Sorry.
 			if ( ! file_exists( $dev_log_dir ) ) {
-				mkdir( $dev_log_dir, 0755, true );
+				mkdir( $dev_log_dir, 0700, true );
 			}
 			$prod_log_dir = PLUGIN_ROOT . 'logs';
 			if ( ! file_exists( $prod_log_dir ) ) {
-				mkdir( $prod_log_dir, 0755, true );
+				mkdir( $prod_log_dir, 0700, true );
 			}
 			$this->log = new Logger( static::$log_name );
 			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG ) );
@@ -72,6 +72,7 @@ abstract class Awfn {
 
 	/**
 	 * Log debug or warning messages if our logger is set up.
+	 *
 	 * @param $severity     string debug | warning
 	 * @param $msg          string Message to log
 	 */

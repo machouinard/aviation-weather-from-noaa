@@ -1,16 +1,15 @@
 (function ($) {
-    
+
     $(function () {
         console.log($);
 
-        var a = $('.awfn-shortcode');
-        console.log(a);
-        $.each(a, function (i, v) {
+        var shortcodes = $('.awfn-shortcode');
+
+        $.each(shortcodes, function (i, v) {
             console.log(v);
             var $this = $(this);
             var atts = $(this).data('atts');
-            console.log( atts );
-            
+
             $.ajax({
                 url: ajax_url,
                 type: 'post',
@@ -23,7 +22,7 @@
                     $this.html(resp.data);
                 },
                 error : function( x ) {
-                    alert('error: ' + x );
+                    console.log( 'Error posting to shortcode function' );
                 }
             })
         });
