@@ -53,7 +53,7 @@ class AwfnPirep extends Awfn {
 				$this->data[] = (string) $report->raw_text;
 			}
 		} else {
-//			$this->maybelog( 'debug', 'No pirep data' );
+			$this->maybelog( 'debug', 'No pirep data for ' . $this->station );
 		}
 	}
 
