@@ -11,6 +11,7 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
     margin-bottom: 10px;
 
     &#metar {
+      cursor: default;
 
       header {
 
@@ -52,6 +53,8 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
     }
 
     &#aircraftreport {
+
+      cursor: default;
 
       header {
 

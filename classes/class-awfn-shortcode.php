@@ -44,12 +44,12 @@ class AWFN_Shortcode {
 		$show_station_info = (bool) $atts['show_station_info'];
 		$distance          = absint( $atts['radial_dist'] );
 		$title             = $atts['title'];
-		?>
 
-		<section class='awfn-shortcode'
-		         data-atts='<?php echo json_encode( $atts ); ?>'></section>
+		$spinner_url = plugin_dir_url( dirname( __FILE__ ) ) . 'css/loading.gif';
+		$atts['spinner'] = $spinner_url;
 
-		<?php
+		$out = "<section class='awfn-shortcode' data-atts='" . json_encode( $atts ) . "'><img class='sc-loading' src='{$spinner_url}'/></section>";
+		return $out;
 
 	}
 
@@ -59,10 +59,10 @@ class AWFN_Shortcode {
 		$atts = $_POST['atts'];
 
 		$hours             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
-		$show_metar        = (bool) $atts['show_metar'];
-		$show_taf          = (bool) $atts['show_taf'];
-		$show_pireps       = (bool) $atts['show_pireps'];
-		$show_station_info = (bool) $atts['show_station_info'];
+		$show_metar        = filter_var( $atts['show_metar'], FILTER_VALIDATE_BOOLEAN );
+		$show_taf          = filter_var( $atts['show_taf'], FILTER_VALIDATE_BOOLEAN );
+		$show_pireps       = filter_var( $atts['show_pireps'], FILTER_VALIDATE_BOOLEAN );
+		$show_station_info = filter_var( $atts['show_station_info'], FILTER_VALIDATE_BOOLEAN );
 		$distance          = absint( $atts['radial_dist'] );
 		$title             = $atts['title'];
 

@@ -143,23 +143,56 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
+		$defaults = array(
+			'icao'              => 'KSMF',
+			'hours'             => '2',
+			'show_metar'        => true,
+			'show_taf'          => true,
+			'show_pireps'       => true,
+			'show_station_info' => true,
+			'radial_dist'       => '100',
+			'title'             => ''
+		);
+
+		$instance              = wp_parse_args( $instance, $defaults );
+		$instance['widget_id'] = $this->id;
+		$spinner_url = plugin_dir_url( __FILE__ ) . 'css/loading.gif';
+		$instance['spinner'] = $spinner_url;
+		extract( $args, EXTR_SKIP );
+
+
+//echo '<pre>';
+//		print_r( $instance );
+
+
+		echo $before_widget;
+		?>
+
+		<section class='adds-weather-wrapper' data-instance='<?php echo json_encode( $instance ); ?>'><img id="<?php echo $this->id; ?>-loading" src="<?php echo $spinner_url; ?>" /></section>
+		<?php
+		echo $after_widget;
+
+
+	} // end widget
+
+	public static function ajax_weather_widget() {
+
+		$instance = $_POST['instance'];
+
+		$hours             = absint( $instance['hours'] ) <= 6 ? absint( $instance['hours'] ) : 1;
+		$show_metar        = filter_var( $instance['show_metar'], FILTER_VALIDATE_BOOLEAN );
+		$show_taf          = filter_var( $instance['show_taf'], FILTER_VALIDATE_BOOLEAN );
+		$show_pireps       = filter_var( $instance['show_pireps'], FILTER_VALIDATE_BOOLEAN );
+		$show_station_info = filter_var( $instance['show_station_info'], FILTER_VALIDATE_BOOLEAN );
+		$distance          = absint( $instance['radial_dist'] );
+		$widget_id         = $instance['widget_id'];
 
 		// Check if there is a cached output
-		$cache = get_transient( $this->id );
-
+		$cache = get_transient( $widget_id );
 
 		if ( $cache ) {
-			return print $cache;
+			wp_send_json_success( $cache );
 		}
-
-		// go on with your widget logic, put everything into a string and …
-		$hours             = empty( $instance['hours'] ) ? '' : absint( $instance['hours'] );
-		$distance          = empty( $instance['radial_dist'] ) ? '' : absint( $instance['radial_dist'] );
-		$show_metar        = isset( $instance['show_metar'] ) ? (bool) $instance['show_metar'] : false;
-		$show_taf          = isset( $instance['show_taf'] ) ? (bool) $instance['show_taf'] : false;
-		$show_pireps       = isset( $instance['show_pireps'] ) ? (bool) $instance['show_pireps'] : false;
-		$show_station_info = isset( $instance['show_station_info'] ) ? (bool) $instance['show_station_info'] : false;
-
 
 		$station = new AwfnStation( $instance['icao'], $show_station_info );
 		$station->clean_icao();
@@ -173,13 +206,9 @@ class Adds_Weather_Widget extends WP_Widget {
 			return;
 		}
 
-		extract( $args, EXTR_SKIP );
-
-		$widget_string = $before_widget;
+		$widget_string = '';
 
 		ob_start();
-
-		echo '<section class="adds-weather-wrapper">';
 
 
 		if ( $station->station_exist() ) {
@@ -201,19 +230,15 @@ class Adds_Weather_Widget extends WP_Widget {
 			echo '<header class="awfn-no-station">ICAO ' . esc_html( $icao ) . ' not found.</header>';
 		}
 
-		echo '</section>';
-
 		$widget_string .= ob_get_clean();
-		$widget_string .= $after_widget;
 
 
 		$cache = $widget_string;
 
-		set_transient( $this->id, $cache, EXPIRE_TIME );
+		set_transient( $widget_id, $cache, EXPIRE_TIME );
 
-		print $widget_string;
-
-	} // end widget
+		wp_send_json_success( $widget_string );
+	}
 
 	/**
 	 * Runs on widget deletion
@@ -261,6 +286,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Delete old transient data
 		delete_transient( $this->id );
+		delete_transient( $this->id, EXPIRE_TIME );
 
 		return $instance;
 
@@ -419,7 +445,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function register_widget_scripts() {
 
-		wp_enqueue_script( self::get_widget_slug() . '-script', plugins_url( 'js/widget.js', __FILE__ ), array(
+		wp_enqueue_script( self::get_widget_slug() . '-script', plugins_url( 'js/widget.min.js', __FILE__ ), array(
 			'jquery'
 		) );
 		wp_localize_script( self::get_widget_slug() . '-script', 'ajax_url', admin_url( 'admin-ajax.php' ) );
@@ -428,8 +454,10 @@ class Adds_Weather_Widget extends WP_Widget {
 	} // end register_widget_scripts
 
 	public function register_ajax_scripts() {
-		wp_enqueue_script( self::get_widget_slug() . '-ajax', plugins_url( 'js/shortcode-cache-buster.js', __FILE__ ), array( 'jquery' ) );
-		wp_localize_script( self::get_widget_slug() . '-ajax', 'ajax_url', admin_url( 'admin-ajax.php' ) );
+		wp_enqueue_script( self::get_widget_slug() . '-sc-ajax', plugins_url( 'js/shortcode-ajax.min.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( self::get_widget_slug() . '-w-ajax', plugins_url( 'js/widget-ajax.min.js', __FILE__ ), array( 'jquery' ) );
+		wp_localize_script( self::get_widget_slug() . '-sc-ajax', 'ajax_url', admin_url( 'admin-ajax.php' ) );
+		wp_localize_script( self::get_widget_slug() . '-w-ajax', 'ajax_url', admin_url( 'admin-ajax.php' ) );
 	}
 
 
@@ -439,3 +467,5 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "Adds_Weather
 
 add_action( 'wp_ajax_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
 add_action( 'wp_ajax_nopriv_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
+add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
+add_action( 'wp_ajax_nopriv_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );

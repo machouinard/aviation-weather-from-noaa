@@ -2,9 +2,12 @@
     "use strict";
     $(function () {
 
-        var metar, pireps, shortcode;
+        console.log( 'wtf' );
+
+        var metar, pireps, shortcode, widget;
 
         shortcode = $('section.awfn-shortcode');
+        widget = $('section.adds-weather-wrapper');
 
         shortcode.on('click', '#metar', function(e) {
             console.log('sc metar clicked');
@@ -28,18 +31,8 @@
             }
         });
 
-        /**
-         * METAR section selector
-         *
-         * @type {*|HTMLElement}
-         */
-        metar = $('section#metar');
-
-        /**
-         * Slide decoded METAR into and out of view when clicked as well as change icons
-         */
-        metar.on('click', function (e) {
-
+        widget.on('click', '#metar', function(e) {
+            console.log( 'widget metar clicked' );
             if ($(this).find($('.fa')).hasClass('fa-sort-desc')) {
                 $(this).find($('.fa')).removeClass('fa-sort-desc').addClass('fa-sort-asc');
                 $('article:nth-child(3)', this).slideDown(200);
@@ -49,18 +42,8 @@
             }
         });
 
-        /**
-         * PIREPS section selector
-         *
-         * @type {*|HTMLElement}
-         */
-        pireps = $('section#aircraftreport');
-
-        /**
-         * Slide PIREPS into and out of view when clicked as well as change icons
-         */
-        pireps.on('click', function (e) {
-
+        widget.on('click', '#aircraftreport', function() {
+            console.log( 'widget pirep clicked' );
             if ($(this).find($('.fa')).hasClass('fa-sort-desc')) {
                 $(this).find($('.fa')).removeClass('fa-sort-desc').addClass('fa-sort-asc');
                 $(this).children('section#all-pireps').slideDown(200);

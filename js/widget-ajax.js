@@ -1,22 +1,20 @@
 (function ($) {
-    
-    $(function () {
-        console.log($);
 
-        var a = $('.awfn-shortcode');
-        console.log(a);
-        $.each(a, function (i, v) {
-            console.log(v);
+    $(function () {
+
+        var wrap = $('.adds-weather-wrapper');
+        $.each( wrap, function (i, v) {
+            console.log('value: ' + v);
             var $this = $(this);
-            var atts = $(this).data('atts');
-            console.log( atts );
-            $(this).html('working...');
+            console.log('this: ' + $this );
+            var instance = $this.data('instance');
+
             $.ajax({
                 url: ajax_url,
                 type: 'post',
                 data: {
-                    action: 'weather_shortcode',
-                    atts: atts
+                    action: 'weather_widget',
+                    instance: instance
                 },
                 success : function( resp ) {
                     console.log( resp );
