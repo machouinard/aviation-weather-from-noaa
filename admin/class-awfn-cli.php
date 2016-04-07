@@ -155,7 +155,7 @@ class AwfnCli extends WP_CLI_Command {
 		$airport->go( false );
 		$lat    = $airport->lat();
 		$lng    = $airport->lng();
-		$pireps = new AwfnPirep( $lat, $lng, $distance, $hours, $show );
+		$pireps = new AwfnPirep( $icao, $lat, $lng, $distance, $hours, $show );
 		$pireps->go( false );
 
 		$output = $pireps->display_data();
