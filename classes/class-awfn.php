@@ -141,6 +141,10 @@ abstract class Awfn {
 
 	}
 
+	public function will_show() {
+		return $this->show;
+	}
+
 	/**
 	 * Retrieves XML data using URL provided by subclass and returns array converted from simplexmlelement
 	 *
