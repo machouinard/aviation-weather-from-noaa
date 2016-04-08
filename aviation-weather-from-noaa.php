@@ -39,6 +39,7 @@ if ( ! defined( 'EXPIRE_TIME' ) ) {
 }
 
 require_once 'vendor/autoload.php';
+require_once PLUGIN_ROOT . 'admin/class-awfn-errors.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once dirname( __FILE__ ) . '/admin/class-awfn-cli.php';
@@ -100,6 +101,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		add_action( 'wp_ajax_nopriv_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
 		add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
 		add_action( 'wp_ajax_nopriv_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
+		add_action( 'wp_ajax_awfn_clear_log', array( 'AWFNErrors', 'clear_log' ) );
 
 		// Hooks fired when the Widget is activated and deactivated
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -117,7 +119,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Register admin styles and scripts
 		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 
 		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
@@ -412,6 +414,8 @@ class Adds_Weather_Widget extends WP_Widget {
 	public function register_admin_scripts() {
 
 		wp_enqueue_script( self::get_widget_slug() . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
+		$nonce = wp_create_nonce( 'awfn_clear_logs' );
+		wp_localize_script( self::get_widget_slug() . '-admin-script', 'options', array( 'secure' => $nonce, 'ajax_url' => admin_url( 'admin-ajax.php' ), 'awfn_debug' => $this->awfn_debug ) );
 
 	} // end register_admin_scripts
 
@@ -458,6 +462,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		wp_enqueue_script( self::get_widget_slug() . '-w-ajax', plugins_url( 'js/widget-ajax.js', __FILE__ ), array( 'jquery' ) );
 		wp_localize_script( self::get_widget_slug() . '-sc-ajax', 'options', array( 'awfn_debug' => $this->awfn_debug ) );
 		wp_localize_script( self::get_widget_slug() . '-w-ajax', 'options', array( 'awfn_debug' => $this->awfn_debug ) );
+
 	}
 
 
