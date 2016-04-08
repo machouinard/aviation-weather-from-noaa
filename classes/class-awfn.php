@@ -17,7 +17,8 @@ abstract class Awfn {
 	protected static $log_name;
 	protected $log = false;
 	protected $hours;
-	public $station;
+	protected $station = false;
+	protected $icao = false;
 	protected $show;
 	protected $url;
 	protected $data = false;

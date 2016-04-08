@@ -12,13 +12,13 @@ class AwfnTaf extends Awfn {
 	 *
 	 * Builds URL for Awfn::load_xml()
 	 *
-	 * @param string $station
+	 * @param string $icao
 	 * @param int    $hours
 	 * @param bool   $show
 	 *
 	 * @since 0.4.0
 	 */
-	public function __construct( $station = 'KSMF', $hours = 2, $show = true ) {
+	public function __construct( $icao = 'KSMF', $hours = 2, $show = true ) {
 
 		self::$log_name = 'TAF';
 
@@ -27,8 +27,8 @@ class AwfnTaf extends Awfn {
 		$url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml';
 		$url .= '&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
 
-		$this->url     = sprintf( $url, $station, $hours );
-		$this->station = $station;
+		$this->url     = sprintf( $url, $icao, $hours );
+		$this->icao = $icao;
 		$this->hours   = $hours;
 		$this->show    = $show;
 	}
@@ -58,7 +58,7 @@ class AwfnTaf extends Awfn {
 			                      . '</article>';
 		} else {
 			$this->display_data = '<article class="taf">No TAF returned</article>';
-			$this->maybelog( 'debug', 'No TAF returned for ' . $this->station . '/' . $this->hours . ' hours' );
+			$this->maybelog( 'debug', 'No TAF returned for ' . $this->icao . '/' . $this->hours . ' hours' );
 		}
 	}
 
