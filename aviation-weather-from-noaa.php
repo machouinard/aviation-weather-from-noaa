@@ -214,8 +214,8 @@ class Adds_Weather_Widget extends WP_Widget {
 			'Available data for %s from the past %d hours', $hours, self::get_widget_slug() ), $icao,
 			$hours ) : $instance['title'];
 
-		// If we somehow end up with a bogus ICAO, bail.
-		if ( empty( $icao ) ) {
+		// No point going any further without ICAO
+		if ( ! $icao ) {
 			return;
 		}
 

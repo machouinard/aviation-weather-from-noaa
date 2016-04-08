@@ -111,7 +111,7 @@ class AwfnStation extends Awfn {
 
 		// If ICAO is only 3 chars we'll check some possibilities; filterable
 		if ( strlen( $matches[0] ) == 3 ) {
-			foreach ( apply_filters( 'awfn_icao_search_array', array( 'K', 'C', 'Y', 'E' ) ) as $first_letter ) {
+			foreach ( apply_filters( 'awfn_icao_search_array', array( 'K', 'C', 'M' ) ) as $first_letter ) {
 				$this->station = $first_letter . $matches[0];
 				if ( $this->get_apt_info() ) {
 					break;
