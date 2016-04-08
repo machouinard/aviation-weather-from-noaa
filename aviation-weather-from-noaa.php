@@ -73,7 +73,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	protected static $widget_slug = 'aviation-weather-from-noaa';
 	protected static $shortcode_slug = 'awfn_';
 
-	public static $expire_time = 900;
+	public static $expire_time = 1800;
 	private $awfn_debug;
 
 
@@ -208,14 +208,13 @@ class Adds_Weather_Widget extends WP_Widget {
 		}
 
 		$station = new AwfnStation( $instance['icao'], $show_station_info );
-		$station->clean_icao();
-		$icao  = isset( $station->station ) ? (string) $station->station : false;
+		$icao  = $station->station_exist() ? (string) $station->get_icao() : false;
 		$title = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour',
 			'Available data for %s from the past %d hours', $hours, self::get_widget_slug() ), $icao,
 			$hours ) : $instance['title'];
 
-		// If we somehow end up with a bogus ICAO, bail.
-		if ( empty( $icao ) ) {
+		// No point going any further without ICAO
+		if ( ! $icao ) {
 			return;
 		}
 
@@ -237,7 +236,7 @@ class Adds_Weather_Widget extends WP_Widget {
 			$taf = new AwfnTaf( $icao, $hours, $show_taf );
 			$taf->go();
 
-			$pirep = new AwfnPirep( $station->station, $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+			$pirep = new AwfnPirep( $station->get_icao(), $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
 			$pirep->go();
 		} else {
 			echo '<header class="awfn-no-station">ICAO ' . esc_html( $icao ) . ' not found.</header>';

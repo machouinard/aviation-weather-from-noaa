@@ -17,7 +17,8 @@ abstract class Awfn {
 	protected static $log_name;
 	protected $log = false;
 	protected $hours;
-	public $station;
+	protected $station = false;
+	protected $icao = false;
 	protected $show;
 	protected $url;
 	protected $data = false;
@@ -153,27 +154,33 @@ abstract class Awfn {
 	 * @since 0.4.0
 	 */
 	public function load_xml() {
+
 		try {
 			$xml_raw = wp_remote_get( esc_url_raw( $this->url ) );
 			if ( is_wp_error( $xml_raw ) ) {
-				$this->maybelog( 'warn', $xml_raw->get_error_message() );
+				$this->maybelog( 'debug', $xml_raw->get_error_message() );
 				$this->xmlData = false;
 
 				return false;
 			}
 		} catch ( Exception $e ) {
 			$this->maybelog( 'debug', $e->getMessage() );
+
+			return false;
 		}
+
 		try {
 			$body = wp_remote_retrieve_body( $xml_raw );
-			if ( '' == $body || strpos( $body, '<!DOCTYPE' ) ) {
-				$this->maybelog( 'debug', print_r( $xml_raw, true ) );
+			if ( '' === $body || strpos( $body, '<!DOCTYPE' ) ) {
+				$this->maybelog( 'debug', $xml_raw );
 				$this->maybelog( 'debug', $body );
 
 				return false;
 			}
 		} catch ( Exception $e ) {
 			$this->maybelog( 'debug', $e->getMessage() );
+
+			return false;
 		}
 
 		try {
@@ -185,9 +192,18 @@ abstract class Awfn {
 			}
 		} catch ( Exception $e ) {
 			$this->maybelog( 'debug', $e->getMessage() );
+
+			return false;
 		}
 
-		$atts = $loaded->data->attributes();
+		try {
+			$atts = $loaded->data->attributes();
+		} catch ( Exception $e ) {
+			$this->maybelog( 'debug', $e->getMessage() );
+
+			return false;
+		}
+
 		if ( 0 < $atts['num_results'] ) {
 			if ( 'AircraftReport' == static::$log_name ) {
 				// maintain simplexmlelement to preserve all pireps

@@ -68,9 +68,8 @@ class AWFN_Shortcode {
 
 		// Calling this up here so we can set $icao and not have to call it again
 		$station = new AwfnStation( $atts['apts'], $show_station_info );
-		$station->clean_icao();
 
-		$icao = isset( $station->station ) ? (string) $station->station : false;
+		$icao = $station->station_exist() ? (string) $station->get_icao() : false;
 
 		// The same shortcode can be used multiple times while being cached once based on its attributes
 		$shortcode_id = SHORTCODE_SLUG . md5( serialize( $atts ) );
@@ -108,7 +107,7 @@ class AWFN_Shortcode {
 				$taf->go();
 
 				// Handle PIREPS
-				$pirep = new AwfnPirep( $station->station, $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+				$pirep = new AwfnPirep( $station->get_icao(), $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
 				$pirep->go();
 
 			} else {

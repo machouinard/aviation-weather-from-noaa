@@ -16,24 +16,25 @@ class AwfnStation extends Awfn {
 	 *
 	 * Builds URL for Awfn::load_xml()
 	 *
-	 * @param      $station
+	 * @param      $icao
 	 * @param bool $show
 	 *
 	 * @since 0.4.0
 	 */
-	public function __construct( $station, $show = false ) {
+	public function __construct( $icao, $show = false ) {
 
 		self::$log_name = 'Station';
 
 		parent::__construct();
 
-		$this->station = strtoupper( sanitize_text_field( $station ) );
+		$this->icao = strtoupper( sanitize_text_field( $icao ) );
 		$this->show    = (bool) $show;
 
 		$base = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations';
 		$base .= '&requestType=retrieve&format=xml&stationString=%s';
-		$this->url = sprintf( $base, $this->station );
+		$this->url = sprintf( $base, $this->icao );
 
+		$this->clean_icao();
 
 	}
 
@@ -56,6 +57,10 @@ class AwfnStation extends Awfn {
 	 */
 	public function station_exist() {
 		return $this->xmlData ? true : false;
+	}
+
+	public function get_icao() {
+		return $this->icao;
 	}
 
 	/**
@@ -86,11 +91,16 @@ class AwfnStation extends Awfn {
 	 * @return string
 	 * @since 0.4.0
 	 */
+	// TODO: SELF?
 	public static function static_clean_icao( $icao ) {
-		$airport = new AwfnStation( $icao );
-		$airport->clean_icao();
+		$airport = new self( $icao );
 
-		return $airport->xmlData['station_id'];
+		if ( $airport->station_exist() ) {
+			return $airport->xmlData['station_id'];
+		} else {
+			return false;
+		}
+
 	}
 
 	/**
@@ -102,17 +112,17 @@ class AwfnStation extends Awfn {
 	 */
 	public function clean_icao() {
 
-		if ( ! preg_match( '/^[A-Za-z]{3,4}$/', $this->station, $matches ) ) {
+		if ( ! preg_match( '/^[A-Za-z]{3,4}$/', $this->icao, $matches ) ) {
 			// $this->station has no chance of being legit
-			$this->station = '';
+//			$this->station = '';
 
 			return false;
 		}
 
 		// If ICAO is only 3 chars we'll check some possibilities; filterable
 		if ( strlen( $matches[0] ) == 3 ) {
-			foreach ( apply_filters( 'awfn_icao_search_array', array( 'K', 'C', 'Y', 'E' ) ) as $first_letter ) {
-				$this->station = $first_letter . $matches[0];
+			foreach ( apply_filters( 'awfn_icao_search_array', array( 'K', 'C', 'M' ) ) as $first_letter ) {
+				$this->icao = $first_letter . $matches[0];
 				if ( $this->get_apt_info() ) {
 					break;
 				}
@@ -125,7 +135,8 @@ class AwfnStation extends Awfn {
 
 		// No match found
 		if ( false === $this->xmlData ) {
-			$this->station = '';
+//			$this->station = '';
+			return false;
 		}
 
 	}
@@ -139,29 +150,29 @@ class AwfnStation extends Awfn {
 	public function get_apt_info() {
 
 		// If we don't have a possible match, bail
-		if ( ! preg_match( '~^[A-Za-z0-9]{4,4}$~', $this->station, $matches ) ) {
+		if ( ! preg_match( '~^[A-Za-z0-9]{4,4}$~', $this->icao, $matches ) ) {
 			return false;
 		}
 
-		$station_name = strtoupper( $this->station );
+//		$station_name = strtoupper( $this->icao );
 
 		// Check our stored option for matching ICAO data
 		$stations = get_option( STORED_STATIONS_KEY, array() );
 
-		if ( isset( $stations[ $station_name ] ) ) {
+		if ( isset( $stations[ $this->icao ] ) ) {
 			// Use cached station data
-			$this->xmlData = $stations[ $station_name ];
+			$this->xmlData = $stations[ $this->icao ];
 		} else {
 			// No match found in option so we need to go external
 			$this->url
 				= sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s',
-				$this->station );
+				$this->icao );
 
 			$this->load_xml();
 
 			if ( $this->xmlData ) {
 				// Update option with new station data
-				$stations[ $station_name ] = $this->xmlData;
+				$stations[ $this->icao ] = $this->xmlData;
 				update_option( STORED_STATIONS_KEY, $stations );
 			}
 		}
@@ -179,7 +190,7 @@ class AwfnStation extends Awfn {
 	 * @since 0.4.0
 	 */
 	public static function static_apt_info( $icao ) {
-		$airport = new AwfnStation( $icao );
+		$airport = new self( $icao );
 		$airport->clean_icao();
 		$airport->get_apt_info();
 

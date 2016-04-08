@@ -18,13 +18,13 @@ class AwfnMetar extends Awfn {
 	 *
 	 * Setup log name - late static binding, build URL for Awfn::load_xml()
 	 *
-	 * @param string $station
+	 * @param string $icao
 	 * @param int $hours
 	 * @param bool $show
 	 *
 	 * @since 0.4.0
 	 */
-	public function __construct( $station = 'KSMF', $hours = 2, $show = true ) {
+	public function __construct( $icao = 'KSMF', $hours = 2, $show = true ) {
 
 		self::$log_name = 'METAR';
 
@@ -32,10 +32,10 @@ class AwfnMetar extends Awfn {
 
 		$base_url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
 		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
-		$this->url     = sprintf( $base_url, $station, $hours );
-		$this->station = $station;
-		$this->hours   = $hours;
-		$this->show    = $show;
+		$this->url   = sprintf( $base_url, $icao, $hours );
+		$this->icao  = $icao;
+		$this->hours = $hours;
+		$this->show  = $show;
 
 
 	}
@@ -49,7 +49,7 @@ class AwfnMetar extends Awfn {
 			$this->data = $this->xmlData['raw_text'];
 			$this->decode_metar();
 		} else {
-			$this->maybelog( 'debug', 'No metar data returned for ' . $this->station );
+			$this->maybelog( 'debug', 'No metar data returned for ' . $this->icao );
 		}
 	}
 
@@ -102,7 +102,7 @@ MAC;
 
 		} else {
 			$this->decoded = false;
-			$this->maybelog( 'debug', 'Invalid METAR for ' . $this->station );
+			$this->maybelog( 'debug', 'Invalid METAR for ' . $this->icao );
 			$this->maybelog( 'debug', $this->data );
 		}
 	}
