@@ -1,15 +1,32 @@
 <?php
 class StationTest extends WP_UnitTestCase {
 
+	protected $icao = 'kord';
+	protected $expected_lat = 41.98;
+	protected $expected_lng = -87.93;
 	protected $station;
 
 	public function setup() {
-		$this->station = new AwfnStation('kord');
+		$this->station = new AwfnStation( $this->icao );
 		$this->station->go( false );
 	}
 
 	function testSimpleFalse() {
 		$this->assertFalse( $this->station->will_show() );
+	}
+
+	function testLat() {
+		$lat = $this->station->lat();
+		$this->assertTrue( false !== $lat );
+		$this->assertEquals( $this->expected_lat, $this->expected_lat );
+
+
+	}
+
+	function testLng() {
+		$lng = $this->station->lng();
+		$this->assertTrue( false !== $lng );
+		$this->assertEquals( $this->expected_lng, $lng );
 	}
 
 	function testStaticInfo() {
@@ -38,6 +55,11 @@ class StationTest extends WP_UnitTestCase {
 		$station = new AwfnStation('wxyz');
 		$station->go( false );
 		$this->assertFalse( $station->station_exist() );
+	}
+
+	function testBuildDisplayContainsCapIcao() {
+		$display = $this->station->build_display();
+		$this->assertSame( strtoupper( $this->icao ), $display['station_id'] );
 	}
 
 }
