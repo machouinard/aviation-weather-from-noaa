@@ -1,5 +1,7 @@
 # Aviation Weather from NOAA #
 
+[![Build Status](https://travis-ci.org/machouinard/aviation-weather-from-noaa.svg?branch=master)](https://travis-ci.org/machouinard/aviation-weather-from-noaa)
+
 Contributors:		machouinard
 **Tags:** 				aviation, metar, pireps, weather, noaa
   
