@@ -1,4 +1,8 @@
 <?php
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
+
 /**
  * @package   Aviation Weather from NOAA
  * @author    Mark Chouinard <mark@chouinard.me>
@@ -39,6 +43,7 @@ if ( ! defined( 'EXPIRE_TIME' ) ) {
 }
 
 require_once 'vendor/autoload.php';
+require_once PLUGIN_ROOT . 'admin/class-awfn-logs.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once dirname( __FILE__ ) . '/admin/class-awfn-cli.php';
@@ -74,6 +79,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	protected static $shortcode_slug = 'awfn_';
 
 	public static $expire_time = 1800;
+	public static $log;
 	private $awfn_debug;
 
 
@@ -87,7 +93,12 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 
-		$this->awfn_debug = ( defined( 'AWFN_DEBUG' ) && AWFN_DEBUG ) ? true : false;
+//		$this->awfn_debug = ( defined( 'AWFN_DEBUG' ) && AWFN_DEBUG ) ? true : false;
+
+		$awfn_logs_options = get_option( 'awfn_logs_option_name' );
+		$debug_0           = isset( $awfn_logs_options['debug_0'] ) ? true : false;
+
+		$this->awfn_debug = $debug_0;
 
 		// load plugin text domain
 		add_action( 'init', array( $this, 'widget_textdomain' ) );
@@ -100,6 +111,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		add_action( 'wp_ajax_nopriv_weather_shortcode', array( 'AWFN_Shortcode', 'ajax_weather_shortcode' ) );
 		add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
 		add_action( 'wp_ajax_nopriv_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
+		add_action( 'wp_ajax_awfn_clear_log', array( 'AWFNLogs', 'clear_log' ) );
 
 		// Hooks fired when the Widget is activated and deactivated
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -117,7 +129,7 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		// Register admin styles and scripts
 		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 
 		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
@@ -188,6 +200,8 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public static function ajax_weather_widget() {
 
+		check_ajax_referer( 'widget-ajax', 'security' );
+
 		// Coming from our jQuery/AJAX POST
 		$instance = $_POST['instance'];
 
@@ -203,13 +217,16 @@ class Adds_Weather_Widget extends WP_Widget {
 		$cache = get_transient( $widget_id );
 
 		if ( $cache ) {
+			self::log( 'info', 'Cached data found for ' . $widget_id );
 			// If we have good cached data, use it.
 			wp_send_json_success( $cache );
 		}
 
+		self::log( 'info', 'No cached data found for ' . $widget_id );
+
 		$station = new AwfnStation( $instance['icao'], $show_station_info );
-		$icao  = $station->station_exist() ? (string) $station->get_icao() : false;
-		$title = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour',
+		$icao    = $station->station_exist() ? (string) $station->get_icao() : false;
+		$title   = empty( $instance['title'] ) ? sprintf( _n( 'Available data for %s from the past hour',
 			'Available data for %s from the past %d hours', $hours, self::get_widget_slug() ), $icao,
 			$hours ) : $instance['title'];
 
@@ -247,6 +264,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		set_transient( $widget_id, $widget_string, EXPIRE_TIME );
 
 		wp_send_json_success( $widget_string );
+
 	}
 
 	/**
@@ -402,7 +420,7 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function register_admin_styles() {
 
-		wp_enqueue_style( self::get_widget_slug() . '-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
+		wp_enqueue_style( self::get_widget_slug() . '-admin-styles', plugins_url( 'css/awfn-admin.css', __FILE__ ) );
 
 	} // end register_admin_styles
 
@@ -412,6 +430,12 @@ class Adds_Weather_Widget extends WP_Widget {
 	public function register_admin_scripts() {
 
 		wp_enqueue_script( self::get_widget_slug() . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
+		$nonce = wp_create_nonce( 'awfn_clear_logs' );
+		wp_localize_script( self::get_widget_slug() . '-admin-script', 'options', array(
+			'secure'     => $nonce,
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'awfn_debug' => $this->awfn_debug
+		) );
 
 	} // end register_admin_scripts
 
@@ -455,9 +479,69 @@ class Adds_Weather_Widget extends WP_Widget {
 
 	public function register_ajax_scripts() {
 		wp_enqueue_script( self::get_widget_slug() . '-sc-ajax', plugins_url( 'js/shortcode-ajax.js', __FILE__ ), array( 'jquery' ) );
+		$shortcode_nonce = wp_create_nonce( 'shortcode-ajax' );
+		wp_localize_script( self::get_widget_slug() . '-sc-ajax', 'shortcodeOptions', array(
+			'awfn_debug' => $this->awfn_debug,
+			'security'   => $shortcode_nonce
+		) );
+
 		wp_enqueue_script( self::get_widget_slug() . '-w-ajax', plugins_url( 'js/widget-ajax.js', __FILE__ ), array( 'jquery' ) );
-		wp_localize_script( self::get_widget_slug() . '-sc-ajax', 'options', array( 'awfn_debug' => $this->awfn_debug ) );
-		wp_localize_script( self::get_widget_slug() . '-w-ajax', 'options', array( 'awfn_debug' => $this->awfn_debug ) );
+		$widget_nonce = wp_create_nonce( 'widget-ajax' );
+		wp_localize_script( self::get_widget_slug() . '-w-ajax', 'widgetOptions', array(
+			'awfn_debug' => $this->awfn_debug,
+			'security'   => $widget_nonce,
+			'test'       => 'fuck'
+		) );
+
+	}
+
+	public static function log( $severity, $msg ) {
+		$awfn_logs_options = get_option( 'awfn_logs_option_name' );
+		$debug_0           = isset( $awfn_logs_options['debug_0'] ) ? true : false;
+
+		if ( $debug_0 ) {
+			$logger = self::get_logger();
+//			if ( null !== $logger ) {
+				if ( is_array( $msg ) ) {
+					$logger->$severity( print_r( $msg ) );
+				} else {
+					$logger->$severity( $msg );
+				}
+//			}
+		}
+	}
+
+	protected static function get_logger() {
+		if ( null === self::$log ) {
+			self::setup_logger();
+		}
+
+		return self::$log;
+	}
+
+	protected static function setup_logger() {
+		// Prepare logger
+		$dev_log_dir = PLUGIN_ROOT . 'logs';
+
+		// Permissions for his one are up to you, for now. Sorry.
+		if ( ! file_exists( $dev_log_dir ) ) {
+			mkdir( $dev_log_dir, 0700, true );
+		}
+		$prod_log_dir = PLUGIN_ROOT . 'logs';
+		if ( ! file_exists( $prod_log_dir ) ) {
+			mkdir( $prod_log_dir, 0700, true );
+		}
+		self::$log       = new Logger( 'AJAX' );
+		$formatter       = new LineFormatter( "[%datetime%] > %channel%.%level_name%: %message%\n" );
+		$info_handler    = new StreamHandler( PLUGIN_ROOT . 'logs/info.log', Logger::INFO, false );
+		$debug_handler   = new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG );
+		$warning_handler = new StreamHandler( PLUGIN_ROOT . 'logs/warning.log', Logger::WARNING, false );
+		$info_handler->setFormatter( $formatter );
+		$debug_handler->setFormatter( $formatter );
+		$warning_handler->setFormatter( $formatter );
+		self::$log->pushHandler( $debug_handler );
+		self::$log->pushHandler( $info_handler );
+		self::$log->pushHandler( $warning_handler );
 	}
 
 

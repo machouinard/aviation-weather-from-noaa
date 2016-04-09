@@ -2,6 +2,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * Class Awfn
@@ -51,8 +52,15 @@ abstract class Awfn {
 	 */
 	public function __construct() {
 
+		$this->prepare_logger();
+	}
+
+	private function prepare_logger() {
+		$awfn_logs_options = get_option( 'awfn_logs_option_name' );
+		$debug_0           = isset( $awfn_logs_options['debug_0'] ) ? true : false;
+
 		// Prepare logger
-		if ( defined( 'AWFN_DEBUG' ) && AWFN_DEBUG ) {
+		if ( $debug_0 ) {
 
 			$dev_log_dir = PLUGIN_ROOT . 'logs';
 
@@ -65,10 +73,17 @@ abstract class Awfn {
 				mkdir( $prod_log_dir, 0700, true );
 			}
 			$this->log = new Logger( static::$log_name );
-			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG ) );
-			$this->log->pushHandler( new StreamHandler( PLUGIN_ROOT . 'logs/warning.log', Logger::WARNING ) );
+			$formatter = new LineFormatter("[%datetime%] > %channel%.%level_name%: %message%\n");
+			$info_handler = new StreamHandler( PLUGIN_ROOT . 'logs/info.log', Logger::INFO, false );
+			$debug_handler = new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG );
+			$warning_handler = new StreamHandler( PLUGIN_ROOT . 'logs/warning.log', Logger::WARNING, false );
+			$info_handler->setFormatter( $formatter );
+			$debug_handler->setFormatter( $formatter );
+			$warning_handler->setFormatter( $formatter );
+			$this->log->pushHandler( $debug_handler );
+			$this->log->pushHandler( $info_handler );
+			$this->log->pushHandler( $warning_handler );
 		}
-
 	}
 
 	/**
@@ -164,7 +179,7 @@ abstract class Awfn {
 				return false;
 			}
 		} catch ( Exception $e ) {
-			$this->maybelog( 'debug', $e->getMessage() );
+			$this->maybelog( 'warning', $e->getMessage() );
 
 			return false;
 		}
@@ -178,7 +193,7 @@ abstract class Awfn {
 				return false;
 			}
 		} catch ( Exception $e ) {
-			$this->maybelog( 'debug', $e->getMessage() );
+			$this->maybelog( 'warning', $e->getMessage() );
 
 			return false;
 		}
@@ -191,7 +206,7 @@ abstract class Awfn {
 				return false;
 			}
 		} catch ( Exception $e ) {
-			$this->maybelog( 'debug', $e->getMessage() );
+			$this->maybelog( 'warning', $e->getMessage() );
 
 			return false;
 		}
@@ -199,7 +214,7 @@ abstract class Awfn {
 		try {
 			$atts = $loaded->data->attributes();
 		} catch ( Exception $e ) {
-			$this->maybelog( 'debug', $e->getMessage() );
+			$this->maybelog( 'warning', $e->getMessage() );
 
 			return false;
 		}
@@ -215,6 +230,8 @@ abstract class Awfn {
 
 			return true;
 		}
+		$this->maybelog('debug', 'No xml loaded for ' . $this->icao );
+		return false; // testing
 
 	}
 

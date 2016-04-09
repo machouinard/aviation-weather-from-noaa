@@ -4,7 +4,7 @@
 
         var wrap = $('.adds-weather-wrapper');
         // Our debug setting was localized in main file
-        var awfn_debug = ( '1' === options.awfn_debug ) ? true : false;
+        var awfn_debug = ( '1' === widgetOptions.awfn_debug ) ? true : false;
 
         $.each( wrap, function (i, v) {
 
@@ -16,6 +16,7 @@
                 type: 'post',
                 data: {
                     action: 'weather_widget',
+                    security: widgetOptions.security,
                     instance: instance
                 },
                 success : function( resp ) {

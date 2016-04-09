@@ -37,6 +37,7 @@ class AwfnMetar extends Awfn {
 		$this->hours = $hours;
 		$this->show  = $show;
 
+		$this->maybelog('info', 'New for ' . $icao );
 
 	}
 
@@ -130,7 +131,7 @@ MAC;
 
 
 	private function to_farenheit( $c ) {
-		return (float) $c * 9 / 5 + 32;
+		return round( (float) $c * 9 / 5 + 32 );
 	}
 
 

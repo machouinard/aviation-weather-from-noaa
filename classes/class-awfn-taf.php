@@ -43,7 +43,7 @@ class AwfnTaf extends Awfn {
 		if ( $this->xmlData ) {
 			$this->data = $this->xmlData['raw_text'];
 		} else {
-//			$this->maybelog( 'debug', 'No taf data found' );
+//			$this->maybelog( 'debug', 'No taf data found', 'decode_data' );
 		}
 	}
 
@@ -58,7 +58,7 @@ class AwfnTaf extends Awfn {
 			                      . '</article>';
 		} else {
 			$this->display_data = '<article class="taf">No TAF returned</article>';
-			$this->maybelog( 'debug', 'No TAF returned for ' . $this->icao . '/' . $this->hours . ' hours' );
+			$this->maybelog( 'debug', 'No TAF returned for ' . $this->icao . '/' . $this->hours . ' hours', null );
 		}
 	}
 

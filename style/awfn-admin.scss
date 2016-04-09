@@ -1,0 +1,63 @@
+div.awfn-form {
+    padding: 10px 0;
+
+    input, select {
+        margin: 5px 0;
+    }
+}
+
+
+div#awfn-error-logs {
+
+    h2 {
+        margin-top: 40px;
+    }
+
+    section {
+
+        button {
+
+            &.awfn-clear-log {
+
+            }
+
+        }
+
+        div.errors {
+
+            border-bottom: 1px solid #000000;
+
+
+
+            ul {
+
+                li {
+                    color: #1e1e1e;
+                    font-weight: bold;
+                    line-height: 2.5;
+                    //padding: 0 1rem;
+                    //-webkit-border-radius: 5px;
+                    //-moz-border-radius: 5px;
+                    //border-radius: 5px;
+
+                    &:nth-of-type(odd) {
+                        //background-color: #979797;
+                    }
+                    &:nth-of-type(even) {
+                        background-color: #dedede;
+                    }
+                }
+            }
+        }
+
+        p {
+            font-weight:bold;
+
+            &.success {
+                color: green;
+            }
+        }
+
+
+    }
+}
