@@ -24,11 +24,13 @@ class AwfnCli extends WP_CLI_Command {
 		list( $icao ) = $args;
 
 		$station = new AwfnStation( $icao );
-		$station->go( false );
 		if ( ! $station->station_exist() ) {
 			WP_CLI::error( 'Invalid ICAO' );
 			return;
 		}
+		$station->decode_data();
+		$station->build_display();
+
 		$this->lat = $station->lat();
 		$this->lng = $station->lng();
 
@@ -152,7 +154,7 @@ class AwfnCli extends WP_CLI_Command {
 		$show = false;
 
 		$airport = new AwfnStation( $icao );
-		$airport->go( false );
+
 		$lat    = $airport->lat();
 		$lng    = $airport->lng();
 		$pireps = new AwfnPirep( $icao, $lat, $lng, $distance, $hours, $show );

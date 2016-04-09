@@ -38,17 +38,6 @@ class AwfnStation extends Awfn {
 
 	}
 
-	public function go( $display = true ) {
-		if ( $this->get_apt_info() ) {
-			$this->decode_data();
-			$this->build_display();
-
-			if ( $display ) {
-				$this->display_data();
-			}
-		}
-	}
-
 	/**
 	 * Does airport exist?
 	 *
@@ -96,7 +85,7 @@ class AwfnStation extends Awfn {
 		$airport = new self( $icao );
 
 		if ( $airport->station_exist() ) {
-			return $airport->xmlData['station_id'];
+			return (string) $airport->xmlData->station_id;
 		} else {
 			return false;
 		}
@@ -164,15 +153,11 @@ class AwfnStation extends Awfn {
 			$this->xmlData = $stations[ $this->icao ];
 		} else {
 			// No match found in option so we need to go external
-			$this->url
-				= sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s',
-				$this->icao );
-
 			$this->load_xml();
 
 			if ( $this->xmlData ) {
 				// Update option with new station data
-				$stations[ $this->icao ] = $this->xmlData;
+				$stations[ $this->icao ] = json_decode( json_encode( $this->xmlData ), 1 );
 				update_option( STORED_STATIONS_KEY, $stations );
 			}
 		}
