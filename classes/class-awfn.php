@@ -72,10 +72,10 @@ abstract class Awfn {
 			if ( ! file_exists( $prod_log_dir ) ) {
 				mkdir( $prod_log_dir, 0700, true );
 			}
-			$this->log       = new Logger( static::$log_name );
-			$formatter       = new LineFormatter( "[%datetime%] > %channel%.%level_name%: %message%\n" );
-			$info_handler    = new StreamHandler( PLUGIN_ROOT . 'logs/info.log', Logger::INFO, false );
-			$debug_handler   = new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG );
+			$this->log = new Logger( static::$log_name );
+			$formatter = new LineFormatter("[%datetime%] > %channel%.%level_name%: %message%\n");
+			$info_handler = new StreamHandler( PLUGIN_ROOT . 'logs/info.log', Logger::INFO, false );
+			$debug_handler = new StreamHandler( PLUGIN_ROOT . 'logs/debug.log', Logger::DEBUG );
 			$warning_handler = new StreamHandler( PLUGIN_ROOT . 'logs/warning.log', Logger::WARNING, false );
 			$info_handler->setFormatter( $formatter );
 			$debug_handler->setFormatter( $formatter );
@@ -220,14 +220,17 @@ abstract class Awfn {
 		}
 
 		if ( 0 < $atts['num_results'] ) {
-			$this->xmlData = $loaded->data->{static::$log_name};
-			$this->maybelog('info', 'XML loaded for ' . $this->icao );
+			if ( 'AircraftReport' == static::$log_name ) {
+				// maintain simplexmlelement to preserve all pireps
+				$xml_array = $loaded->data->{static::$log_name};
+			} else {
+				$xml_array = json_decode( json_encode( $loaded->data->{static::$log_name} ), 1 );
+			}
+			$this->xmlData = $xml_array;
 
 			return true;
 		}
-
-		$this->maybelog( 'debug', 'No xml loaded for ' . $this->icao );
-
+		$this->maybelog('debug', 'No xml loaded for ' . $this->icao );
 		return false; // testing
 
 	}

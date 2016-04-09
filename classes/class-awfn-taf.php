@@ -13,8 +13,8 @@ class AwfnTaf extends Awfn {
 	 * Builds URL for Awfn::load_xml()
 	 *
 	 * @param string $icao
-	 * @param int $hours
-	 * @param bool $show
+	 * @param int    $hours
+	 * @param bool   $show
 	 *
 	 * @since 0.4.0
 	 */
@@ -27,10 +27,10 @@ class AwfnTaf extends Awfn {
 		$url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml';
 		$url .= '&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
 
-		$this->url   = sprintf( $url, $icao, $hours );
-		$this->icao  = $icao;
-		$this->hours = $hours;
-		$this->show  = $show;
+		$this->url     = sprintf( $url, $icao, $hours );
+		$this->icao = $icao;
+		$this->hours   = $hours;
+		$this->show    = $show;
 	}
 
 	/**
@@ -41,9 +41,9 @@ class AwfnTaf extends Awfn {
 	public function decode_data() {
 
 		if ( $this->xmlData ) {
-			$this->data = (string) $this->xmlData->raw_text;
-		} else { // Should never get to this point
-			$this->maybelog( 'debug', 'No taf data found for ' . $this->icao );
+			$this->data = $this->xmlData['raw_text'];
+		} else {
+//			$this->maybelog( 'debug', 'No taf data found', 'decode_data' );
 		}
 	}
 

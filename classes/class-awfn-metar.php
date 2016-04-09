@@ -37,7 +37,7 @@ class AwfnMetar extends Awfn {
 		$this->hours = $hours;
 		$this->show  = $show;
 
-		$this->maybelog( 'info', 'New for ' . $icao );
+		$this->maybelog('info', 'New for ' . $icao );
 
 	}
 
@@ -47,9 +47,9 @@ class AwfnMetar extends Awfn {
 	public function decode_data() {
 
 		if ( $this->xmlData ) {
-			$this->data = (string) $this->xmlData->raw_text;
+			$this->data = $this->xmlData['raw_text'];
 			$this->decode_metar();
-		} else {  // Should never get to this point
+		} else {
 			$this->maybelog( 'debug', 'No metar data returned for ' . $this->icao );
 		}
 	}
