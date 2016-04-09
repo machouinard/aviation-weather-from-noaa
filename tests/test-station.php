@@ -8,7 +8,6 @@ class StationTest extends WP_UnitTestCase {
 
 	public function setup() {
 		$this->station = new AwfnStation( $this->icao );
-		$this->station->go( false );
 	}
 
 	function testSimpleFalse() {
@@ -53,12 +52,13 @@ class StationTest extends WP_UnitTestCase {
 
 	function testStationNotExists() {
 		$station = new AwfnStation('wxyz');
-		$station->go( false );
 		$this->assertFalse( $station->station_exist() );
 	}
 
 	function testBuildDisplayContainsCapIcao() {
+		$this->station->decode_data();
 		$display = $this->station->build_display();
+
 		$this->assertSame( strtoupper( $this->icao ), $display['station_id'] );
 	}
 	
