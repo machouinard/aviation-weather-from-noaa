@@ -45,18 +45,20 @@ class AWFN_Shortcode {
 		$distance          = absint( $atts['radial_dist'] );
 		$title             = $atts['title'];
 
-		$spinner_url = plugin_dir_url( dirname( __FILE__ ) ) . 'css/loading.gif';
+		$spinner_url     = plugin_dir_url( dirname( __FILE__ ) ) . 'css/loading.gif';
 		$atts['spinner'] = $spinner_url;
 
 		$out = "<section class='awfn-shortcode' data-atts='" . json_encode( $atts ) . "'><img class='sc-loading' src='{$spinner_url}'/></section>";
+
 		return $out;
 
 	}
 
 	public static function ajax_weather_shortcode() {
 
+		check_ajax_referer( 'shortcode-ajax', 'security' );
 
-		$atts = $_POST['atts'];
+		$atts  = $_POST['atts'];
 
 		$hours             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
 		$show_metar        = filter_var( $atts['show_metar'], FILTER_VALIDATE_BOOLEAN );
@@ -75,55 +77,52 @@ class AWFN_Shortcode {
 		$shortcode_id = SHORTCODE_SLUG . md5( serialize( $atts ) );
 
 		// Check for cached output
-		$output = get_transient( $shortcode_id );
-
-		if ( ! $output ) {
-
-			if ( empty ( $title ) ) {
-				$title = sprintf( _n( 'Available data for %s from the past hour',
-					'Available data for %s from the past %d hours', $hours, Adds_Weather_Widget::get_widget_slug() ), $icao, $hours );
-			}
-
-			// Start output buffering
-			ob_start();
-
-			echo '<section class="adds-weather-shortcode-wrapper">';
-
-			// Do we have station data?
-			if ( $station->station_exist() ) {
-
-				echo '<header>' . esc_html( $title ) . '</header>';
-
-				$station->decode_data();
-				$station->build_display();
-				$station->display_data();
-
-				// Handle METAR
-				$metar = new AwfnMetar( $icao, $hours, $show_metar );
-				$metar->go();
-
-				// Handle TAF
-				$taf = new AwfnTaf( $icao, $hours, $show_taf );
-				$taf->go();
-
-				// Handle PIREPS
-				$pirep = new AwfnPirep( $station->get_icao(), $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
-				$pirep->go();
-
-			} else {
-				// We have no station data; say so.
-				echo '<header>ICAO ' . esc_html( $atts['apts'] ) . ' not found<header>';
-			}
-
-			echo '</section>';
-
-			$output = ob_get_clean();
-
-			// Cache shortcode output
-			set_transient( $shortcode_id, $output, EXPIRE_TIME );
-
+		if ( $output = get_transient( $shortcode_id ) ) {
+			Adds_Weather_Widget::log( 'info', 'Cached data found for shortcode id: ' . $shortcode_id );
+			wp_send_json_success( $output );
 		}
 
+		Adds_Weather_Widget::log( 'info', 'No cached data found for shortcode id: ' . $shortcode_id );
+
+		if ( empty ( $title ) ) {
+			$title = sprintf( _n( 'Available data for %s from the past hour',
+				'Available data for %s from the past %d hours', $hours, Adds_Weather_Widget::get_widget_slug() ), $icao, $hours );
+		}
+
+		// Start output buffering
+		ob_start();
+
+		echo '<section class="adds-weather-shortcode-wrapper">';
+
+		// Do we have station data?
+		if ( $station->station_exist() ) {
+
+			echo '<header>' . esc_html( $title ) . '</header>';
+
+			$station->decode_data();
+			$station->build_display();
+			$station->display_data();
+
+			// Handle METAR
+			$metar = new AwfnMetar( $icao, $hours, $show_metar );
+			$metar->go();
+
+			// Handle TAF
+			$taf = new AwfnTaf( $icao, $hours, $show_taf );
+			$taf->go();
+
+			// Handle PIREPS
+			$pirep = new AwfnPirep( $station->get_icao(), $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+			$pirep->go();
+
+		} else {
+			// We have no station data; say so.
+			echo '<header>ICAO ' . esc_html( $atts['apts'] ) . ' not found<header>';
+		}
+
+		echo '</section>';
+
+		$output = ob_get_clean();
 
 		// Allowed markup in shortcode. This is filterable.
 		$kses_args = array(
@@ -169,7 +168,12 @@ class AWFN_Shortcode {
 		// Run output through KSES
 		$output = wp_kses( $output, apply_filters( 'adds_kses', $kses_args ) );
 
+		// Cache shortcode output
+		set_transient( $shortcode_id, $output, EXPIRE_TIME );
+
 		wp_send_json_success( $output );
+
+
 	}
 
 }
