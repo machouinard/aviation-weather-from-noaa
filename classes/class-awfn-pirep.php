@@ -38,6 +38,8 @@ class AwfnPirep extends Awfn {
 		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';
 		$this->url = sprintf( $base, $distance, $lng, $lat, $hours );
 
+		$this->maybelog('info', 'New PIREP for ' . $icao );
+
 	}
 
 	/**
@@ -49,12 +51,12 @@ class AwfnPirep extends Awfn {
 	 */
 	public function decode_data() {
 
-		if ( $this->xmlData ) {
+		if ( $this->xmlData->raw_text ) {
 			foreach ( $this->xmlData as $report ) {
 				$this->data[] = (string) $report->raw_text;
 			}
-		} else {
-			$this->maybelog( 'debug', 'No pirep data for ' . $this->icao );
+		} else { // This should never be called
+			$this->maybelog( 'warning', 'No pirep data for ' . $this->icao );
 		}
 	}
 
@@ -70,7 +72,7 @@ class AwfnPirep extends Awfn {
 			$count = count( $this->data );
 
 			$count_display = sprintf( '<span class="awfn-min">(%d)</span>', $count );
-			$this->maybelog( 'debug', 'Pirep count for ' . $this->icao . ': ' . $count );
+			$this->maybelog( 'debug', 'Pirep count for ' . $this->icao . ': ' . $count, __LINE__ );
 
 			$this->display_data = '<header>';
 			$this->display_data .= sprintf( _n( 'Pirep %s', 'Pireps %s', $count, Adds_Weather_Widget::get_widget_slug() ), $count_display );

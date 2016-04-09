@@ -1,0 +1,21 @@
+div.awfn-form {
+  padding: 10px 0; }
+  div.awfn-form input, div.awfn-form select {
+    margin: 5px 0; }
+
+div#awfn-error-logs h2 {
+  margin-top: 40px; }
+div#awfn-error-logs section div.errors {
+  border-bottom: 1px solid #000000; }
+  div#awfn-error-logs section div.errors ul li {
+    color: #1e1e1e;
+    font-weight: bold;
+    line-height: 2.5; }
+    div#awfn-error-logs section div.errors ul li:nth-of-type(even) {
+      background-color: #dedede; }
+div#awfn-error-logs section p {
+  font-weight: bold; }
+  div#awfn-error-logs section p.success {
+    color: green; }
+
+/*# sourceMappingURL=awfn-admin.css.map */

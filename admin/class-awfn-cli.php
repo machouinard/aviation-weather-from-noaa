@@ -64,7 +64,7 @@ class AwfnCli extends WP_CLI_Command {
 	 */
 	public function get_metar( $args ) {
 
-		list( $icao, $hours ) = $args;
+		list( $icao, $hours ) = array_pad( $args, 2, null );
 		$hours = null === $hours ? 2 : (int) $hours;
 		$show = false;
 
@@ -103,7 +103,7 @@ class AwfnCli extends WP_CLI_Command {
 	 */
 	public function get_taf( $args ) {
 
-		list( $icao, $hours ) = $args;
+		list( $icao, $hours ) = array_pad( $args, 2, null );
 		$hours = null === $hours ? 2 : (int) $hours;
 		$show = false;
 
@@ -146,7 +146,7 @@ class AwfnCli extends WP_CLI_Command {
 	 */
 	public function get_pireps( $args ) {
 
-		list( $icao, $distance, $hours ) = $args;
+		list( $icao, $distance, $hours ) = array_pad( $args, 3, null );
 		$distance = ( null === $distance ) ? 100 : (int) $distance;
 		$hours = null === $hours ? 2 : (int) $hours;
 		$show = false;
