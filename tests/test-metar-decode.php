@@ -3,7 +3,7 @@
 class CloudChunkDecoderTest extends WP_UnitTestCase {
   private $AwfnMetarDecoder;
 
-  public function __construct() {
+  public function setup() {
           $this->AwfnMetarDecoder = new AwfnMetar();
   }
 
