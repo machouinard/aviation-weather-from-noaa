@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Test for Protect against null cloud base issue, github #5
+ */
 class CloudChunkDecoderTest extends WP_UnitTestCase {
   private $AwfnMetarDecoder;
 
