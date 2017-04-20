@@ -61,7 +61,7 @@ class StationTest extends WP_UnitTestCase {
 		$display = $this->station->build_display();
 		$this->assertSame( strtoupper( $this->icao ), $display['station_id'] );
 	}
-	
+
 	function testStaticCleanIcaoGood() {
 		$res = AwfnStation::static_clean_icao('kptk');
 		$this->AssertSame( 'KPTK', $res );

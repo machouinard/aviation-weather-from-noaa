@@ -55,6 +55,22 @@ class AwfnMetar extends Awfn {
 	}
 
 	/**
+	 * Test a raw text Metar
+	 *
+	 * @since 0.4.1
+	 *
+	 */
+	 public function decode_text_metar($metar = '') {
+
+		 if ( $metar ) {
+			 $this->data = $metar;
+			 $this->decode_metar();
+			 return $this->decoded;
+		 } else {
+			 $this->maybelog( 'debug', 'No metar data returned for ' . $this->icao );
+		 }
+	 }
+	/**
 	 * Decodes raw metar into friendlier display
 	 *
 	 * @since 0.4.0
@@ -75,8 +91,8 @@ class AwfnMetar extends Awfn {
 			$v_units              = null == $v ? '' : $v->getVisibility()->getUnit();
 			$cld                  = $d->getClouds();
 			$cld_amount           = isset( $cld[0] ) ? $cld[0]->getAmount() : '';
-			$cld_base_height      = isset( $cld[0] ) ? $cld[0]->getBaseHeight()->getValue() : '';
-			$cld_base_height_unit = isset( $cld[0] ) ? $cld[0]->getBaseHeight()->getUnit() : '';
+			$cld_base_height      = (null !== $cld[0] && null !== $cld[0]->getBaseHeight()) ? $cld[0]->getBaseHeight()->getValue() : '';
+			$cld_base_height_unit = (null !== $cld[0] && null !== $cld[0]->getBaseHeight()) ? $cld[0]->getBaseHeight()->getUnit() : '';
 			$t                    = $d->getAirTemperature();
 			$tmp                  = null == $t ? '' : $d->getAirTemperature()->getValue();
 			$tmp_unit             = null == $t ? '' : $d->getAirTemperature()->getUnit();
