@@ -91,8 +91,8 @@ class AwfnMetar extends Awfn {
 			$v_units              = null == $v ? '' : $v->getVisibility()->getUnit();
 			$cld                  = $d->getClouds();
 			$cld_amount           = isset( $cld[0] ) ? $cld[0]->getAmount() : '';
-			$cld_base_height      = (null !== $cld[0] && null !== $cld[0]->getBaseHeight()) ? $cld[0]->getBaseHeight()->getValue() : '';
-			$cld_base_height_unit = (null !== $cld[0] && null !== $cld[0]->getBaseHeight()) ? $cld[0]->getBaseHeight()->getUnit() : '';
+			$cld_base_height      = ( isset( $cld[0] ) && null !== $cld[0] && null !== $cld[0]->getBaseHeight()) ? $cld[0]->getBaseHeight()->getValue() : '';
+			$cld_base_height_unit = ( isset( $cld[0] ) && null !== $cld[0] && null !== $cld[0]->getBaseHeight()) ? $cld[0]->getBaseHeight()->getUnit() : '';
 			$t                    = $d->getAirTemperature();
 			$tmp                  = null == $t ? '' : $d->getAirTemperature()->getValue();
 			$tmp_unit             = null == $t ? '' : $d->getAirTemperature()->getUnit();
@@ -115,7 +115,6 @@ class AwfnMetar extends Awfn {
 <p>Dewpoint: {$tmp_dewpoint} {$tmp_unit} / {$df} deg F</p>
 <p>Pressure: {$pressure} {$pressure_unit}</p>
 MAC;
-
 
 		} else {
 			$this->decoded = false;
