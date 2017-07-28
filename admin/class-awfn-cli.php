@@ -14,7 +14,7 @@ class AwfnCli extends WP_CLI_Command {
 	 * : An airport ICAO code
 	 *
 	 * ## EXAMPLES
-	 * wp awfn icao kzzv
+	 * wp awfn info kzzv
 	 *
 	 * @subcommand info
 	 * @alias info
