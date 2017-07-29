@@ -118,7 +118,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ## Upgrade Notice ##
 
-### 0.4.0 ###
-Separate functionality into individual classes, Improve use of transients and options including deletion on uninstall,
-Only display most recent METAR & TAF, Add decoded METAR, Show/hide decoded METAR and PIREPS, WP-CLI Integration with error logging,
-Removed filter hooks for styling wrappers
+### 0.5.0 ###
+* Still caching data but loading via Ajax to get around CDN issues
