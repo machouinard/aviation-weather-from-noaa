@@ -134,7 +134,7 @@ class AWFNLogs {
 
 	public function debug_0_callback() {
 		printf(
-			'<input type="checkbox" name="awfn_logs_option_name[debug_0]" id="debug_0" value="debug_0" %s> <label for="debug_0">Check to enable logging</label>',
+			'<input type="checkbox" name="awfn_logs_option_name[debug_0]" id="debug_0" value="debug_0" %s> <label for="debug_0">Check to enable logging/debugging</label>',
 			( isset( $this->awfn_logs_options['debug_0'] ) && $this->awfn_logs_options['debug_0'] === 'debug_0' ) ? 'checked' : ''
 		);
 	}
@@ -161,11 +161,20 @@ class AWFNLogs {
 	 * @return array log files
 	 */
 	private static function get_log_files() {
+
+	    //* If we don't have a `logs` directory return an empty array.
+	    if ( ! is_dir( plugin_dir_path( dirname( __FILE__ ) ) . 'logs' ) ) {
+
+	        return array();
+
+        }
+
 		$dir      = new RecursiveDirectoryIterator( plugin_dir_path( dirname( __FILE__ ) ) . 'logs', RecursiveDirectoryIterator::SKIP_DOTS );
 		$iterator = new RecursiveIteratorIterator( $dir, RecursiveIteratorIterator::SELF_FIRST );
 
-		# We create our list of files in the theme
+		# Create our list of log files
 		$files = array();
+
 		foreach ( $iterator as $file ) {
 			if ( substr( $file->getFilename(), - 4 ) == '.log' ) {
 				array_push( $files, $file->getPathname() );
@@ -180,7 +189,6 @@ class AWFNLogs {
 /**
  * Only load in admin
  */
-$debug = ( defined( 'AWFN_DEBUG' ) && AWFN_DEBUG ) ? true : false;
 if ( is_admin() ) {
-	$awfn_errors = new AWFNLogs();
+	new AWFNLogs();
 }
