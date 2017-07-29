@@ -37,13 +37,14 @@ class AWFN_Shortcode {
 
 		$atts = wp_parse_args( $atts, $defaults );
 
-		$hours             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
-		$show_metar        = (bool) $atts['show_metar'];
-		$show_taf          = (bool) $atts['show_taf'];
-		$show_pireps       = (bool) $atts['show_pireps'];
-		$show_station_info = (bool) $atts['show_station_info'];
-		$distance          = absint( $atts['radial_dist'] );
-		$title             = $atts['title'];
+		$atts['apts']              = esc_html( $atts['apts'] );
+		$atts['hours']             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
+		$atts['show_metar']        = (bool) $atts['show_metar'];
+		$atts['show_taf']          = (bool) $atts['show_taf'];
+		$atts['show_pireps']       = (bool) $atts['show_pireps'];
+		$atts['show_station_info'] = (bool) $atts['show_station_info'];
+		$atts['radial_dist']       = absint( $atts['radial_dist'] ) > 10 && absint( $atts['radial_dist'] ) < 201 ? absint( $atts['radial_dist'] ) : 100;
+		$atts['title']             = esc_html( $atts['title'] );
 
 		$spinner_url     = plugin_dir_url( dirname( __FILE__ ) ) . 'css/loading.gif';
 		$atts['spinner'] = $spinner_url;
@@ -58,7 +59,18 @@ class AWFN_Shortcode {
 
 		check_ajax_referer( 'shortcode-ajax', 'security' );
 
-		$atts  = $_POST['atts'];
+		$defaults = array(
+			'apts'              => 'KSMF',
+			'hours'             => '2',
+			'show_metar'        => '1',
+			'show_taf'          => '1',
+			'show_pireps'       => '1',
+			'show_station_info' => '1',
+			'radial_dist'       => '100',
+			'title'             => ''
+		);
+
+		$atts = wp_parse_args( $_POST['atts'], $defaults );
 
 		$hours             = absint( $atts['hours'] ) <= 6 ? absint( $atts['hours'] ) : 1;
 		$show_metar        = filter_var( $atts['show_metar'], FILTER_VALIDATE_BOOLEAN );
