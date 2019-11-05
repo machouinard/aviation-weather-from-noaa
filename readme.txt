@@ -3,8 +3,8 @@
 Contributors:		machouinard
 Tags: 				aviation, metar, pireps, weather, noaa
 Requires at least: 	3.8
-Tested up to:      	4.8
-Stable tag:        	trunk
+Tested up to:      	5.2.4
+Stable tag:        	0.5.0
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,7 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 == Changelog ==
 = 0.5.0 =
 * Still caching data but loading via Ajax to get around CDN issues
+* Fix PHP notices
 
 = 0.4.0 =
 * Separate functionality into individual classes
