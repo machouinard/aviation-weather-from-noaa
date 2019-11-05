@@ -1,0 +1,63 @@
+# Copyright (C) 2019 Mark Chouinard
+# This file is distributed under the same license as the Aviation Weather From NOAA plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Aviation Weather From NOAA 0.5.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/aviation-weather-from-noaa\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-11-05T07:16:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.2.0\n"
+"X-Domain: awfn\n"
+
+#. Plugin Name of the plugin
+msgid "Aviation Weather From NOAA"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/machouinard/aviation-weather-from-noaa"
+msgstr ""
+
+#. Description of the plugin
+msgid "Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)"
+msgstr ""
+
+#. Author of the plugin
+msgid "Mark Chouinard"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://chouinard.me"
+msgstr ""
+
+#: views/admin.php:3
+msgid "Title"
+msgstr ""
+
+#: views/admin.php:9
+msgid "ICAO"
+msgstr ""
+
+#: views/admin.php:24
+msgid "Radial Distance"
+msgstr ""
+
+#: views/admin.php:38
+msgid "METAR"
+msgstr ""
+
+#: views/admin.php:46
+msgid "TAF"
+msgstr ""
+
+#: views/admin.php:54
+msgid "PIREPS"
+msgstr ""
+
+#: views/admin.php:62
+msgid "Airport Location"
+msgstr ""

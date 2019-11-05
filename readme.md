@@ -7,7 +7,7 @@ Contributors:		machouinard
   
 **Requires at least:** 	3.8
   
-**Tested up to:**      	4.8
+**Tested up to:**      	5.2.4
   
 **Stable tag:**        	trunk
   
@@ -56,6 +56,7 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 ## Changelog ##
 ### 0.5.0 ###
 * Still caching data but loading via Ajax to get around CDN issues
+* Fix PHP notices
 
 ### 0.4.0 ###
 * Separate functionality into individual classes
