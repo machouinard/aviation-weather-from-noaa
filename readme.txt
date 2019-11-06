@@ -1,6 +1,6 @@
 === Aviation Weather from NOAA ===
 
-Contributors:		machouinard
+Contributors:		machouinard, ranchhand6
 Tags: 				aviation, metar, pireps, weather, noaa
 Requires at least: 	3.8
 Tested up to:      	5.2.4
