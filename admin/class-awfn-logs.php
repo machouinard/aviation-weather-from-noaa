@@ -19,9 +19,8 @@ class AWFNLogs {
 			'AWFN Logs', // menu_title
 			'manage_options', // capability
 			'awfn-logs', // menu_slug
-			array( $this, 'awfn_logs_create_admin_page' ), // function
-			'dashicons-admin-generic', // icon_url
-			76 // position
+			array( $this, 'awfn_logs_create_admin_page' ),
+			1
 		);
 	}
 
