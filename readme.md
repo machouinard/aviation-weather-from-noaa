@@ -7,9 +7,9 @@ Contributors:		machouinard
   
 **Requires at least:** 	3.8
   
-**Tested up to:**      	4.8
+**Tested up to:**      	5.3
   
-**Stable tag:**        	trunk
+**Stable tag:**        	0.5.1
   
 **License:**           	GPLv2 or later
   
@@ -54,6 +54,9 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Changelog ##
+### 0.5.1 ###
+* Update add_management_page() args to prevent PHP notice
+
 ### 0.5.0 ###
 * Still caching data but loading via Ajax to get around CDN issues
 
@@ -118,5 +121,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ## Upgrade Notice ##
 
-### 0.5.0 ###
-* Still caching data but loading via Ajax to get around CDN issues
+### 0.5.1 ###
+* Prevent PHP notice when adding menu page
