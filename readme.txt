@@ -1,6 +1,6 @@
 === Aviation Weather from NOAA ===
 
-Contributors:		machouinard
+Contributors:		machouinard, ranchhand6
 Tags: 				aviation, metar, pireps, weather, noaa
 Requires at least: 	3.8
 Tested up to:      	5.3
@@ -52,6 +52,7 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 = 0.5.0 =
 * Still caching data but loading via Ajax to get around CDN issues
+* Fix PHP notices
 
 = 0.4.0 =
 * Separate functionality into individual classes

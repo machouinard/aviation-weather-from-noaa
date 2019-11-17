@@ -59,6 +59,7 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ### 0.5.0 ###
 * Still caching data but loading via Ajax to get around CDN issues
+* Fix PHP notices
 
 ### 0.4.0 ###
 * Separate functionality into individual classes
