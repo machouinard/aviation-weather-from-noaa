@@ -3,8 +3,8 @@
 Contributors:		machouinard, ranchhand6
 Tags: 				aviation, metar, pireps, weather, noaa
 Requires at least: 	3.8
-Tested up to:      	5.2.4
-Stable tag:        	0.5.0
+Tested up to:      	5.3
+Stable tag:        	0.5.1
 License:           	GPLv2 or later
 License URI:       	http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 == Changelog ==
+= 0.5.1 =
+* Update add_management_page() args to prevent PHP notice
+
 = 0.5.0 =
 * Still caching data but loading via Ajax to get around CDN issues
 * Fix PHP notices
@@ -112,5 +115,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 == Upgrade Notice ==
 
-= 0.5.0 =
-* Still caching data but loading via Ajax to get around CDN issues
+= 0.5.1 =
+* Prevent PHP notice when adding menu page
