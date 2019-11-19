@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/machouinard/aviation-weather-from-noaa.svg?branch=master)](https://travis-ci.org/machouinard/aviation-weather-from-noaa)
 
-Contributors:		machouinard
+Contributors:		machouinard, ranchhand6
 **Tags:** 				aviation, metar, pireps, weather, noaa
   
 **Requires at least:** 	3.8
