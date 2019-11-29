@@ -62,6 +62,14 @@ div#awfn-error-logs {
     }
 }
 
+// Gutenberg Block Editor
+#awfn-toggle-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+}
+
 .components-base-control .components-base-control__label {
     display: block;
 }
@@ -70,4 +78,10 @@ div#awfn-error-logs {
 #inspector-select-control-3,
 #inspector-text-control-1 {
     width: 100px;
+}
+
+#awfn-top-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
 }
