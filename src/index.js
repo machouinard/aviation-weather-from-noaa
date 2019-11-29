@@ -109,11 +109,6 @@ registerBlockType(
 						onChange={ onChangeIcao }
 						value={ apts }
 					/>
-					<TextControl
-						label={ __( 'Custom Title' ) }
-						onChange={ onChangeTitle }
-						value={ title }
-					/>
 					<SelectControl
 						label={ __( 'Radial Distance' ) }
 						onChange={ onChangeDist }
@@ -125,7 +120,9 @@ registerBlockType(
 							{ value: 125, label: '125' },
 							{ value: 150, label: '150' },
 							{ value: 175, label: '175' },
-							{ value: 200, label: '200' }
+							{ value: 200, label: '200' },
+							{ value: 250, label: '250' },
+							{ value: 300, label: '300' },
 						] }
 					/>
 					<SelectControl
@@ -140,6 +137,11 @@ registerBlockType(
 							{ value: 5, label: '5' },
 							{ value: 6, label: '6' }
 						] }
+					/>
+					<TextControl
+						label={ __( 'Custom Title' ) }
+						onChange={ onChangeTitle }
+						value={ title }
 					/>
 					<ToggleControl
 						label={ __( 'Show METAR' ) }
