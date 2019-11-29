@@ -165,12 +165,9 @@ registerBlockType(
 			);
 		},
 		save: props => {
-			console.log( 'props', props );
 			const spinnerUrl = opts.spinnerUrl;
-			console.log( 'spinner', spinnerUrl );
 			const { attributes: { apts, title, radial_dist, hours, show_metar, show_taf, show_pireps, show_station_info } } = props;
 			const { attributes }                                                                                            = props;
-			console.log( 'atts', attributes );
 			return (
 				<section
 					className="awfn-shortcode"
