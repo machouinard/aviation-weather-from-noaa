@@ -2,7 +2,7 @@
 vendor/
 composer.lock
 logs/
-
+style/.sass-cache
 # Created by https://www.gitignore.io/api/node,wordpress,jetbrains+all,composer
 # Edit at https://www.gitignore.io/?templates=node,wordpress,jetbrains+all,composer
 
@@ -178,7 +178,7 @@ typings/
 # nuxt.js build output
 .nuxt
 
-# react / gatsby 
+# react / gatsby
 public/
 
 # vuepress build output
