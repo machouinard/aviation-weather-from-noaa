@@ -104,70 +104,79 @@ registerBlockType(
 			};
 			return (
 				<div>
-					<TextControl
-						label={ __( 'ICAO' ) }
-						onChange={ onChangeIcao }
-						value={ apts }
-					/>
-					<SelectControl
-						label={ __( 'Radial Distance' ) }
-						onChange={ onChangeDist }
-						value={ radial_dist }
-						options={ [
-							{ value: 25, label: '25' },
-							{ value: 50, label: '50' },
-							{ value: 100, label: '100' },
-							{ value: 125, label: '125' },
-							{ value: 150, label: '150' },
-							{ value: 175, label: '175' },
-							{ value: 200, label: '200' },
-							{ value: 250, label: '250' },
-							{ value: 300, label: '300' },
-						] }
-					/>
-					<SelectControl
-						label={ __( 'Hours Before Now' ) }
-						onChange={ onChangeHours }
-						value={ hours }
-						options={ [
-							{ value: 1, label: '1' },
-							{ value: 2, label: '2' },
-							{ value: 3, label: '3' },
-							{ value: 4, label: '4' },
-							{ value: 5, label: '5' },
-							{ value: 6, label: '6' }
-						] }
-					/>
+					<div id="awfn-top-options">
+						<TextControl
+							className="awfn-one-third"
+							label={ __( 'ICAO' ) }
+							onChange={ onChangeIcao }
+							value={ apts }
+						/>
+						<SelectControl
+							className="awfn-one-third"
+							label={ __( 'Radial Distance' ) }
+							onChange={ onChangeDist }
+							value={ radial_dist }
+							options={ [
+								{ value: 25, label: '25' },
+								{ value: 50, label: '50' },
+								{ value: 100, label: '100' },
+								{ value: 125, label: '125' },
+								{ value: 150, label: '150' },
+								{ value: 175, label: '175' },
+								{ value: 200, label: '200' },
+								{ value: 250, label: '250' },
+								{ value: 300, label: '300' }
+							] }
+						/>
+						<SelectControl
+							className="awfn-one-third"
+							label={ __( 'Hours Before Now' ) }
+							onChange={ onChangeHours }
+							value={ hours }
+							options={ [
+								{ value: 1, label: '1' },
+								{ value: 2, label: '2' },
+								{ value: 3, label: '3' },
+								{ value: 4, label: '4' },
+								{ value: 5, label: '5' },
+								{ value: 6, label: '6' }
+							] }
+						/>
+					</div>
 					<TextControl
 						label={ __( 'Custom Title' ) }
 						onChange={ onChangeTitle }
 						value={ title }
+						placeholder="Replaces the default title (use a space for no title)"
 					/>
-					<ToggleControl
-						label={ __( 'Show METAR' ) }
-						onChange={ onChangeShowMetar }
-						checked={ metarVal }
-					/>
-					<ToggleControl
-						label={ __( 'Show TAF' ) }
-						onChange={ onChangeShowTaf }
-						checked={ tafVal }
-					/>
-					<ToggleControl
-						label={ __( 'Show PIREPS' ) }
-						onChange={ onChangeShowPireps }
-						checked={ pirepVal }
-					/>
-					<ToggleControl
-						label={ __( 'Show Station Info' ) }
-						onChange={ onChangeShowStationInfo }
-						checked={ stationVal }
-					/>
+					<label htmlFor="awfn-toggle-options">Display</label>
+					<div id="awfn-toggle-options">
+						<ToggleControl
+							label={ __( 'METAR' ) }
+							onChange={ onChangeShowMetar }
+							checked={ metarVal }
+						/>
+						<ToggleControl
+							label={ __( 'TAF' ) }
+							onChange={ onChangeShowTaf }
+							checked={ tafVal }
+						/>
+						<ToggleControl
+							label={ __( 'PIREPS' ) }
+							onChange={ onChangeShowPireps }
+							checked={ pirepVal }
+						/>
+						<ToggleControl
+							label={ __( 'Station Info' ) }
+							onChange={ onChangeShowStationInfo }
+							checked={ stationVal }
+						/>
+					</div>
 				</div>
 			);
 		},
 		save: props => {
-			const spinnerUrl = opts.spinnerUrl;
+			const spinnerUrl                                                                                                = opts.spinnerUrl;
 			const { attributes: { apts, title, radial_dist, hours, show_metar, show_taf, show_pireps, show_station_info } } = props;
 			const { attributes }                                                                                            = props;
 			return (
