@@ -1,5 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { TextControl, SelectControl } from '@wordpress/components';
+import { TextControl, SelectControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 registerBlockType(
@@ -69,8 +69,12 @@ registerBlockType(
 		edit: props => {
 			const { attributes: { apts, title, radial_dist, hours, show_metar, show_taf, show_pireps, show_station_info }, setAttributes } = props;
 
+			let metarVal   = show_metar !== '0',
+			    tafVal     = show_taf !== '0',
+			    pirepVal   = show_pireps !== '0',
+			    stationVal = show_station_info !== '0';
+
 			const onChangeIcao            = newIcao => {
-				console.log( 'newIcao', newIcao );
 				setAttributes( { apts: newIcao } );
 			};
 			const onChangeTitle           = newTitle => {
@@ -83,16 +87,20 @@ registerBlockType(
 				setAttributes( { hours: newHours } );
 			};
 			const onChangeShowMetar       = newMetar => {
-				setAttributes( { show_metar: newMetar } );
+				const metar = newMetar ? '1' : '0';
+				setAttributes( { show_metar: metar } );
 			};
 			const onChangeShowTaf         = newTaf => {
-				setAttributes( { show_taf: newTaf } );
+				const taf = newTaf ? '1' : '0';
+				setAttributes( { show_taf: taf } );
 			};
 			const onChangeShowPireps      = newPireps => {
-				setAttributes( { show_pireps: newPireps } );
+				const pireps = newPireps ? '1' : '0';
+				setAttributes( { show_pireps: pireps } );
 			};
 			const onChangeShowStationInfo = newStationInfo => {
-				setAttributes( { show_station_info: newStationInfo } );
+				const station = newStationInfo ? '1' : '0';
+				setAttributes( { show_station_info: station } );
 			};
 			return (
 				<div>
@@ -133,41 +141,25 @@ registerBlockType(
 							{ value: 6, label: '6' }
 						] }
 					/>
-					<SelectControl
-						label={ __( 'Show Metar' ) }
+					<ToggleControl
+						label={ __( 'Show METAR' ) }
 						onChange={ onChangeShowMetar }
-						value={ show_metar }
-						options={ [
-							{ value: '1', label: 'Yes' },
-							{ value: '0', label: 'No' }
-						] }
+						checked={ metarVal }
 					/>
-					<SelectControl
+					<ToggleControl
 						label={ __( 'Show TAF' ) }
 						onChange={ onChangeShowTaf }
-						value={ show_taf }
-						options={ [
-							{ value: '1', label: 'Yes' },
-							{ value: '0', label: 'No' }
-						] }
+						checked={ tafVal }
 					/>
-					<SelectControl
-						label={ __( 'Show Pireps' ) }
+					<ToggleControl
+						label={ __( 'Show PIREPS' ) }
 						onChange={ onChangeShowPireps }
-						value={ show_pireps }
-						options={ [
-							{ value: '1', label: 'Yes' },
-							{ value: '0', label: 'No' }
-						] }
+						checked={ pirepVal }
 					/>
-					<SelectControl
+					<ToggleControl
 						label={ __( 'Show Station Info' ) }
 						onChange={ onChangeShowStationInfo }
-						value={ show_station_info }
-						options={ [
-							{ value: '1', label: 'Yes' },
-							{ value: '0', label: 'No' }
-						] }
+						checked={ stationVal }
 					/>
 				</div>
 			);

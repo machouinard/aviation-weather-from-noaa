@@ -180,9 +180,12 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
         show_pireps = _props$attributes.show_pireps,
         show_station_info = _props$attributes.show_station_info,
         setAttributes = props.setAttributes;
+    var metarVal = show_metar !== '0',
+        tafVal = show_taf !== '0',
+        pirepVal = show_pireps !== '0',
+        stationVal = show_station_info !== '0';
 
     var onChangeIcao = function onChangeIcao(newIcao) {
-      console.log('newIcao', newIcao);
       setAttributes({
         apts: newIcao
       });
@@ -207,26 +210,30 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
     };
 
     var onChangeShowMetar = function onChangeShowMetar(newMetar) {
+      var metar = newMetar ? '1' : '0';
       setAttributes({
-        show_metar: newMetar
+        show_metar: metar
       });
     };
 
     var onChangeShowTaf = function onChangeShowTaf(newTaf) {
+      var taf = newTaf ? '1' : '0';
       setAttributes({
-        show_taf: newTaf
+        show_taf: taf
       });
     };
 
     var onChangeShowPireps = function onChangeShowPireps(newPireps) {
+      var pireps = newPireps ? '1' : '0';
       setAttributes({
-        show_pireps: newPireps
+        show_pireps: pireps
       });
     };
 
     var onChangeShowStationInfo = function onChangeShowStationInfo(newStationInfo) {
+      var station = newStationInfo ? '1' : '0';
       setAttributes({
-        show_station_info: newStationInfo
+        show_station_info: station
       });
     };
 
@@ -287,50 +294,22 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
         value: 6,
         label: '6'
       }]
-    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["SelectControl"], {
-      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show Metar'),
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["ToggleControl"], {
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show METAR'),
       onChange: onChangeShowMetar,
-      value: show_metar,
-      options: [{
-        value: '1',
-        label: 'Yes'
-      }, {
-        value: '0',
-        label: 'No'
-      }]
-    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["SelectControl"], {
+      checked: metarVal
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["ToggleControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show TAF'),
       onChange: onChangeShowTaf,
-      value: show_taf,
-      options: [{
-        value: '1',
-        label: 'Yes'
-      }, {
-        value: '0',
-        label: 'No'
-      }]
-    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["SelectControl"], {
-      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show Pireps'),
+      checked: tafVal
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["ToggleControl"], {
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show PIREPS'),
       onChange: onChangeShowPireps,
-      value: show_pireps,
-      options: [{
-        value: '1',
-        label: 'Yes'
-      }, {
-        value: '0',
-        label: 'No'
-      }]
-    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["SelectControl"], {
+      checked: pirepVal
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["ToggleControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show Station Info'),
       onChange: onChangeShowStationInfo,
-      value: show_station_info,
-      options: [{
-        value: '1',
-        label: 'Yes'
-      }, {
-        value: '0',
-        label: 'No'
-      }]
+      checked: stationVal
     }));
   },
   save: function save(props) {
