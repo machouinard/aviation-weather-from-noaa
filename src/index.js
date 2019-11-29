@@ -24,7 +24,7 @@ registerBlockType(
 				default: ''
 			},
 			radial_dist: {
-				type: 'number',
+				type: 'string',
 				source: 'attribute',
 				selector: 'section',
 				attribute: 'data-radial_dist',
