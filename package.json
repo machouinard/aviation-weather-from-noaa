@@ -1,0 +1,15 @@
+{
+  "name": "awfn-block",
+  "version": "1.0.0",
+  "description": "AWFN Gutenberg Block",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start"
+  },
+  "author": "Mark Chouinard",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@wordpress/scripts": "^6.0.0"
+  }
+}

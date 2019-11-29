@@ -138,6 +138,9 @@ class Adds_Weather_Widget extends WP_Widget {
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_ajax_scripts' ) );
 
+		//* Gutenberg
+		add_action( 'enqueue_block_editor_assets', array( $this, 'awfn_block_editor_assets' ) );
+
 		//* Add shortcode
 		add_shortcode( 'adds_weather', array( 'AWFN_Shortcode', 'adds_weather_shortcode' ) );
 
@@ -545,6 +548,27 @@ class Adds_Weather_Widget extends WP_Widget {
 		self::$log->pushHandler( $debug_handler );
 		self::$log->pushHandler( $info_handler );
 		self::$log->pushHandler( $warning_handler );
+	}
+
+	/**
+	 * Enqueue Block JS
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 *
+	 */
+	public function awfn_block_editor_assets() {
+		$assets = include( plugin_dir_path( __FILE__ ) . 'build/index.asset.php' );
+
+		wp_enqueue_script(
+			'awfn-block-js',
+			plugins_url( 'build/index.js', __FILE__ ),
+			$assets['dependencies'],
+			$assets['version']
+		);
+
+		$spinner_url     = plugin_dir_url( __FILE__ ) . 'css/loading.gif';
+		wp_localize_script( 'awfn-block-js', 'opts', ['spinnerUrl' => $spinner_url] );
 	}
 
 
