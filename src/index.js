@@ -18,7 +18,7 @@ registerBlockType(
 			},
 			title: {
 				type: 'string',
-				source: 'attributes',
+				source: 'attribute',
 				selector: 'section',
 				attribute: 'data-title',
 				default: ''
