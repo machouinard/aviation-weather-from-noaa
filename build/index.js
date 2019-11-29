@@ -121,7 +121,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
     },
     title: {
       type: 'string',
-      source: 'attributes',
+      source: 'attribute',
       selector: 'section',
       attribute: 'data-title',
       default: ''
@@ -241,10 +241,6 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('ICAO'),
       onChange: onChangeIcao,
       value: apts
-    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["TextControl"], {
-      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Custom Title'),
-      onChange: onChangeTitle,
-      value: title
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["SelectControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Radial Distance'),
       onChange: onChangeDist,
@@ -270,6 +266,12 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
       }, {
         value: 200,
         label: '200'
+      }, {
+        value: 250,
+        label: '250'
+      }, {
+        value: 300,
+        label: '300'
       }]
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["SelectControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Hours Before Now'),
@@ -294,6 +296,10 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
         value: 6,
         label: '6'
       }]
+    }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["TextControl"], {
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Custom Title'),
+      onChange: onChangeTitle,
+      value: title
     }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__["ToggleControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show METAR'),
       onChange: onChangeShowMetar,
@@ -313,9 +319,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
     }));
   },
   save: function save(props) {
-    console.log('props', props);
     var spinnerUrl = opts.spinnerUrl;
-    console.log('spinner', spinnerUrl);
     var _props$attributes2 = props.attributes,
         apts = _props$attributes2.apts,
         title = _props$attributes2.title,
@@ -326,7 +330,6 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('awf
         show_pireps = _props$attributes2.show_pireps,
         show_station_info = _props$attributes2.show_station_info;
     var attributes = props.attributes;
-    console.log('atts', attributes);
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("section", {
       className: "awfn-shortcode",
       "data-apts": apts,

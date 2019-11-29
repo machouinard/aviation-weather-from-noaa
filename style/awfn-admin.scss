@@ -61,3 +61,13 @@ div#awfn-error-logs {
 
     }
 }
+
+.components-base-control .components-base-control__label {
+    display: block;
+}
+
+#inspector-select-control-1,
+#inspector-select-control-3,
+#inspector-text-control-1 {
+    width: 100px;
+}
