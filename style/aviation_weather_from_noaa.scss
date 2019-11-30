@@ -1,5 +1,7 @@
 section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
 
+  padding: 0;
+
   header {
 
     font-weight: bold;
@@ -9,6 +11,7 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
   section {
 
     margin-bottom: 10px;
+    padding: 0;
 
     &#metar {
       cursor: default;
