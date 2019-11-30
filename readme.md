@@ -25,6 +25,9 @@ Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
 * Create multiple instances using either widget or shortcode
 * WP-CLI Integration
 
+### Gutenberg Block ###
+A new `AWFN Block` can be found in the Widgets section.
+
 ### Shortcode Usage: ( shown with defaults ) ###
     [adds_weather apts='KSMF' hours=2 show_metar=1 show_taf=1 show_pireps=1 show_station_info=1 radial_dist=100 title='']
 
