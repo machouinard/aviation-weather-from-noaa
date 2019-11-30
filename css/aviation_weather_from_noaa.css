@@ -1,48 +1,51 @@
-section.adds-weather-wrapper header, section.adds-weather-shortcode-wrapper header {
-  font-weight: bold;
-  margin-bottom: 10px; }
-section.adds-weather-wrapper section, section.adds-weather-shortcode-wrapper section {
-  margin-bottom: 10px; }
-  section.adds-weather-wrapper section#metar, section.adds-weather-shortcode-wrapper section#metar {
-    cursor: default; }
-    section.adds-weather-wrapper section#metar header span, section.adds-weather-shortcode-wrapper section#metar header span {
-      font-size: .75em;
-      font-weight: lighter;
-      margin-left: .5em;
-      vertical-align: baseline;
-      color: #500000; }
-  section.adds-weather-wrapper section article, section.adds-weather-shortcode-wrapper section article {
-    padding: 8px;
-    overflow-wrap: break-word; }
-    section.adds-weather-wrapper section article p, section.adds-weather-shortcode-wrapper section article p {
-      margin: 0; }
-    section.adds-weather-wrapper section article.decoded-metar, section.adds-weather-shortcode-wrapper section article.decoded-metar {
-      display: none;
-      width: 100%;
-      height: 100%;
-      background-color: #a5a5a5;
-      color: #ffffff;
-      -webkit-border-radius: 5px;
-      -moz-border-radius: 5px;
-      border-radius: 5px; }
-  section.adds-weather-wrapper section#aircraftreport, section.adds-weather-shortcode-wrapper section#aircraftreport {
-    cursor: default; }
-    section.adds-weather-wrapper section#aircraftreport header span, section.adds-weather-shortcode-wrapper section#aircraftreport header span {
-      font-size: .75em;
-      font-weight: lighter;
-      vertical-align: baseline; }
-      section.adds-weather-wrapper section#aircraftreport header span.fa, section.adds-weather-shortcode-wrapper section#aircraftreport header span.fa {
+section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
+  padding: 0; }
+  section.adds-weather-wrapper header, section.adds-weather-shortcode-wrapper header {
+    font-weight: bold;
+    margin-bottom: 10px; }
+  section.adds-weather-wrapper section, section.adds-weather-shortcode-wrapper section {
+    margin-bottom: 10px;
+    padding: 0; }
+    section.adds-weather-wrapper section#metar, section.adds-weather-shortcode-wrapper section#metar {
+      cursor: default; }
+      section.adds-weather-wrapper section#metar header span, section.adds-weather-shortcode-wrapper section#metar header span {
+        font-size: .75em;
+        font-weight: lighter;
         margin-left: .5em;
+        vertical-align: baseline;
         color: #500000; }
-    section.adds-weather-wrapper section#aircraftreport section#all-pireps, section.adds-weather-shortcode-wrapper section#aircraftreport section#all-pireps {
-      display: none;
-      width: 100%;
-      height: 100%; }
-    section.adds-weather-wrapper section#aircraftreport article:nth-of-type(even), section.adds-weather-shortcode-wrapper section#aircraftreport article:nth-of-type(even) {
-      background-color: #a5a5a5;
-      color: #ffffff;
-      -webkit-border-radius: 5px;
-      -moz-border-radius: 5px;
-      border-radius: 5px; }
+    section.adds-weather-wrapper section article, section.adds-weather-shortcode-wrapper section article {
+      padding: 8px;
+      overflow-wrap: break-word; }
+      section.adds-weather-wrapper section article p, section.adds-weather-shortcode-wrapper section article p {
+        margin: 0; }
+      section.adds-weather-wrapper section article.decoded-metar, section.adds-weather-shortcode-wrapper section article.decoded-metar {
+        display: none;
+        width: 100%;
+        height: 100%;
+        background-color: #a5a5a5;
+        color: #ffffff;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px; }
+    section.adds-weather-wrapper section#aircraftreport, section.adds-weather-shortcode-wrapper section#aircraftreport {
+      cursor: default; }
+      section.adds-weather-wrapper section#aircraftreport header span, section.adds-weather-shortcode-wrapper section#aircraftreport header span {
+        font-size: .75em;
+        font-weight: lighter;
+        vertical-align: baseline; }
+        section.adds-weather-wrapper section#aircraftreport header span.fa, section.adds-weather-shortcode-wrapper section#aircraftreport header span.fa {
+          margin-left: .5em;
+          color: #500000; }
+      section.adds-weather-wrapper section#aircraftreport section#all-pireps, section.adds-weather-shortcode-wrapper section#aircraftreport section#all-pireps {
+        display: none;
+        width: 100%;
+        height: 100%; }
+      section.adds-weather-wrapper section#aircraftreport article:nth-of-type(even), section.adds-weather-shortcode-wrapper section#aircraftreport article:nth-of-type(even) {
+        background-color: #a5a5a5;
+        color: #ffffff;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px; }
 
 /*# sourceMappingURL=aviation_weather_from_noaa.css.map */

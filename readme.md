@@ -9,7 +9,7 @@ Contributors:		machouinard, ranchhand6
   
 **Tested up to:**      	5.3
   
-**Stable tag:**        	0.5.1
+**Stable tag:**        	0.6.0
   
 **License:**           	GPLv2 or later
   
@@ -34,6 +34,11 @@ Data is cached for 30 minutes using the WordPress Transients API.
 * adds_kses: Array of permitted HTML tags.
 * adds_custom_css: URL of a user-supplied stylesheet.  Supplying a stylesheet in theme's directory ( 'css/aviation_weather_from_noaa.css' ) will also override stylesheet.
 
+### Styling ###
+* Copy `css/aviation_weather_from_noaa.css` from plugin directory into theme directory, keeping that file structure.
+* Make desired changes.
+* Plugin will load this stylesheet instead of its own.
+
 Code and support available at [GitHub](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Installation ##
@@ -54,6 +59,9 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Changelog ##
+### 0.6.0 ###
+* Added Gutenberg Block
+
 ### 0.5.1 ###
 * Update add_management_page() args to prevent PHP notice
 
@@ -122,5 +130,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ## Upgrade Notice ##
 
-### 0.5.1 ###
-* Prevent PHP notice when adding menu page
+### 0.6.0 ###
+* Added Gutenberg Block
