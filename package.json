@@ -4,8 +4,10 @@
   "description": "AWFN Gutenberg Block",
   "main": "index.js",
   "scripts": {
-    "build": "wp-scripts build",
-    "start": "wp-scripts start"
+    "prod": "wp-scripts build",
+    "start": "wp-scripts start",
+    "pack": "./build.sh",
+    "build": "npm run prod; npm run pack"
   },
   "author": "Mark Chouinard",
   "license": "GPL-3.0",
