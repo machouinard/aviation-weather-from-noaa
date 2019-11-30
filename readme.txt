@@ -125,6 +125,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 * First release
 
 == Upgrade Notice ==
-
 = 0.6.0 =
-* Added Gutenberg Block
+Added Gutenberg Block.
