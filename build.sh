@@ -11,13 +11,12 @@ cp -R ./lang output
 cp -R ./vendor output
 cp -R ./views output
 cp ./aviation-weather-from-noaa.php output
-cp ./readme.md output
 cp ./readme.txt output
 
-mkdir awfn-tmp
-cp -R output/* awfn-tmp
+mkdir aviation-weather-from-noaa
+cp -R output/* aviation-weather-from-noaa
 
-zip -r aviation-weather-from-noaa.zip awfn-tmp
+zip -r aviation-weather-from-noaa.zip aviation-weather-from-noaa
 mv ./aviation-weather-from-noaa.zip output
 
-rm -rf ./awfn-tmp
+rm -rf ./aviation-weather-from-noaa
