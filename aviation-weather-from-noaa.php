@@ -114,6 +114,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		add_action( 'wp_ajax_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
 		add_action( 'wp_ajax_nopriv_weather_widget', array( 'Adds_Weather_Widget', 'ajax_weather_widget' ) );
 		add_action( 'wp_ajax_awfn_clear_log', array( 'AWFNLogs', 'clear_log' ) );
+		add_action( 'in_plugin_update_message-aviation-weather-from-noaa/aviation-weather-from-noaa.php', [$this, 'show_upgrade_notice'], 10, 2 );
 
 		//* Hooks fired when the Widget is activated and deactivated
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -569,6 +570,25 @@ class Adds_Weather_Widget extends WP_Widget {
 
 		$spinner_url     = plugin_dir_url( __FILE__ ) . 'css/loading.gif';
 		wp_localize_script( 'awfn-block-js', 'opts', ['spinnerUrl' => $spinner_url] );
+	}
+
+	/**
+	 * Show upgrade notice on plugin page
+	 *
+	 * This just makes sure the updgrade notice appears so users can see what's changed.
+	 * Normally it only appears on the upgrade page.
+	 *
+	 * @param $current
+	 * @param $new
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function show_upgrade_notice( $current, $new ) {
+		if ( isset( $new->upgrade_notice ) && strlen( trim( $new->upgrade_notice ) ) > 0 ) {
+			echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>Upgrade Notice</strong>';
+			echo strip_tags( $new->upgrade_notice), '</p>';
+		}
 	}
 
 

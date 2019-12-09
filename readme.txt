@@ -130,5 +130,4 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 == Upgrade Notice ==
 = 0.7.0 =
-* Fix block error when using default Radial Dist (previously saved blocks should still display on the front-end but may not be editable in the admin and should be replaced)
-* Fix admin styling issue with narrow Title field
+Fixed block error when using default Radial Dist (previously saved blocks should still display on the front-end but may not be editable in the admin and should be replaced).  Fixed admin styling issue with narrow Custom Title field.
