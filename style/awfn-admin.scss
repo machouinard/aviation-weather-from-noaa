@@ -74,14 +74,13 @@ div#awfn-error-logs {
     display: block;
 }
 
-#inspector-select-control-1,
-#inspector-select-control-3,
-#inspector-text-control-1 {
-    width: 100px;
-}
-
 #awfn-top-options {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+}
+
+#awfn-top-options .components-text-control__input,
+#awfn-top-options .components-select-control__input {
+    width: 100px;
 }
