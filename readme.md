@@ -9,7 +9,7 @@ Contributors:		machouinard, ranchhand6
   
 **Tested up to:**      	5.3
   
-**Stable tag:**        	0.6.0
+**Stable tag:**        	0.7.0
   
 **License:**           	GPLv2 or later
   
@@ -62,6 +62,10 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Changelog ##
+### 0.7.0 ###
+* Treat radial_dist and hours_before_now and their defaults as strings to fix block error
+* Fix admin styling issue with Title only being 100px wide
+
 ### 0.6.0 ###
 * Added Gutenberg Block
 
@@ -133,5 +137,6 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ## Upgrade Notice ##
 
-### 0.6.0 ###
-* Added Gutenberg Block
+### 0.7.0 ###
+* Fix block error when using default Radial Dist
+* Fix admin styling issue with narrow Title field
