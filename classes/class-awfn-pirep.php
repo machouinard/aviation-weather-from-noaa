@@ -76,7 +76,7 @@ class AwfnPirep extends Awfn {
 
 			$this->display_data = '<header>';
 			$this->display_data .= sprintf( _n( 'Pirep %s', 'Pireps %s', $count, Adds_Weather_Widget::get_widget_slug() ), $count_display );
-			$this->display_data .= '<span class="fa fa-sort-desc"></span></header><section id="all-pireps">';
+			$this->display_data .= '<span class="fas fa-sort-down"></span></header><section id="all-pireps">';
 
 			foreach ( $this->data as $pirep ) {
 				$this->display_data .= sprintf( '<article class="pirep">%s</article>', $pirep );

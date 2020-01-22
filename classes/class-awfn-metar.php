@@ -131,7 +131,7 @@ MAC;
 	public function build_display() {
 
 		if ( $this->data ) {
-			$this->display_data = '<header>METAR<span class="fa fa-sort-desc"></span></header><article class="metar">'
+			$this->display_data = '<header>METAR<span class="fas fa-sort-down"></span></header><article class="metar">'
 			                      . esc_html( $this->data ) .
 			                      '</article>';
 			if ( $this->decoded ) {
