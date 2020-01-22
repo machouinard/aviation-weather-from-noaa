@@ -10,10 +10,8 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
       cursor: default; }
       section.adds-weather-wrapper section#metar header span, section.adds-weather-shortcode-wrapper section#metar header span {
         font-size: .75em;
-        font-weight: lighter;
         margin-left: .5em;
-        vertical-align: baseline;
-        color: #500000; }
+        vertical-align: baseline; }
     section.adds-weather-wrapper section article, section.adds-weather-shortcode-wrapper section article {
       padding: 8px;
       overflow-wrap: break-word; }
@@ -32,11 +30,10 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
       cursor: default; }
       section.adds-weather-wrapper section#aircraftreport header span, section.adds-weather-shortcode-wrapper section#aircraftreport header span {
         font-size: .75em;
-        font-weight: lighter;
+        margin-left: .5em;
         vertical-align: baseline; }
         section.adds-weather-wrapper section#aircraftreport header span.fa, section.adds-weather-shortcode-wrapper section#aircraftreport header span.fa {
-          margin-left: .5em;
-          color: #500000; }
+          margin-left: .5em; }
       section.adds-weather-wrapper section#aircraftreport section#all-pireps, section.adds-weather-shortcode-wrapper section#aircraftreport section#all-pireps {
         display: none;
         width: 100%;

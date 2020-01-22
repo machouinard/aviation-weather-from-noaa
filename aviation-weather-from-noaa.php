@@ -14,7 +14,7 @@ use Monolog\Formatter\LineFormatter;
  * Plugin Name:       Aviation Weather From NOAA
  * Plugin URI:        https://github.com/machouinard/aviation-weather-from-noaa
  * Description:       Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:           0.7.0
+ * Version:           0.7.1
  * Author:            Mark Chouinard
  * Author URI:        https://chouinard.me
  * Text Domain:       awfn
@@ -466,7 +466,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		}
 		wp_enqueue_style( self::get_widget_slug() . '-widget-styles', apply_filters( 'adds_custom_css', $location ) );
 
-		wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' );
+		wp_enqueue_script( 'font-awesome', '//kit.fontawesome.com/a9c93912bd.js' );
 
 	} //* end register_widget_styles
 

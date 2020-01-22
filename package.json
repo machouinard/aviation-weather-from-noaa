@@ -12,6 +12,6 @@
   "author": "Mark Chouinard",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@wordpress/scripts": "^6.1.0"
+    "@wordpress/scripts": "^6.2.0"
   }
 }
