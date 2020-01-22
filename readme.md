@@ -8,9 +8,9 @@ Contributors:		machouinard, ranchhand6
   
 **Requires at least:** 	3.8
   
-**Tested up to:**      	5.3
+**Tested up to:**      	5.3.2
   
-**Stable tag:**        	0.7.0
+**Stable tag:**        	0.7.1
   
 **License:**           	GPLv2 or later
   
@@ -63,6 +63,9 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Changelog ##
+### 0.7.1 ###
+* Upgrade FontAwesome to v5
+
 ### 0.7.0 ###
 * Treat radial_dist and hours_before_now and their defaults as strings to fix block error
 * Fix admin styling issue with Title only being 100px wide
@@ -138,6 +141,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ## Upgrade Notice ##
 
-### 0.7.0 ###
-* Fix block error when using default Radial Dist
-* Fix admin styling issue with narrow Title field
+### 0.7.1 ###
+* Upgrade FontAwesome to v5
