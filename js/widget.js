@@ -8,7 +8,6 @@
         widget = $('section.adds-weather-wrapper');
 
         shortcode.on('click', '#metar', function(e) {
-            console.log('sc metar' );
             if ($(this).find($('.fas')).hasClass('fa-sort-down')) {
                 $(this).find($('.fas')).removeClass('fa-sort-down').addClass('fa-sort-up');
                 $('article:nth-child(3)', this).slideDown(200);
@@ -19,7 +18,6 @@
         });
 
         shortcode.on('click', '#aircraftreport', function(e) {
-            console.log('sc pirep' );
             if ($(this).find($('.fas')).hasClass('fa-sort-down')) {
                 $(this).find($('.fas')).removeClass('fa-sort-down').addClass('fa-sort-up');
                 $(this).children('section#all-pireps').slideDown(200);
@@ -30,7 +28,6 @@
         });
 
         widget.on('click', '#metar', function(e) {
-            console.log('widget metar' );
             if ($(this).find($('.fas')).hasClass('fa-sort-down')) {
                 $(this).find($('.fas')).removeClass('fa-sort-down').addClass('fa-sort-up');
                 $('article:nth-child(3)', this).slideDown(200);
@@ -41,7 +38,6 @@
         });
 
         widget.on('click', '#aircraftreport', function() {
-            console.log('widget pirep' );
             if ($(this).find($('.fas')).hasClass('fa-sort-down')) {
                 $(this).find($('.fas')).removeClass('fa-sort-down').addClass('fa-sort-up');
                 $(this).children('section#all-pireps').slideDown(200);
