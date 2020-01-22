@@ -20,10 +20,8 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
 
         span {
           font-size: .75em;
-          font-weight: lighter;
           margin-left: .5em;
           vertical-align: baseline;
-          color: #500000;
         }
 
       }
@@ -64,12 +62,11 @@ section.adds-weather-wrapper, section.adds-weather-shortcode-wrapper {
         span {
 
           font-size: .75em;
-          font-weight: lighter;
+          margin-left: .5em;
           vertical-align: baseline;
 
           &.fa {
             margin-left: .5em;
-            color: #500000;
           }
         }
       }
