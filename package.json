@@ -4,14 +4,21 @@
   "description": "AWFN Gutenberg Block",
   "main": "index.js",
   "scripts": {
-    "prod": "wp-scripts build",
-    "start": "wp-scripts start",
+    "prod": "gulp; wp-scripts build",
+    "start": "gulp; wp-scripts start",
     "pack": "./build.sh",
     "build": "npm run prod; npm run pack"
   },
   "author": "Mark Chouinard",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@wordpress/scripts": "^6.2.0"
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@wordpress/scripts": "~7.1.2",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify": "^3.1.0"
   }
 }
