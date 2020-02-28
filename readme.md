@@ -63,6 +63,10 @@ Code and support available at [GitHub](https://github.com/machouinard/aviation-w
 Support will be made available at the [GitHub Repo](https://github.com/machouinard/aviation-weather-from-noaa "GitHub Repo")
 
 ## Changelog ##
+### 0.7.2 ###
+* Fix minification issue preventing metar and pirep sections from expanding.
+* Use Gulp to minify JS
+
 ### 0.7.1 ###
 * Upgrade FontAwesome to v5
 
@@ -141,5 +145,5 @@ Support will be made available at the [GitHub Repo](https://github.com/machouina
 
 ## Upgrade Notice ##
 
-### 0.7.1 ###
-* Upgrade FontAwesome to v5
+### 0.7.2 ###
+* Fix expanded display of metar and pireps.

@@ -14,7 +14,7 @@ use Monolog\Formatter\LineFormatter;
  * Plugin Name:       Aviation Weather From NOAA
  * Plugin URI:        https://github.com/machouinard/aviation-weather-from-noaa
  * Description:       Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:           0.7.1
+ * Version:           0.7.2
  * Author:            Mark Chouinard
  * Author URI:        https://chouinard.me
  * Text Domain:       awfn
@@ -100,7 +100,7 @@ class Adds_Weather_Widget extends WP_Widget {
 		$this->awfn_debug = $debug_0;
 
 		//* Unless we're debugging, enqueue minified scripts
-		$this->prefix = $this->awfn_debug ? '' : '.min';
+		$this->prefix = $this->awfn_debug ? '' : '-min';
 
 		//* load plugin text domain
 		add_action( 'init', array( $this, 'widget_textdomain' ) );
@@ -586,8 +586,8 @@ class Adds_Weather_Widget extends WP_Widget {
 	 */
 	public function show_upgrade_notice( $current, $new ) {
 		if ( isset( $new->upgrade_notice ) && strlen( trim( $new->upgrade_notice ) ) > 0 ) {
-			echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>Upgrade Notice</strong>';
-			echo strip_tags( $new->upgrade_notice), '</p>';
+			echo '<p style="background-color: #d54e21; padding: 10px; color: #f9f9f9; margin-top: 10px"><strong>Upgrade Notice:&nbsp;</strong>';
+			echo strip_tags( $new->upgrade_notice);
 		}
 	}
 
