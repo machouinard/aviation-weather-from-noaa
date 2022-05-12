@@ -3,7 +3,7 @@ vendor/
 composer.lock
 logs/
 style/.sass-cache
-output/
+dist/
 # Created by https://www.gitignore.io/api/node,wordpress,jetbrains+all,composer
 # Edit at https://www.gitignore.io/?templates=node,wordpress,jetbrains+all,composer
 
