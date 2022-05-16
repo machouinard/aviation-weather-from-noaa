@@ -504,9 +504,12 @@ class Adds_Weather_Widget extends WP_Widget {
 			array(
 				'jquery',
 			) );
+		$args = [
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+		];
 		wp_localize_script( self::get_widget_slug() . '-script',
-			'ajax_url',
-			admin_url( 'admin-ajax.php' ) );
+			'opts',
+			$args );
 
 	} //* end register_widget_scripts
 
