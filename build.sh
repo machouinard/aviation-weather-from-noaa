@@ -1,22 +1,22 @@
 #!/bin/bash
 
-rm -rf ./output
-mkdir ./output
-cp -R ./admin output
-cp -R ./build output
-cp -R ./classes output
-cp -R ./css output
-cp -R ./js output
-cp -R ./lang output
-cp -R ./vendor output
-cp -R ./views output
-cp ./aviation-weather-from-noaa.php output
-cp ./readme.txt output
+rm -rf ./dist
+mkdir ./dist
+cp -R ./admin dist
+cp -R ./build dist
+cp -R ./classes dist
+cp -R ./css dist
+cp -R ./js dist
+cp -R ./lang dist
+cp -R ./vendor dist
+cp -R ./views dist
+cp ./aviation-weather-from-noaa.php dist
+cp ./readme.txt dist
 
 mkdir aviation-weather-from-noaa
-cp -R output/* aviation-weather-from-noaa
+cp -R dist/* aviation-weather-from-noaa
 
 zip -r aviation-weather-from-noaa.zip aviation-weather-from-noaa
-mv ./aviation-weather-from-noaa.zip output
+mv ./aviation-weather-from-noaa.zip dist
 
 rm -rf ./aviation-weather-from-noaa
