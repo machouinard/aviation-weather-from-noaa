@@ -21,13 +21,13 @@
 				},
 				success: function ( resp ) {
 					if ( awfn_debug ) {
-						//console.log( 'shortcode ajax success' );
+						console.log( 'shortcode ajax success' );
 					}
 					$this.html( resp.data );
 				},
 				error: function ( x ) {
 					if ( awfn_debug ) {
-						//console.log( 'Shortcode error posting to weather_shortcode' );
+						console.log( 'Shortcode error posting to weather_shortcode' );
 					}
 				},
 			} );
