@@ -29,9 +29,8 @@ class AwfnStation extends Awfn {
 
 		$this->icao = strtoupper( sanitize_text_field( $icao ) );
 		$this->show    = (bool) $show;
-
-		$base = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations';
-		$base .= '&requestType=retrieve&format=xml&stationString=%s';
+		$base = 'https://aviationweather.gov/api/data/stationinfo';
+		$base .= '&ids=%s&format=xml';
 		$this->url = sprintf( $base, $this->icao );
 
 		$this->clean_icao();
@@ -165,7 +164,7 @@ class AwfnStation extends Awfn {
 		} else {
 			// No match found in option so we need to go external
 			$this->url
-				= sprintf( 'http://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=stations&requestType=retrieve&format=xml&stationString=%s',
+				= sprintf( 'https://aviationweather.gov/api/data/stationinfo?ids=%s&format=xml',
 				$this->icao );
 
 			$this->load_xml();

@@ -343,6 +343,12 @@
       "oAP" : "\/lang\/aviation-weather-from-noaa.pot",
       "oF" : 0
     },
+    "\/logs" : {
+      "ft" : 65536,
+      "oA" : 1,
+      "oAP" : "\/logs",
+      "oF" : 0
+    },
     "\/package-lock.json" : {
       "ft" : 524288,
       "oA" : 1,

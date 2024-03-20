@@ -43,7 +43,7 @@ class AWFN_Shortcode {
 		$atts['show_taf']          = (bool) $atts['show_taf'];
 		$atts['show_pireps']       = (bool) $atts['show_pireps'];
 		$atts['show_station_info'] = (bool) $atts['show_station_info'];
-		$atts['radial_dist']       = absint( $atts['radial_dist'] ) > 10 && absint( $atts['radial_dist'] ) < 201 ? absint( $atts['radial_dist'] ) : 100;
+		$atts['radial_dist']       = absint( $atts['radial_dist'] ) > 10 && absint( $atts['radial_dist'] ) < 301 ? absint( $atts['radial_dist'] ) : 100;
 		$atts['title']             = esc_html( $atts['title'] );
 
 		$spinner_url     = plugin_dir_url( dirname( __FILE__ ) ) . 'css/loading.gif';
@@ -124,7 +124,7 @@ class AWFN_Shortcode {
 			$taf->go();
 
 			// Handle PIREPS
-			$pirep = new AwfnPirep( $station->get_icao(), $station->lat(), $station->lng(), $distance, $hours, $show_pireps );
+			$pirep = new AwfnPirep( $station->get_icao(), $distance, $hours, $show_pireps );
 			$pirep->go();
 
 		} else {

@@ -25,7 +25,7 @@ class AwfnPirep extends Awfn {
 	 *
 	 * @since 0.4.0
 	 */
-	public function __construct( $icao = '', $lat, $lng, $distance = 100, $hours = 2, $show = true ) {
+	public function __construct( $icao = '', $distance = 100, $hours = 2, $show = true ) {
 
 		self::$log_name = 'AircraftReport';
 
@@ -34,11 +34,12 @@ class AwfnPirep extends Awfn {
 		$this->icao  = $icao;
 		$this->show  = (bool) $show;
 		$this->hours = (int) $hours;
-		$base        = 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve';
-		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';
-		$this->url = sprintf( $base, $distance, $lng, $lat, $hours );
+//		$base        = 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=aircraftreports&requestType=retrieve';
+//		$base .= '&format=xml&radialDistance=%d;%f,%f&hoursBeforeNow=%d';
+		$base = 'https://aviationweather.gov/api/data/pirep?id=%s&format=xml&age=%d&distance=%d';
+		$this->url = sprintf( $base, $icao, $hours, $distance );
 
-		$this->maybelog('info', 'New PIREP for ' . $icao );
+		$this->maybelog('info', 'Maybe new PIREP for ' . $icao );
 
 	}
 
