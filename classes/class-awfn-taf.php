@@ -24,10 +24,11 @@ class AwfnTaf extends Awfn {
 
 		parent::__construct();
 
-		$url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml';
-		$url .= '&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
+//		$url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml';
+//		$url .= '&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
+		$url = 'https://aviationweather.gov/api/data/taf?ids=%s&format=xml&metar=false';
 
-		$this->url     = sprintf( $url, $icao, $hours );
+		$this->url     = sprintf( $url, $icao );
 		$this->icao = $icao;
 		$this->hours   = $hours;
 		$this->show    = $show;

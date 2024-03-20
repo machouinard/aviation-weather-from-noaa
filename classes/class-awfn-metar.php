@@ -30,8 +30,9 @@ class AwfnMetar extends Awfn {
 
 		parent::__construct();
 
-		$base_url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
-		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
+//		$base_url = 'https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars';
+//		$base_url .= '&requestType=retrieve&format=xml&mostRecent=true&stationString=%s&hoursBeforeNow=%d';
+		$base_url = 'https://aviationweather.gov/api/data/metar?ids=%s&format=xml&taf=false&hours=%d';
 		$this->url   = sprintf( $base_url, $icao, $hours );
 		$this->icao  = $icao;
 		$this->hours = $hours;
