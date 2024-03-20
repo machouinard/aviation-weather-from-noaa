@@ -15,7 +15,7 @@ use Monolog\Formatter\LineFormatter;
  * Plugin Name:       Aviation Weather From NOAA
  * Plugin URI:        https://github.com/machouinard/aviation-weather-from-noaa
  * Description:       Aviation weather data from NOAA's Aviation Digital Data Service (ADDS)
- * Version:           0.7.2
+ * Version:           0.8.0
  * Author:            Mark Chouinard
  * Author URI:        https://chouinard.me
  * Text Domain:       awfn
